@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎙️ 회의록 자동화 시스템 — 설치 및 사용 가이드</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #21253a;
+    --border: #2e3250;
+    --accent: #6c8ef5;
+    --accent2: #a78bfa;
+    --green: #34d399;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --text: #e2e8f0;
+    --text-muted: #8892b0;
+    --code-bg: #141824;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(15,17,23,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem; height: 56px;
+  }
+  .nav-logo { font-size: 1.1rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .nav-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration: none; font-size: .85rem;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 900px; margin: 0 auto; padding: 80px 2rem 4rem; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center; padding: 4rem 0 3rem;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #1e2a4a, #2a1e4a);
+    border: 1px solid #3d4a8a;
+    border-radius: 999px;
+    padding: .3rem 1rem; font-size: .8rem;
+    color: var(--accent2); margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: 2.6rem; font-weight: 800; line-height: 1.2;
+    background: linear-gradient(135deg, #e2e8f0 30%, var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+  .hero p { color: var(--text-muted); font-size: 1.05rem; max-width: 580px; margin: 0 auto 2rem; }
+  .hero-flow {
+    display: flex; align-items: center; justify-content: center;
+    gap: .5rem; flex-wrap: wrap; margin-bottom: 2.5rem;
+  }
+  .flow-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .5rem 1rem; font-size: .85rem;
+    display: flex; align-items: center; gap: .4rem;
+  }
+  .flow-arrow { color: var(--text-muted); font-size: 1.2rem; }
+  .hero-pills { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+  .pill {
+    border-radius: 999px; padding: .25rem .8rem; font-size: .75rem; font-weight: 600;
+  }
+  .pill-green  { background:#052e16; color: var(--green);  border: 1px solid #16a34a33; }
+  .pill-blue   { background:#0c1a3a; color: var(--accent);  border: 1px solid #3b82f633; }
+  .pill-purple { background:#1a0a3a; color: var(--accent2); border: 1px solid #7c3aed33; }
+  .pill-yellow { background:#2a1a02; color: var(--yellow);  border: 1px solid #d9770633; }
+
+  /* ── SECTION ── */
+  section { margin-bottom: 4rem; scroll-margin-top: 72px; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--accent);
+    background: #0c1a3a; border: 1px solid #3b82f633;
+    border-radius: 999px; padding: .25rem .8rem; margin-bottom: .8rem;
+  }
+  h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: .4rem; }
+  h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: .5rem; }
+  .section-desc { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1rem; }
+
+  /* ── SPEC TABLE ── */
+  .spec-table { width: 100%; border-collapse: collapse; }
+  .spec-table th, .spec-table td {
+    padding: .6rem .9rem; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-table th { color: var(--text-muted); font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing:.05em; }
+  .spec-table td:first-child { color: var(--accent2); font-weight: 600; }
+  .ok   { color: var(--green); }
+  .warn { color: var(--yellow); }
+  .fail { color: var(--red); }
+
+  /* ── STEPS ── */
+  .steps { counter-reset: step; display: flex; flex-direction: column; gap: 1rem; }
+  .step {
+    display: grid; grid-template-columns: 40px 1fr; gap: 1rem;
+    align-items: start;
+  }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: .9rem; flex-shrink: 0; margin-top: .15rem;
+  }
+  .step-body {}
+  .step-title { font-weight: 700; font-size: 1rem; margin-bottom: .3rem; }
+  .step-desc  { color: var(--text-muted); font-size: .9rem; margin-bottom: .7rem; }
+
+  /* ── CODE ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: .5rem 0;
+  }
+  .code-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .45rem .9rem;
+    background: #1a1d27; border-bottom: 1px solid var(--border);
+    font-size: .75rem; color: var(--text-muted);
+  }
+  .code-dots { display: flex; gap: .4rem; }
+  .code-dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .code-dots .d1 { background:#f87171; }
+  .code-dots .d2 { background:#fbbf24; }
+  .code-dots .d3 { background:#34d399; }
+  pre {
+    padding: 1rem 1.2rem;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: .82rem; line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .cmd  { color: #93c5fd; }
+  .cmt  { color: #4b5563; }
+  .str  { color: #86efac; }
+  .key  { color: var(--accent2); }
+  .val  { color: var(--yellow); }
+  .hl   { background: #1e2d4a; display: block; margin: 0 -1.2rem; padding: 0 1.2rem; }
+
+  /* ── INLINE CODE ── */
+  code {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: .1em .4em;
+    font-family: 'Consolas', monospace; font-size: .82em;
+    color: var(--accent2);
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: 10px; padding: 1rem 1.2rem;
+    display: flex; gap: .8rem; align-items: flex-start;
+    margin: .8rem 0;
+  }
+  .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: .05rem; }
+  .callout-body { flex: 1; }
+  .callout-title { font-weight: 700; font-size: .9rem; margin-bottom: .2rem; }
+  .callout-text  { font-size: .88rem; color: var(--text-muted); }
+  .callout.tip    { background:#052e16; border:1px solid #16a34a44; }
+  .callout.tip .callout-title { color: var(--green); }
+  .callout.warn   { background:#2a1a02; border:1px solid #d9770644; }
+  .callout.warn .callout-title { color: var(--yellow); }
+  .callout.info   { background:#0c1a3a; border:1px solid #3b82f644; }
+  .callout.info .callout-title { color: var(--accent); }
+
+  /* ── FILE TREE ── */
+  .file-tree {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.2rem;
+    font-family: 'Consolas', monospace; font-size: .82rem; line-height: 2;
+  }
+  .ft-dir  { color: var(--accent); }
+  .ft-file { color: var(--text); }
+  .ft-desc { color: var(--text-muted); margin-left: .5rem; font-size: .75rem; }
+  .ft-key  { color: var(--green); }
+
+  /* ── USAGE BOX ── */
+  .usage-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1rem; }
+  .usage-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+    transition: border-color .2s, transform .15s;
+  }
+  .usage-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .usage-icon { font-size: 2rem; margin-bottom: .8rem; }
+  .usage-title { font-weight: 700; font-size: 1rem; margin-bottom: .4rem; }
+  .usage-desc  { color: var(--text-muted); font-size: .85rem; margin-bottom: .8rem; }
+
+  /* ── CONFIG TABLE ── */
+  .cfg-table { width: 100%; border-collapse: collapse; }
+  .cfg-table th, .cfg-table td {
+    padding: .65rem 1rem; text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: .85rem;
+    vertical-align: top;
+  }
+  .cfg-table th { color: var(--text-muted); font-size: .75rem; font-weight: 700; text-transform: uppercase; background: var(--surface2); }
+  .cfg-table td:first-child { color: var(--accent2); font-family: 'Consolas', monospace; font-size: .8rem; white-space: nowrap; }
+  .cfg-table td:nth-child(2) { color: var(--yellow); font-family: 'Consolas', monospace; font-size: .8rem; }
+  .cfg-table tr:hover td { background: #1e2130; }
+
+  /* ── MODEL COMPARE ── */
+  .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width:600px){ .model-grid { grid-template-columns: 1fr; } }
+  .model-card {
+    border-radius: 14px; padding: 1.4rem;
+    border: 2px solid transparent;
+    background: var(--surface);
+    position: relative;
+  }
+  .model-card.recommended {
+    border-color: var(--green);
+    background: linear-gradient(135deg, #0a1f12, #0f1a1a);
+  }
+  .model-card.fast {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, #0a1220, #0f1530);
+  }
+  .model-badge {
+    position: absolute; top: -10px; right: 1rem;
+    font-size: .7rem; font-weight: 700;
+    border-radius: 999px; padding: .2rem .7rem;
+  }
+  .badge-green  { background: var(--green);  color: #052e16; }
+  .badge-blue   { background: var(--accent); color: #fff; }
+  .model-name   { font-size: 1.1rem; font-weight: 800; margin-bottom: .3rem; }
+  .model-stat   { font-size: .82rem; color: var(--text-muted); margin-bottom: .15rem; }
+  .model-stat b { color: var(--text); }
+
+  /* ── FLOW DIAGRAM ── */
+  .pipeline {
+    display: flex; align-items: stretch;
+    gap: 0; overflow-x: auto;
+    border: 1px solid var(--border); border-radius: 14px;
+    background: var(--surface); margin-bottom: 1rem;
+  }
+  .pipe-step {
+    flex: 1; padding: 1.2rem 1rem; text-align: center;
+    border-right: 1px solid var(--border);
+    min-width: 120px; position: relative;
+  }
+  .pipe-step:last-child { border-right: none; }
+  .pipe-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 800; margin: 0 auto .5rem;
+  }
+  .pipe-icon { font-size: 1.5rem; margin-bottom: .3rem; }
+  .pipe-label { font-size: .8rem; font-weight: 700; margin-bottom: .2rem; }
+  .pipe-tech  { font-size: .72rem; color: var(--text-muted); }
+  .pipe-time  {
+    position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+    font-size: .65rem; color: var(--text-muted);
+    background: var(--surface2); border-radius: 999px; padding: .1rem .5rem; white-space: nowrap;
+  }
+  .p1 .pipe-num { background:#1e3a5f; color: var(--accent); }
+  .p2 .pipe-num { background:#1a1040; color: var(--accent2); }
+  .p3 .pipe-num { background:#052e16; color: var(--green); }
+  .p4 .pipe-num { background:#2a1a02; color: var(--yellow); }
+
+  /* ── FAQ ── */
+  details {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: .6rem; overflow: hidden;
+  }
+  summary {
+    padding: 1rem 1.2rem; cursor: pointer;
+    font-weight: 600; font-size: .9rem;
+    list-style: none; display: flex; align-items: center; justify-content: space-between;
+  }
+  summary::after { content: '﹢'; color: var(--accent); font-size: 1.2rem; }
+  details[open] summary::after { content: '－'; }
+  details[open] { border-color: var(--accent); }
+  .faq-body { padding: .2rem 1.2rem 1rem; color: var(--text-muted); font-size: .9rem; }
+  .faq-body p { margin-bottom: .5rem; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 2rem;
+    color: var(--text-muted); font-size: .8rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- ─────────────── NAV ─────────────── -->
+<nav>
+  <div class="nav-logo">🎙️ 회의록 자동화</div>
+  <div class="nav-links">
+    <a href="#overview">개요</a>
+    <a href="#requirements">환경 확인</a>
+    <a href="#install">설치</a>
+    <a href="#usage">사용법</a>
+    <a href="#config">설정</a>
+    <a href="#customize">커스터마이징</a>
+    <a href="#models">모델 선택</a>
+    <a href="#faq">문제 해결</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ─────────────── HERO ─────────────── -->
+<section class="hero" id="overview">
+  <div class="hero-badge">🔒 100% 로컬 · 외부 전송 없음</div>
+  <h1>음성 녹음 → 회의록<br>자동 완성 시스템</h1>
+  <p>녹음 파일을 폴더에 넣으면<br>AI가 받아쓰고, 요약하고, Obsidian에 저장합니다.</p>
+  <div class="hero-flow">
+    <div class="flow-step">🎙️ 음성 녹음</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">📝 Whisper STT</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">🤖 Ollama 요약</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">📓 Obsidian 저장</div>
+  </div>
+  <div class="hero-pills">
+    <span class="pill pill-green">✓ 설치 후 더블클릭으로 완료</span>
+    <span class="pill pill-blue">✓ 한국어 특화</span>
+    <span class="pill pill-purple">✓ 인터넷 불필요</span>
+    <span class="pill pill-yellow">✓ 무료 오픈소스</span>
+  </div>
+</section>
+
+<!-- ─────────────── 처리 파이프라인 ─────────────── -->
+<section>
+  <div class="pipeline">
+    <div class="pipe-step p1">
+      <div class="pipe-num">1</div>
+      <div class="pipe-icon">🎙️</div>
+      <div class="pipe-label">음성 입력</div>
+      <div class="pipe-tech">m4a · mp3 · wav 등</div>
+      <div class="pipe-time">파일 넣기</div>
+    </div>
+    <div class="pipe-step p2">
+      <div class="pipe-num">2</div>
+      <div class="pipe-icon">📝</div>
+      <div class="pipe-label">STT 전사</div>
+      <div class="pipe-tech">faster-whisper<br>GPU 가속</div>
+      <div class="pipe-time">35분 녹음 → 약 2분</div>
+    </div>
+    <div class="pipe-step p3">
+      <div class="pipe-num">3</div>
+      <div class="pipe-icon">🤖</div>
+      <div class="pipe-label">AI 요약</div>
+      <div class="pipe-tech">Ollama<br>gemma4:12b</div>
+      <div class="pipe-time">약 17분(CPU)</div>
+    </div>
+    <div class="pipe-step p4">
+      <div class="pipe-num">4</div>
+      <div class="pipe-icon">📓</div>
+      <div class="pipe-label">Obsidian 저장</div>
+      <div class="pipe-tech">자동 마크다운<br>타임스탬프 포함</div>
+      <div class="pipe-time">즉시</div>
+    </div>
+  </div>
+  <div class="callout info">
+    <div class="callout-icon">🔒</div>
+    <div class="callout-body">
+      <div class="callout-title">100% 로컬 처리</div>
+      <div class="callout-text">음성 데이터와 녹취록이 외부 서버로 전송되지 않습니다. STT(Whisper)와 LLM(Ollama) 모두 이 PC에서 직접 동작합니다.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── 환경 확인 ─────────────── -->
+<section id="requirements">
+  <div class="section-label">📋 Step 0</div>
+  <h2>환경 확인</h2>
+  <p class="section-desc">설치 전에 아래 항목을 확인하세요. 이 PC는 이미 모두 충족되어 있습니다.</p>
+
+  <div class="card">
+    <table class="spec-table">
+      <thead>
+        <tr><th>항목</th><th>필요 사양</th><th>이 PC</th><th>상태</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OS</td>
+          <td>Windows 10 이상</td>
+          <td>Windows 11</td>
+          <td class="ok">✓</td>
+        </tr>
+        <tr>
+          <td>Python</td>
+          <td>3.9 이상</td>
+          <td>3.14.3</td>
+          <td class="ok">✓</td>
+        </tr>
+        <tr>
+          <td>GPU(VRAM)</td>
+          <td>없어도 됨 (있으면 STT 가속)</td>
+          <td>RTX A2000 4GB</td>
+          <td class="ok">✓ STT GPU 가속</td>
+        </tr>
+        <tr>
+          <td>RAM</td>
+          <td>16GB 이상 권장</td>
+          <td>32GB</td>
+          <td class="ok">✓</td>
+        </tr>
+        <tr>
+          <td>Ollama</td>
+          <td>0.30.6 이상</td>
+          <td>0.30.6</td>
+          <td class="ok">✓</td>
+        </tr>
+        <tr>
+          <td>Obsidian</td>
+          <td>Vault 생성되어 있을 것</td>
+          <td>C:\저장소\옵시디언</td>
+          <td class="ok">✓</td>
+        </tr>
+        <tr>
+          <td>디스크</td>
+          <td>15GB 이상 여유</td>
+          <td>—</td>
+          <td class="warn">Whisper 모델 ~1.5GB<br>Ollama 모델 ~18GB</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <div class="callout-title">새 PC에 설치하는 경우</div>
+      <div class="callout-text">Python, Ollama, Obsidian이 없다면 각각 공식 사이트에서 설치 후 진행하세요. Python: python.org · Ollama: ollama.com · Obsidian: obsidian.md</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── 설치 ─────────────── -->
+<section id="install">
+  <div class="section-label">🚀 설치</div>
+  <h2>처음 한 번만 하는 설치</h2>
+  <p class="section-desc">이미 설치가 완료된 PC입니다. 다른 PC에서 설치할 때 참고하세요.</p>
+
+  <div class="steps">
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">프로젝트 폴더 만들기</div>
+        <div class="step-desc">파일 탐색기에서 원하는 위치에 <code>meeting</code> 폴더를 생성합니다.<br>이 PC의 경우 <code>C:\SeikProject\meeting</code>에 이미 생성되어 있습니다.</div>
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <div class="callout-title">폴더 경로에 한글이나 공백 피하기</div>
+            <div class="callout-text">예: C:\SeikProject\meeting ← 좋음 / C:\내 프로젝트\미팅 ← 오류 가능성 있음</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">파일 다운로드</div>
+        <div class="step-desc">아래 5개 파일을 프로젝트 폴더에 저장합니다.</div>
+        <div class="file-tree">
+<span class="ft-dir">📁 C:\SeikProject\meeting\</span>
+<span style="margin-left:1.5rem">├─ <span class="ft-key">meeting.py</span>       <span class="ft-desc">← 핵심 스크립트 (건드리지 마세요)</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-key">config.json</span>      <span class="ft-desc">← 설정 파일 (경로·모델 변경 시 편집)</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-key">prompt.md</span>        <span class="ft-desc">← 회의록 양식 프롬프트 (원하는 대로 편집)</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-key">glossary.md</span>      <span class="ft-desc">← 오인식 보정 사전 (회사 용어 추가)</span></span>
+<span style="margin-left:1.5rem">└─ <span class="ft-key">회의록만들기.bat</span> <span class="ft-desc">← 더블클릭 실행 파일</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Python 가상환경 만들기</div>
+        <div class="step-desc">프로젝트 폴더에서 <code>명령 프롬프트(cmd)</code>를 열고 아래 명령어를 실행합니다.<br>폴더에서 <code>Shift + 우클릭</code> → <em>"여기서 PowerShell 창 열기"</em> 선택</div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+            <span>PowerShell / 명령 프롬프트</span>
+          </div>
+          <pre><span class="cmt"># 1. 가상환경 생성 (한 번만)</span>
+<span class="cmd">python -m venv .venv</span>
+
+<span class="cmt"># 2. 패키지 설치 (한 번만, 5~10분 소요)</span>
+<span class="cmd">.\.venv\Scripts\python.exe -m pip install faster-whisper nvidia-cublas-cu12 "nvidia-cudnn-cu12==9.*"</span></pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-icon">✅</div>
+          <div class="callout-body">
+            <div class="callout-title">설치 성공 확인</div>
+            <div class="callout-text"><code>Successfully installed faster-whisper-...</code> 메시지가 나오면 완료입니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Ollama 모델 설치</div>
+        <div class="step-desc">Ollama 앱이 실행 중인 상태에서 cmd에 입력합니다. (첫 번째 실행 시 다운로드, ~8GB)</div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+            <span>명령 프롬프트</span>
+          </div>
+          <pre><span class="cmt"># 기본 요약 모델 (고품질, ~8GB 다운로드)</span>
+<span class="cmd">ollama pull gemma4:12b</span>
+
+<span class="cmt"># 빠른 요약 모델 (선택, ~3GB, 기본보다 빠름)</span>
+<span class="cmd">ollama pull gemma3:latest</span></pre>
+        </div>
+        <div class="callout warn">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-body">
+            <div class="callout-title">Ollama 버전 주의</div>
+            <div class="callout-text">gemma4:12b는 Ollama 0.30.6 이상에서만 설치됩니다. 오류가 나면 <a href="https://ollama.com/download" style="color:var(--accent)">ollama.com</a>에서 최신 버전을 설치하세요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">config.json에서 Obsidian Vault 경로 확인</div>
+        <div class="step-desc">메모장으로 <code>config.json</code>을 열어 <code>vault_meeting_dir</code> 경로가 내 Obsidian Vault와 맞는지 확인합니다.</div>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+            <span>config.json</span>
+          </div>
+          <pre>{
+  <span class="key">"vault_meeting_dir"</span>: <span class="str">"C:\\저장소\\옵시디언\\회의록"</span>,  <span class="cmt">← 여기만 내 경로로</span>
+  <span class="key">"ollama_model"</span>:     <span class="str">"gemma4:12b"</span>,
+  <span class="key">"whisper_model"</span>:    <span class="str">"medium"</span>,
+  ...
+}</pre>
+        </div>
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <div class="callout-title">경로 구분자는 \\ 두 개</div>
+            <div class="callout-text">Windows 경로에서 역슬래시는 <code>\\</code>로 두 번 써야 합니다. 예: <code>C:\\Users\\홍길동\\Vault</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── 사용법 ─────────────── -->
+<section id="usage">
+  <div class="section-label">▶️ 사용법</div>
+  <h2>매일 사용하는 방법</h2>
+  <p class="section-desc">설치 후에는 이 세 가지 방법 중 편한 것을 선택하세요.</p>
+
+  <div class="usage-cards">
+
+    <div class="usage-card">
+      <div class="usage-icon">📂</div>
+      <div class="usage-title">방법 1 — 폴더 넣고 더블클릭 ⭐</div>
+      <div class="usage-desc">가장 쉬운 방법. 여러 파일을 한 번에 처리할 때.</div>
+      <div class="code-block">
+        <pre style="padding:.7rem 1rem; font-size:.78rem">1. 녹음 파일을 아래 폴더에 복사
+   📁 C:\SeikProject\meeting\회의록\
+
+2. 회의록만들기.bat 더블클릭
+
+3. 완료! Obsidian에서 확인</pre>
+      </div>
+      <div class="callout tip" style="margin-top:.5rem">
+        <div class="callout-icon">✅</div>
+        <div class="callout-body">
+          <div class="callout-text">처리된 녹음은 자동으로 <code>처리완료\</code> 폴더로 이동되어 중복 처리되지 않습니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="usage-card">
+      <div class="usage-icon">🖱️</div>
+      <div class="usage-title">방법 2 — 드래그 앤 드롭</div>
+      <div class="usage-desc">특정 파일 1개만 빠르게 처리할 때.</div>
+      <div class="code-block">
+        <pre style="padding:.7rem 1rem; font-size:.78rem">녹음 파일을 마우스로 집어서
+회의록만들기.bat 위에
+끌어다 놓기</pre>
+      </div>
+    </div>
+
+    <div class="usage-card">
+      <div class="usage-icon">⌨️</div>
+      <div class="usage-title">방법 3 — 명령어 (고급)</div>
+      <div class="usage-desc">제목 지정, 모델 선택 등 세부 옵션이 필요할 때.</div>
+      <div class="code-block">
+        <pre style="padding:.7rem 1rem; font-size:.78rem"><span class="cmt"># 특정 파일 + 제목 지정</span>
+<span class="cmd">python meeting.py "파일.m4a" --title "제목"</span>
+
+<span class="cmt"># 빠른 모델로 처리</span>
+<span class="cmd">python meeting.py "파일.m4a" --ollama-model gemma3:latest</span>
+
+<span class="cmt"># 고품질 모델로 처리</span>
+<span class="cmd">python meeting.py "파일.m4a" --ollama-model gemma4:12b</span></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 결과물 구조 -->
+  <h3 style="margin-top:2rem; margin-bottom:.8rem">📄 생성되는 회의록 구조</h3>
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+      <span>Obsidian 회의록 예시 — C:\저장소\옵시디언\회의록\2026-06-05_회의.md</span>
+    </div>
+    <pre>## TA 기획 고도화 및 LLM 연동 관련 실무 협의
+
+> ⚠️ <span class="str">전사 오인식 보정 안내</span>: 히어로→키움, LLP→LLM, SLM→sLLM ...
+
+## 📌 핵심 요약        <span class="cmt">← 회의 전체를 6~10개 핵심으로 압축</span>
+## 🔑 주요 키워드      <span class="cmt">← 등장한 핵심 용어 태그</span>
+## ✅ 액션 아이템      <span class="cmt">← 담당자·기한 포함 TODO 목록</span>
+## 🎯 결정 사항       <span class="cmt">← 합의·확정된 사항</span>
+## 👥 발화자 분석     <span class="cmt">← 참석자별 역할·발언 분석</span>
+## 💬 주요 대화 내용  <span class="cmt">← 타임스탬프(MM:SS) 구간별 요약</span>
+## ❓ 후속 논의 필요  <span class="cmt">← 미해결 사항</span>
+
+> [!note]- 전체 녹취록  <span class="cmt">← 접어두기로 원문 보존</span></pre>
+  </div>
+
+  <!-- 폴더 구조 -->
+  <h3 style="margin-top:2rem; margin-bottom:.8rem">📁 폴더 구조</h3>
+  <div class="file-tree">
+<span class="ft-dir">📁 C:\SeikProject\meeting\</span>
+<span style="margin-left:1.5rem">├─ <span class="ft-dir">📁 회의록\</span>             <span class="ft-desc">← 녹음 파일 넣는 입력함 (inbox)</span></span>
+<span style="margin-left:3rem">└─ <span class="ft-dir">📁 처리완료\</span>         <span class="ft-desc">← 처리된 녹음이 여기로 이동</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-dir">📁 transcripts\</span>        <span class="ft-desc">← 전사(받아쓰기) 원문 txt 보관</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-file">meeting.py</span>             <span class="ft-desc">← 핵심 스크립트</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-key">config.json</span>            <span class="ft-desc">← ✏️ 설정 변경 시 편집</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-key">prompt.md</span>              <span class="ft-desc">← ✏️ 회의록 양식 변경 시 편집</span></span>
+<span style="margin-left:1.5rem">├─ <span class="ft-key">glossary.md</span>            <span class="ft-desc">← ✏️ 오인식 단어 추가 시 편집</span></span>
+<span style="margin-left:1.5rem">└─ <span class="ft-file">회의록만들기.bat</span>       <span class="ft-desc">← 더블클릭 실행</span></span>
+
+<span style="margin-top:.5rem;display:block"><span class="ft-dir">📁 C:\저장소\옵시디언\회의록\</span>   <span class="ft-desc">← Obsidian Vault — 완성된 회의록.md 저장</span></span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── CONFIG ─────────────── -->
+<section id="config">
+  <div class="section-label">⚙️ 설정</div>
+  <h2>config.json 상세 설명</h2>
+  <p class="section-desc">메모장으로 열어 원하는 값만 수정하면 됩니다. 수정 후 저장하면 다음 실행부터 바로 적용됩니다.</p>
+
+  <div class="code-block" style="margin-bottom:1rem">
+    <div class="code-header">
+      <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+      <span>config.json — 현재 설정</span>
+    </div>
+    <pre>{
+  <span class="key">"vault_meeting_dir"</span>:  <span class="str">"C:\\저장소\\옵시디언\\회의록"</span>,
+  <span class="key">"whisper_model"</span>:      <span class="str">"medium"</span>,
+  <span class="key">"whisper_device"</span>:     <span class="str">"auto"</span>,
+  <span class="key">"whisper_language"</span>:   <span class="str">"ko"</span>,
+  <span class="key">"ollama_url"</span>:         <span class="str">"http://localhost:11434"</span>,
+  <span class="key">"ollama_model"</span>:       <span class="str">"gemma4:12b"</span>,
+  <span class="key">"ollama_num_ctx"</span>:     <span class="val">65536</span>,
+  <span class="key">"ollama_timeout"</span>:     <span class="val">5400</span>,
+  <span class="key">"prompt_file"</span>:        <span class="str">"prompt.md"</span>,
+  <span class="key">"glossary_file"</span>:      <span class="str">"glossary.md"</span>,
+  <span class="key">"save_raw_transcript"</span>:<span class="val">true</span>,
+  <span class="key">"transcript_dir"</span>:     <span class="str">"C:\\SeikProject\\meeting\\transcripts"</span>,
+  <span class="key">"inbox_dir"</span>:          <span class="str">"C:\\SeikProject\\meeting\\회의록"</span>,
+  <span class="key">"processed_subdir"</span>:   <span class="str">"처리완료"</span>,
+  <span class="key">"audio_exts"</span>:         [<span class="str">".m4a"</span>, <span class="str">".mp3"</span>, <span class="str">".wav"</span>, <span class="str">".mp4"</span>, ...]
+}</pre>
+  </div>
+
+  <div class="card">
+    <table class="cfg-table">
+      <thead>
+        <tr><th>항목</th><th>현재 값</th><th>설명</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>vault_meeting_dir</td>
+          <td>…\옵시디언\회의록</td>
+          <td>완성된 회의록 .md 파일이 저장될 Obsidian 폴더 경로</td>
+        </tr>
+        <tr>
+          <td>whisper_model</td>
+          <td>"medium"</td>
+          <td>STT 모델 크기. <code>small</code>(빠름/낮은 정확도) · <code>medium</code>(균형) · <code>large-v3</code>(최고 정확도, ~3GB)</td>
+        </tr>
+        <tr>
+          <td>whisper_device</td>
+          <td>"auto"</td>
+          <td>GPU 사용 여부. <code>auto</code>: GPU 있으면 자동 사용, 없으면 CPU / <code>cpu</code>: 강제 CPU</td>
+        </tr>
+        <tr>
+          <td>ollama_model</td>
+          <td>"gemma4:12b"</td>
+          <td>요약에 사용할 LLM. 빠른 처리가 필요하면 <code>gemma3:latest</code>로 변경</td>
+        </tr>
+        <tr>
+          <td>ollama_num_ctx</td>
+          <td>65536</td>
+          <td>한 번에 처리할 최대 토큰 수. 한국어 1시간 녹음이면 더 늘릴 수 있음 (131072)</td>
+        </tr>
+        <tr>
+          <td>ollama_timeout</td>
+          <td>5400 (90분)</td>
+          <td>AI 요약 최대 대기 시간(초). 긴 회의나 느린 PC는 늘리세요</td>
+        </tr>
+        <tr>
+          <td>save_raw_transcript</td>
+          <td>true</td>
+          <td>전사(받아쓰기) 원문을 txt로 별도 저장할지 여부. <code>false</code>로 바꾸면 저장 안 함</td>
+        </tr>
+        <tr>
+          <td>inbox_dir</td>
+          <td>…\회의록</td>
+          <td>녹음 파일을 넣을 입력함 폴더 경로</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── CUSTOMIZE ─────────────── -->
+<section id="customize">
+  <div class="section-label">✏️ 커스터마이징</div>
+  <h2>회의록 양식 · 용어 수정</h2>
+  <p class="section-desc">코드는 건드리지 않아도 됩니다. 두 파일만 편집하면 됩니다.</p>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <h3>📝 prompt.md — 회의록 양식 변경</h3>
+      <p style="color:var(--text-muted); font-size:.85rem; margin-bottom:1rem">회의록에 들어갈 섹션, 형식, AI 작성 규칙을 자유롭게 수정합니다.</p>
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">수정 예시</div>
+          <div class="callout-text">
+            • 섹션 추가: <code>## 🧑 참석자</code> 줄 추가<br>
+            • 섹션 제거: 원하지 않는 <code>## 👥 발화자 분석</code> 줄 삭제<br>
+            • 요약 개수: "6~10개 불릿" → "3~5개 불릿"으로 변경
+          </div>
+        </div>
+      </div>
+      <div class="callout warn" style="margin-top:.5rem">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">치환자는 지우지 마세요</div>
+          <div class="callout-text"><code>{glossary}</code>와 <code>{transcript}</code>는 자동 삽입 태그입니다. 반드시 파일 안에 남겨두세요.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📖 glossary.md — 오인식 보정 사전</h3>
+      <p style="color:var(--text-muted); font-size:.85rem; margin-bottom:1rem">Whisper가 잘못 인식하는 회사·도메인 용어를 등록합니다.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+          <span>glossary.md — 새 항목 추가 예시</span>
+        </div>
+        <pre><span class="cmt"># 기존 항목들...</span>
+- `히어로`, `휴우보` → <span class="str">**키움(증권)**</span>
+- `LNM`, `LLP` → <span class="str">**LLM**</span>
+
+<span class="cmt"># 새로 추가하면 끝!</span>
+<span class="hl">- `새로나온오류표현` → <span class="str">**올바른표기**</span> (설명)</span></pre>
+      </div>
+      <div class="callout tip" style="margin-top:.5rem">
+        <div class="callout-icon">✅</div>
+        <div class="callout-body">
+          <div class="callout-title">저장하면 다음 실행부터 바로 적용</div>
+          <div class="callout-text">코드 수정이나 재시작 없이 파일을 저장하는 것만으로 즉시 반영됩니다.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── MODELS ─────────────── -->
+<section id="models">
+  <div class="section-label">🤖 모델 선택</div>
+  <h2>STT · LLM 모델 비교</h2>
+  <p class="section-desc">용도에 따라 적합한 모델을 선택하세요.</p>
+
+  <h3 style="margin-bottom:.8rem">🗣️ STT 모델 (Whisper) — 음성 인식 정확도</h3>
+  <div class="card" style="margin-bottom:1.5rem">
+    <table class="cfg-table">
+      <thead>
+        <tr><th>모델</th><th>크기</th><th>속도</th><th>정확도</th><th>추천 상황</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>small</td>
+          <td>~500MB</td>
+          <td class="ok">매우 빠름</td>
+          <td class="warn">보통</td>
+          <td>짧은 회의, 빠른 처리 우선</td>
+        </tr>
+        <tr style="background:#0a1a2a">
+          <td>medium ⭐</td>
+          <td>~1.5GB</td>
+          <td class="ok">빠름</td>
+          <td class="ok">좋음</td>
+          <td><b>현재 설정 — 대부분의 경우 적합</b></td>
+        </tr>
+        <tr>
+          <td>large-v3</td>
+          <td>~3GB</td>
+          <td class="warn">보통</td>
+          <td class="ok">최고</td>
+          <td>긴 회의, 억양/잡음 많은 환경</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-bottom:.8rem">🤖 LLM 모델 (Ollama) — 요약 품질 vs 속도</h3>
+  <div class="model-grid">
+    <div class="model-card recommended">
+      <span class="model-badge badge-green">현재 기본값</span>
+      <div class="model-name">gemma4:12b</div>
+      <div class="model-stat">파라미터: <b>12B</b></div>
+      <div class="model-stat">크기: <b>7.6 GB</b></div>
+      <div class="model-stat">요약 속도 (35분 회의): <b>~17분 (CPU)</b></div>
+      <div class="model-stat">컨텍스트: <b>최대 256K 토큰</b></div>
+      <div class="model-stat">특징: <b>디테일·고유명사·수치 정확</b></div>
+      <div class="model-stat" style="margin-top:.5rem">추천: <b>중요한 회의, 야간·자동 처리</b></div>
+    </div>
+    <div class="model-card fast">
+      <span class="model-badge badge-blue">빠른 처리</span>
+      <div class="model-name">gemma3:latest</div>
+      <div class="model-stat">파라미터: <b>4B</b></div>
+      <div class="model-stat">크기: <b>3.3 GB</b></div>
+      <div class="model-stat">요약 속도 (35분 회의): <b>~3분 (CPU)</b></div>
+      <div class="model-stat">컨텍스트: <b>최대 128K 토큰</b></div>
+      <div class="model-stat">특징: <b>참석자 실명·맥락 잘 포착</b></div>
+      <div class="model-stat" style="margin-top:.5rem">추천: <b>일상 회의, 빠른 처리 필요 시</b></div>
+    </div>
+  </div>
+
+  <div class="callout info" style="margin-top:1rem">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <div class="callout-title">상황에 따라 바꾸는 방법</div>
+      <div class="callout-text">
+        <b>평소</b>: <code>config.json</code>의 <code>ollama_model</code>을 <code>"gemma3:latest"</code>로 변경<br>
+        <b>중요 회의만</b>: 실행 시 <code>--ollama-model gemma4:12b</code> 옵션 추가
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── FAQ ─────────────── -->
+<section id="faq">
+  <div class="section-label">🛠️ 문제 해결</div>
+  <h2>자주 묻는 질문</h2>
+  <p class="section-desc">오류가 발생하면 아래에서 해결 방법을 찾아보세요.</p>
+
+  <details>
+    <summary>🔴 "Ollama 호출 실패" 오류가 나요</summary>
+    <div class="faq-body">
+      <p>Ollama 앱이 실행 중이지 않을 때 발생합니다.</p>
+      <div class="code-block"><pre><span class="cmt"># 해결: 아래 명령어로 수동 시작</span>
+<span class="cmd">ollama serve</span></pre></div>
+      <p>또는 Windows 시작 메뉴에서 <b>Ollama</b>를 검색해 실행하세요. 트레이(시계 오른쪽)에 Ollama 아이콘이 보이면 정상입니다.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>🔴 "Library cublas64_12.dll not found" GPU 오류</summary>
+    <div class="faq-body">
+      <p>CUDA 라이브러리가 PATH에 등록되지 않은 경우입니다. <code>meeting.py</code>가 자동으로 처리하도록 설계되어 있으나, 실패 시 CPU로 자동 전환됩니다. 실제로는 STT가 CPU로 처리되어도 동작합니다(약 3~4배 느림).</p>
+      <p>강제로 CPU를 사용하려면 <code>config.json</code>에서 <code>"whisper_device": "cpu"</code>로 변경하세요.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>🔴 회의록 내용이 중간에 잘려요</summary>
+    <div class="faq-body">
+      <p>녹음이 매우 길거나(1시간 이상) <code>num_ctx</code>가 너무 작을 때 발생합니다.</p>
+      <div class="code-block"><pre><span class="cmt"># config.json 수정</span>
+<span class="key">"ollama_num_ctx"</span>: <span class="val">131072</span>  <span class="cmt">← 65536에서 두 배로</span></pre></div>
+      <p>단, num_ctx가 클수록 요약 시간도 늘어납니다.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>🔴 요약이 시간 초과(timeout)로 실패해요</summary>
+    <div class="faq-body">
+      <p><code>config.json</code>의 <code>ollama_timeout</code> 값을 늘리세요.</p>
+      <div class="code-block"><pre><span class="key">"ollama_timeout"</span>: <span class="val">7200</span>  <span class="cmt">← 2시간으로 설정</span></pre></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🟡 회의록에 오인식 단어가 계속 나와요</summary>
+    <div class="faq-body">
+      <p><code>glossary.md</code>에 해당 단어를 추가하세요. 메모장으로 열어 줄을 추가하고 저장하면 됩니다.</p>
+      <div class="code-block"><pre><span class="cmt"># glossary.md에 추가</span>
+- `오인식된표현` → <span class="str">**올바른표현**</span> (설명)</pre></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🟡 gemma4:12b pull 시 "requires a newer version" 오류</summary>
+    <div class="faq-body">
+      <p>Ollama를 최신 버전으로 업데이트해야 합니다.</p>
+      <div class="code-block"><pre><span class="cmt"># 방법 1: winget (권장)</span>
+<span class="cmd">winget upgrade --id Ollama.Ollama</span>
+
+<span class="cmt"># 방법 2: 직접 다운로드</span>
+<span class="cmt"># https://ollama.com/download 에서 재설치</span></pre></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>🟡 처리 완료됐는데 Obsidian에서 파일이 안 보여요</summary>
+    <div class="faq-body">
+      <p>두 가지를 확인하세요:</p>
+      <p>1. <code>config.json</code>의 <code>vault_meeting_dir</code> 경로가 실제 Obsidian Vault 폴더와 일치하는지 확인.</p>
+      <p>2. Obsidian에서 <b>Ctrl+R</b> 또는 좌측 파일 탐색기를 클릭해 새로고침.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>🟡 영어 회의도 처리할 수 있나요?</summary>
+    <div class="faq-body">
+      <p><code>config.json</code>에서 언어와 모델을 변경하세요.</p>
+      <div class="code-block"><pre><span class="key">"whisper_language"</span>: <span class="str">"en"</span>,   <span class="cmt">← "ko"에서 변경</span>
+<span class="key">"whisper_model"</span>:    <span class="str">"medium"</span> <span class="cmt">← 동일하게 사용 가능</span></pre></div>
+      <p>자동 감지를 원하면 <code>""</code>(빈 문자열)로 설정하면 됩니다. 단, <code>prompt.md</code>도 영어 지시로 변경해야 영어 회의록이 생성됩니다.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>💡 처리 속도를 더 빠르게 하고 싶어요</summary>
+    <div class="faq-body">
+      <p>세 가지 방법이 있습니다:</p>
+      <p><b>1. LLM 모델 변경</b> — <code>gemma4:12b</code>(~17분) → <code>gemma3:latest</code>(~3분)</p>
+      <p><b>2. Whisper 모델 변경</b> — <code>medium</code> → <code>small</code> (정확도 약간 낮아짐)</p>
+      <p><b>3. GPU 업그레이드</b> — VRAM 12GB 이상이면 LLM도 GPU에서 실행되어 3~5분 내로 처리됩니다.</p>
+    </div>
+  </details>
+
+</section>
+
+<hr class="divider">
+
+<!-- ─────────────── FOOTER ─────────────── -->
+<footer>
+  <p>🎙️ 회의록 자동화 시스템 &nbsp;·&nbsp; C:\SeikProject\meeting &nbsp;·&nbsp; 100% 로컬 처리</p>
+  <p style="margin-top:.4rem">Whisper by OpenAI &nbsp;·&nbsp; Ollama &nbsp;·&nbsp; gemma4:12b by Google &nbsp;·&nbsp; Obsidian</p>
+</footer>
+
+</div><!-- /page -->
+</body>
+</html>

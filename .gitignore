@@ -1,0 +1,21 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 처리된 녹음 파일 (용량 크고 개인정보 포함)
+audio/
+transcripts/
+회의록/
+
+# Claude 내부 메타데이터
+.claude/
+
+# 환경별 설정 (개인 경로 포함 가능)
+# config.json 은 예시용으로 포함
+
+# OS
+Thumbs.db
+.DS_Store
