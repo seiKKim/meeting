@@ -203,12 +203,18 @@
   /* ── FILE TREE ── */
   .file-tree {
     background: var(--code-bg); border: 1px solid var(--border);
-    border-radius: 10px; padding: 1rem 1.2rem;
-    font-family: 'Consolas', monospace; font-size: .82rem; line-height: 2;
+    border-radius: 10px; overflow: hidden;
+  }
+  .file-tree pre {
+    padding: 1rem 1.2rem;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: .82rem; line-height: 2;
+    white-space: pre; overflow-x: auto;
+    margin: 0;
   }
   .ft-dir  { color: var(--accent); }
   .ft-file { color: var(--text); }
-  .ft-desc { color: var(--text-muted); margin-left: .5rem; font-size: .75rem; }
+  .ft-desc { color: var(--text-muted); font-size: .75rem; }
   .ft-key  { color: var(--green); }
 
   /* ── USAGE BOX ── */
@@ -507,14 +513,12 @@
       <div class="step-body">
         <div class="step-title">파일 다운로드</div>
         <div class="step-desc">아래 5개 파일을 프로젝트 폴더에 저장합니다.</div>
-        <div class="file-tree">
-<span class="ft-dir">📁 C:\SeikProject\meeting\</span>
-<span style="margin-left:1.5rem">├─ <span class="ft-key">meeting.py</span>       <span class="ft-desc">← 핵심 스크립트 (건드리지 마세요)</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-key">config.json</span>      <span class="ft-desc">← 설정 파일 (경로·모델 변경 시 편집)</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-key">prompt.md</span>        <span class="ft-desc">← 회의록 양식 프롬프트 (원하는 대로 편집)</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-key">glossary.md</span>      <span class="ft-desc">← 오인식 보정 사전 (회사 용어 추가)</span></span>
-<span style="margin-left:1.5rem">└─ <span class="ft-key">회의록만들기.bat</span> <span class="ft-desc">← 더블클릭 실행 파일</span></span>
-        </div>
+        <div class="file-tree"><pre><span class="ft-dir">📁 C:\SeikProject\meeting\</span>
+├─ <span class="ft-key">meeting.py</span>        <span class="ft-desc">← 핵심 스크립트 (건드리지 마세요)</span>
+├─ <span class="ft-key">config.json</span>       <span class="ft-desc">← 설정 파일 (경로·모델 변경 시 편집)</span>
+├─ <span class="ft-key">prompt.md</span>         <span class="ft-desc">← 회의록 양식 프롬프트 (원하는 대로 편집)</span>
+├─ <span class="ft-key">glossary.md</span>       <span class="ft-desc">← 오인식 보정 사전 (회사 용어 추가)</span>
+└─ <span class="ft-key">회의록만들기.bat</span>  <span class="ft-desc">← 더블클릭 실행 파일</span></pre></div>
       </div>
     </div>
 
@@ -686,19 +690,17 @@
 
   <!-- 폴더 구조 -->
   <h3 style="margin-top:2rem; margin-bottom:.8rem">📁 폴더 구조</h3>
-  <div class="file-tree">
-<span class="ft-dir">📁 C:\SeikProject\meeting\</span>
-<span style="margin-left:1.5rem">├─ <span class="ft-dir">📁 회의록\</span>             <span class="ft-desc">← 녹음 파일 넣는 입력함 (inbox)</span></span>
-<span style="margin-left:3rem">└─ <span class="ft-dir">📁 처리완료\</span>         <span class="ft-desc">← 처리된 녹음이 여기로 이동</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-dir">📁 transcripts\</span>        <span class="ft-desc">← 전사(받아쓰기) 원문 txt 보관</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-file">meeting.py</span>             <span class="ft-desc">← 핵심 스크립트</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-key">config.json</span>            <span class="ft-desc">← ✏️ 설정 변경 시 편집</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-key">prompt.md</span>              <span class="ft-desc">← ✏️ 회의록 양식 변경 시 편집</span></span>
-<span style="margin-left:1.5rem">├─ <span class="ft-key">glossary.md</span>            <span class="ft-desc">← ✏️ 오인식 단어 추가 시 편집</span></span>
-<span style="margin-left:1.5rem">└─ <span class="ft-file">회의록만들기.bat</span>       <span class="ft-desc">← 더블클릭 실행</span></span>
+  <div class="file-tree"><pre><span class="ft-dir">📁 C:\SeikProject\meeting\</span>
+├─ <span class="ft-dir">📁 회의록\</span>          <span class="ft-desc">← 녹음 파일 넣는 입력함 (inbox)</span>
+│  └─ <span class="ft-dir">📁 처리완료\</span>    <span class="ft-desc">← 처리된 녹음이 여기로 이동</span>
+├─ <span class="ft-dir">📁 transcripts\</span>     <span class="ft-desc">← 전사(받아쓰기) 원문 txt 보관</span>
+├─ <span class="ft-file">meeting.py</span>          <span class="ft-desc">← 핵심 스크립트</span>
+├─ <span class="ft-key">config.json</span>         <span class="ft-desc">← ✏️ 설정 변경 시 편집</span>
+├─ <span class="ft-key">prompt.md</span>           <span class="ft-desc">← ✏️ 회의록 양식 변경 시 편집</span>
+├─ <span class="ft-key">glossary.md</span>         <span class="ft-desc">← ✏️ 오인식 단어 추가 시 편집</span>
+└─ <span class="ft-key">회의록만들기.bat</span>    <span class="ft-desc">← 더블클릭 실행 파일</span>
 
-<span style="margin-top:.5rem;display:block"><span class="ft-dir">📁 C:\저장소\옵시디언\회의록\</span>   <span class="ft-desc">← Obsidian Vault — 완성된 회의록.md 저장</span></span>
-  </div>
+<span class="ft-dir">📁 C:\저장소\옵시디언\회의록\</span>  <span class="ft-desc">← Obsidian Vault — 완성된 회의록.md 저장</span></pre></div>
 </section>
 
 <hr class="divider">
