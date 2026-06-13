@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뿌리강의 치팅시트 | 회의록 자동화 시스템</title>
+<style>
+  :root {
+    --bg:        #0a130a;
+    --bg2:       #0d1a0d;
+    --card:      #122012;
+    --card2:     #162816;
+    --cardin:    #0f1c0f;
+    --border:    #1e3a1e;
+    --border2:   #254025;
+    --green:     #22c55e;
+    --green2:    #16a34a;
+    --green3:    #4ade80;
+    --green-dim: #14532d;
+    --text:      #f0f5f0;
+    --text2:     #a0b0a0;
+    --text3:     #6b7a6b;
+    --yellow:    #fbbf24;
+    --red:       #f87171;
+    --blue:      #60a5fa;
+    --purple:    #a78bfa;
+    --orange:    #fb923c;
+    --mono:      'Consolas', 'Fira Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,19,10,.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 2rem;
+    padding: 0 2rem; height: 60px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: .6rem; font-size: 1rem; font-weight: 800; color: var(--green); text-decoration: none; white-space: nowrap; }
+  .nav-logo-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #052e16; }
+  .nav-links { display: flex; gap: 1.6rem; flex: 1; }
+  .nav-links a { color: var(--text2); text-decoration: none; font-size: .85rem; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-btns { display: flex; gap: .6rem; }
+  .btn-outline { border: 1px solid var(--border2); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--text2); background: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+  .btn-solid   { border: none; border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: #052e16; background: var(--green); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 960px; margin: 0 auto; padding: 80px 2rem 4rem; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb { display: flex; align-items: center; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .bc-item { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--border2); border-radius: 999px; padding: .3rem .9rem; font-size: .78rem; color: var(--text2); background: var(--card); text-decoration: none; transition: border-color .2s; }
+  .bc-item:hover { border-color: var(--green); color: var(--green); }
+  .bc-item.active { border-color: var(--green); color: var(--green); background: #052e1644; }
+  .bc-arrow { color: var(--text3); font-size: .8rem; }
+
+  /* ── BADGE ── */
+  .badge { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--border2); border-radius: 999px; padding: .3rem 1rem; font-size: .78rem; font-weight: 700; color: var(--text2); background: var(--card); margin-bottom: 1.2rem; letter-spacing: .04em; }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+  /* ── HERO ── */
+  .hero { padding: 2rem 0 2rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 900; line-height: 1.15; margin-bottom: 1rem; }
+  .hero p  { color: var(--text2); font-size: 1rem; max-width: 640px; line-height: 1.75; }
+
+  /* ── SERIES FLOW ── */
+  .series-bar { border: 1px solid var(--border); border-radius: 14px; background: var(--card); padding: 1rem 1.5rem; margin: 2rem 0; }
+  .series-label { font-size: .72rem; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .8rem; }
+  .series-steps { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .series-step { display: inline-flex; align-items: center; gap: .4rem; border-radius: 8px; padding: .45rem .9rem; font-size: .82rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s; }
+  .series-step.active { background: var(--green); color: #052e16; }
+  .series-step.inactive { background: var(--cardin); border: 1px solid var(--border); color: var(--text2); }
+  .series-step.inactive:hover { border-color: var(--green); color: var(--green); }
+  .series-arrow { color: var(--text3); font-size: .9rem; }
+
+  /* ── SECTION CARD ── */
+  .sec-card { border: 1px solid var(--border); border-radius: 16px; background: var(--card); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 72px; }
+  .sec-header { padding: 1.5rem 1.8rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--card2); display: flex; align-items: flex-start; gap: 1rem; }
+  .sec-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+  .sec-icon.blue   { background: #1e3a5f; }
+  .sec-icon.green  { background: #14532d; }
+  .sec-icon.purple { background: #2e1a5f; }
+  .sec-icon.orange { background: #431407; }
+  .sec-meta { }
+  .sec-label { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .2rem; }
+  .sec-label.blue   { color: var(--blue); }
+  .sec-label.green  { color: var(--green); }
+  .sec-label.purple { color: var(--purple); }
+  .sec-label.orange { color: var(--orange); }
+  .sec-title { font-size: 1.5rem; font-weight: 800; }
+  .sec-body { padding: 1.5rem 1.8rem; }
+
+  /* ── SUB CARDS ── */
+  .sub-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.4rem; }
+  @media(max-width:600px){ .sub-cards { grid-template-columns: 1fr; } }
+  .sub-card { background: var(--cardin); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+  .sub-card-label { font-size: .72rem; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
+  .sub-card-text  { font-size: .88rem; color: var(--text2); line-height: 1.65; }
+  .sub-card-text strong { color: var(--text); }
+  .sub-card-quote { font-size: .92rem; color: var(--text); line-height: 1.65; font-weight: 600; }
+
+  /* ── SECTION TITLE (inside body) ── */
+  .body-section-title {
+    display: flex; align-items: center; gap: .5rem;
+    font-size: .78rem; font-weight: 700; color: var(--green3);
+    text-transform: uppercase; letter-spacing: .06em;
+    margin: 1.4rem 0 .7rem; padding-bottom: .4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .body-section-title::before { content: '⚡'; }
+
+  /* ── TIMELINE ── */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: grid; grid-template-columns: 72px 1fr; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-year { color: var(--green); font-size: .76rem; font-weight: 700; font-family: var(--mono); padding-top: .15rem; line-height: 1.4; }
+  .tl-name { font-weight: 700; font-size: .9rem; margin-bottom: .2rem; }
+  .tl-desc { color: var(--text2); font-size: .82rem; line-height: 1.6; }
+
+  /* ── CONCEPTS ── */
+  .concepts { display: flex; flex-direction: column; gap: .6rem; }
+  .concept-item { background: var(--cardin); border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; display: grid; grid-template-columns: 160px 1fr; gap: 1rem; align-items: start; }
+  @media(max-width:600px){ .concept-item { grid-template-columns: 1fr; } }
+  .concept-term { font-weight: 700; font-size: .85rem; color: var(--green3); font-family: var(--mono); }
+  .concept-desc { font-size: .83rem; color: var(--text2); line-height: 1.6; }
+
+  /* ── KEYWORDS ── */
+  .keywords { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.3rem; }
+  .kw { border: 1px solid var(--border2); border-radius: 8px; padding: .25rem .7rem; font-size: .78rem; font-weight: 600; color: var(--green3); background: #052e1633; font-family: var(--mono); }
+
+  /* ── COMPARE TABLE ── */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .cmp-table th { padding: .6rem .8rem; text-align: left; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); background: var(--cardin); border-bottom: 1px solid var(--border); }
+  .cmp-table td { padding: .65rem .8rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+  .cmp-table td:first-child { color: var(--green3); font-weight: 700; white-space: nowrap; }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .tag-early  { display: inline-block; background: #1a0a0244; color: var(--orange); border: 1px solid #f97316333; border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
+  .tag-mid    { display: inline-block; background: #0c1a3a44; color: var(--blue);   border: 1px solid #3b82f633;  border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
+  .tag-modern { display: inline-block; background: #052e1644; color: var(--green3); border: 1px solid #22c55e33;  border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
+
+  /* ── NEXT STEP ── */
+  .next-step { background: linear-gradient(135deg, var(--card2), #0a2010); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; text-align: center; margin-top: 2rem; }
+  .next-step h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: .6rem; }
+  .next-step p  { color: var(--text2); margin-bottom: 1.5rem; font-size: .95rem; }
+
+  /* ── DIVIDER ── */
+  hr.div { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; padding: 2.5rem; color: var(--text3); font-size: .78rem; border-top: 1px solid var(--border); }
+  footer a { color: var(--green); text-decoration: none; }
+
+  code { background: var(--cardin); border: 1px solid var(--border); border-radius: 4px; padding: .1em .4em; font-family: var(--mono); font-size: .8em; color: var(--green3); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">🎙</div>
+    회의록 자동화
+  </a>
+  <div class="nav-links">
+    <a href="/#step0">설치 가이드</a>
+    <a href="/cheatsheet" style="color:var(--green)">뿌리강의 치팅시트</a>
+    <a href="/#faq">문제 해결</a>
+  </div>
+  <div class="nav-btns">
+    <a class="btn-outline" href="https://github.com/seiKKim/meeting" target="_blank">⭐ GitHub</a>
+    <a class="btn-solid"   href="/">설치 가이드</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a class="bc-item" href="/">📋 설치 가이드</a>
+    <span class="bc-arrow">›</span>
+    <span class="bc-item active">📚 UI 레이아웃 &amp; 컴포넌트</span>
+  </div>
+
+  <!-- BADGE -->
+  <div class="badge"><span class="dot"></span> ROOTS CHEAT SHEET · 1~4강 압축본</div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>뿌리강의 치팅시트</h1>
+    <p>30년 웹 기술의 진화를 4장의 흐름으로 압축한 뿌리강의 핵심 정리. 왜 등장했고, 무엇을 해결했고, 지금 어디로 가는지를 한눈에 잡아 두기 위한 치팅시트입니다.</p>
+  </div>
+
+  <!-- SERIES FLOW -->
+  <div class="series-bar">
+    <div class="series-label">전체 시리즈 흐름</div>
+    <div class="series-steps">
+      <a class="series-step active" href="#lec01">
+        <span>&#60;/&#62;</span> 1강 프론트엔드
+      </a>
+      <span class="series-arrow">→</span>
+      <a class="series-step inactive" href="#lec02">
+        &#9635; 2강 백엔드
+      </a>
+      <span class="series-arrow">→</span>
+      <a class="series-step inactive" href="#lec03">
+        &#9641; 3강 데이터베이스 &amp; 스토리지
+      </a>
+      <span class="series-arrow">→</span>
+      <a class="series-step inactive" href="#lec04">
+        ☁ 4강 웹서버 &amp; 배포
+      </a>
+    </div>
+  </div>
+
+  <!-- ── LECTURE 01 ── -->
+  <div class="sec-card" id="lec01">
+    <div class="sec-header">
+      <div class="sec-icon blue">&#60;/&#62;</div>
+      <div class="sec-meta">
+        <div class="sec-label blue">LECTURE 01 · 1991 ~ 현재</div>
+        <div class="sec-title">프론트엔드</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">강의 의도</div>
+          <div class="sub-card-text">브라우저 위에서 사용자 경험을 설계하는 기술의 진화 과정을 보여주고, 각 기술이 <strong>왜 등장했는지</strong> 이해를 돕는다.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">핵심 메시지</div>
+          <div class="sub-card-quote">"모든 기술은 문제를 해결하기 위해 등장했다"</div>
+        </div>
+      </div>
+
+      <div class="body-section-title">타임라인 (기술 발전사)</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">1991</div>
+          <div><div class="tl-name">HTML</div><div class="tl-desc">문서 구조 정의 / 정보 공유 목적</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">1995</div>
+          <div><div class="tl-name">JS</div><div class="tl-desc">브라우저 동적 반응(이벤트/DOM 조작) 처리</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">1996</div>
+          <div><div class="tl-name">CSS</div><div class="tl-desc">구조와 표현(디자인)의 분리, 유지보수성 향상</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2006</div>
+          <div><div class="tl-name">jQuery</div><div class="tl-desc">브라우저 간 비호환성(크로스 브라우징) 문제 해결</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2009</div>
+          <div><div class="tl-name">Node.js &amp; npm (2010)</div><div class="tl-desc">JS를 브라우저 밖으로 확장, 라이브러리 조립식 개발 생태계</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2013</div>
+          <div><div class="tl-name">React</div><div class="tl-desc">복잡한 상태 관리 해결. "데이터가 바뀌면 화면이 알아서 바뀐다"</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">—</div>
+          <div><div class="tl-name">Webpack / Vite</div><div class="tl-desc">파일 압축/병합(번들링) 및 최신 문법 변환</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">—</div>
+          <div><div class="tl-name">SPA</div><div class="tl-desc">페이지 새로고침 없는 앱 같은 부드러운 전환(UX 향상)</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">—</div>
+          <div><div class="tl-name">SSR / Next.js</div><div class="tl-desc">SPA의 느린 초기 로딩과 SEO(검색엔진 최적화) 문제 해결</div></div>
+        </div>
+      </div>
+
+      <div class="body-section-title">핵심 개념</div>
+      <div class="concepts">
+        <div class="concept-item">
+          <div class="concept-term">인터넷 vs 웹</div>
+          <div class="concept-desc">인터넷은 물리적 통로(인프라), 웹은 그 위에서 돌아가는 문서 공유 시스템</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">DOM</div>
+          <div class="concept-desc">브라우저가 HTML을 읽고 만든 내부 지도. JS가 화면을 조작하는 기준</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">AJAX</div>
+          <div class="concept-desc">페이지 새로고침 없이 백엔드와 데이터를 주고받는 비동기 통신</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">컴포넌트</div>
+          <div class="concept-desc">재사용 가능한 UI 조각 (레고 블록)</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">번들링 &amp; Tree Shaking</div>
+          <div class="concept-desc">여러 파일을 하나로 묶고, 안 쓰는 코드를 걸러내어 최적화</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">하이브리드 렌더링</div>
+          <div class="concept-desc">SSR(서버 렌더링)과 CSR(클라이언트 렌더링)을 상황에 맞게 혼용</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">HTML</span>
+        <span class="kw">CSS</span>
+        <span class="kw">JavaScript</span>
+        <span class="kw">React</span>
+        <span class="kw">NPM</span>
+        <span class="kw">SPA</span>
+        <span class="kw">SSR</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LECTURE 02 ── -->
+  <div class="sec-card" id="lec02">
+    <div class="sec-header">
+      <div class="sec-icon green">&#9635;</div>
+      <div class="sec-meta">
+        <div class="sec-label green">LECTURE 02 · 보이지 않는 곳의 진화</div>
+        <div class="sec-title">백엔드</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">강의 의도</div>
+          <div class="sub-card-text">보이지 않는 곳에서 데이터를 처리하고 저장하는 엔진의 진화 과정을 통해 <strong>백엔드의 역할</strong>을 이해시킨다.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">핵심 메시지</div>
+          <div class="sub-card-quote">"어떻게 처리하고 저장할 것인가의 역사"</div>
+        </div>
+      </div>
+
+      <div class="body-section-title">타임라인 (기술 발전사)</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">정적 웹</div><div class="tl-desc">있는 파일 그대로 보관 후 전달</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">동적 웹 (CGI/PHP/JSP)</div><div class="tl-desc">사용자마다 다른 화면을 주기 위해 실시간 HTML 제조</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">DB 도입</div><div class="tl-desc">파일 저장의 한계 극복, 데이터의 체계적 보관</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">MVC 패턴</div><div class="tl-desc">코드 복잡도를 줄이기 위해 데이터(M), 화면(V), 로직(C) 분리</div></div></div>
+        <div class="tl-item"><div class="tl-year">2007~</div><div><div class="tl-name">REST API</div><div class="tl-desc">스마트폰 시대, 앱/웹 모두에 데이터를 공급하는 표준 창구</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">세션/쿠키</div><div class="tl-desc">무상태(Stateless) HTTP에서 로그인 상태 유지</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">인증/인가/JWT</div><div class="tl-desc">보안 강화. "누구인가"와 "권한이 있는가"의 분리</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">비동기/동시성</div><div class="tl-desc">대량 접속 처리 성능 개선</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">캐시(Redis) / CDN</div><div class="tl-desc">DB 부하 감소 및 응답 속도 극대화</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">트랜잭션(ACID)</div><div class="tl-desc">결제 등 민감한 작업의 무결성 보장 (전부 성공 or 전부 실패)</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">수평 확장 / 로드밸런서</div><div class="tl-desc">트래픽 폭주 대응, 서버 대수 증가 및 분산</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">마이크로서비스 (MSA)</div><div class="tl-desc">서비스 비대화에 따른 배포/장애 국소화를 위한 기능별 분리</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">DevOps / CI/CD</div><div class="tl-desc">수십 개 서비스의 배포 및 운영 자동화</div></div></div>
+      </div>
+
+      <div class="body-section-title">핵심 개념</div>
+      <div class="concepts">
+        <div class="concept-item">
+          <div class="concept-term">서버의 역할 변화</div>
+          <div class="concept-desc">단순 파일 보관소 → 능동적 데이터/HTML 제조 공장</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">MVC 패턴</div>
+          <div class="concept-desc">Model(데이터), View(화면), Controller(교통정리)</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">세션 vs 쿠키</div>
+          <div class="concept-desc">세션은 서버 메모리에, 쿠키는 브라우저에 저장하는 번호표</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">인증 vs 인가</div>
+          <div class="concept-desc">인증(로그인, Who) · 인가(관리자 권한, Can)</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">REST API</span>
+        <span class="kw">MVC</span>
+        <span class="kw">JWT</span>
+        <span class="kw">Redis</span>
+        <span class="kw">트랜잭션</span>
+        <span class="kw">마이크로서비스</span>
+        <span class="kw">CI/CD</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LECTURE 03 ── -->
+  <div class="sec-card" id="lec03">
+    <div class="sec-header">
+      <div class="sec-icon purple">&#9641;</div>
+      <div class="sec-meta">
+        <div class="sec-label purple">LECTURE 03 · 안전한 보관의 진화</div>
+        <div class="sec-title">데이터베이스 &amp; 스토리지</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">강의 의도</div>
+          <div class="sub-card-text">안전한 데이터 보관과 대용량 파일 처리의 분리 필요성을 설명하고, <strong>DB와 스토리지의 발전 과정</strong>을 소개한다.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">핵심 메시지</div>
+          <div class="sub-card-quote">"왜 DB가 생겼고, 왜 스토리지가 분리되었나"</div>
+        </div>
+      </div>
+
+      <div class="body-section-title">데이터베이스(DB) 역사</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">파일시스템 시대</div><div class="tl-desc">중복, 불일치, 검색 비효율, 동시 덮어쓰기 문제 발생</div></div></div>
+        <div class="tl-item"><div class="tl-year">1960s</div><div><div class="tl-name">계층형 / 네트워크형</div><div class="tl-desc">초기 체계화 시도, 구조 변경의 어려움</div></div></div>
+        <div class="tl-item"><div class="tl-year">1970</div><div><div class="tl-name">RDB</div><div class="tl-desc">Codd의 제안. 데이터를 표(Table)로 저장, JOIN 연결</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">SQL</div><div class="tl-desc">직관적이고 영어 문장 같은 데이터 조작 언어</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">정규화 &amp; 인덱스</div><div class="tl-desc">데이터 중복 제거(정규화) 및 고속 검색 색인(인덱스)</div></div></div>
+        <div class="tl-item"><div class="tl-year">2000s</div><div><div class="tl-name">NoSQL</div><div class="tl-desc">빅데이터 시대, 무한 확장을 위한 유연한 스키마 (MongoDB, Redis)</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">클라우드 DB (Supabase)</div><div class="tl-desc">관리 자동화 및 개발 속도 중심의 플랫폼화</div></div></div>
+      </div>
+
+      <div class="body-section-title">스토리지 역사</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">서버 직접 저장</div><div class="tl-desc">디스크 파손 시 유실, 트래픽 감당 불가 문제</div></div></div>
+        <div class="tl-item"><div class="tl-year">2006</div><div><div class="tl-name">Amazon S3</div><div class="tl-desc">객체 스토리지 패러다임. 서버에서 스토리지 분리</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">CDN / 엣지 서버</div><div class="tl-desc">전 세계 사용자와 가까운 서버에 복사본 배치, 속도 극대화</div></div></div>
+      </div>
+
+      <div class="body-section-title">핵심 개념</div>
+      <div class="concepts">
+        <div class="concept-item">
+          <div class="concept-term">핵심 원칙</div>
+          <div class="concept-desc">파일(이미지/영상)은 스토리지에, DB에는 그 URL(텍스트)만 저장한다.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">객체 스토리지 3요소</div>
+          <div class="concept-desc">버킷(창고) · 객체(파일) · 키(파일의 고유 이름)</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">Presigned URL</div>
+          <div class="concept-desc">특정 시간 동안만 권한을 부여하는 임시 파일 접근 링크</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">RDB</span>
+        <span class="kw">NoSQL</span>
+        <span class="kw">SQL</span>
+        <span class="kw">Amazon S3</span>
+        <span class="kw">CDN</span>
+        <span class="kw">Supabase</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LECTURE 04 ── -->
+  <div class="sec-card" id="lec04">
+    <div class="sec-header">
+      <div class="sec-icon orange">☁</div>
+      <div class="sec-meta">
+        <div class="sec-label orange">LECTURE 04 · 코드가 세상에 도달하는 길</div>
+        <div class="sec-title">웹서버 &amp; 배포</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">강의 의도</div>
+          <div class="sub-card-text">완성된 코드가 어떻게 전 세계 사용자와 만나게 되는지, 즉 <strong>코드가 배포되는 과정</strong>을 설명한다.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">핵심 메시지</div>
+          <div class="sub-card-quote">"코드가 완성된 다음, 인터넷에 올라가는 과정"</div>
+        </div>
+      </div>
+
+      <div class="body-section-title">타임라인 (기술 발전사)</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-year">1995</div><div><div class="tl-name">Apache</div><div class="tl-desc">정적 파일을 안정적으로 던져주는 초기 웹서버 표준</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">WAS</div><div class="tl-desc">동적 로직(Python, Java 등)을 실행하는 애플리케이션 엔진</div></div></div>
+        <div class="tl-item"><div class="tl-year">2004</div><div><div class="tl-name">Nginx</div><div class="tl-desc">C10K 문제 해결을 위한 이벤트 기반 웹서버 및 프록시</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">FTP → Git/GitHub</div><div class="tl-desc">수동 파일 업로드의 오류/덮어쓰기를 버전 관리로 해결</div></div></div>
+        <div class="tl-item"><div class="tl-year">2013</div><div><div class="tl-name">Docker</div><div class="tl-desc">"내 컴퓨터에선 되는데" 문제 해결, 코드와 환경을 하나로 포장</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">CI/CD</div><div class="tl-desc">코드 Push 시 테스트부터 배포까지 파이프라인 자동화</div></div></div>
+        <div class="tl-item"><div class="tl-year">—</div><div><div class="tl-name">PaaS (Vercel / Railway)</div><div class="tl-desc">인프라 설정을 극단적으로 단순화한 클릭형 배포 플랫폼</div></div></div>
+      </div>
+
+      <div class="body-section-title">핵심 개념</div>
+      <div class="concepts">
+        <div class="concept-item">
+          <div class="concept-term">웹서버 vs WAS</div>
+          <div class="concept-desc">자판기(정적 파일) vs 바리스타(동적 코드 실행)</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">리버스 프록시</div>
+          <div class="concept-desc">Nginx가 안내데스크처럼 트래픽을 내부 서버로 분배</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">도메인/DNS</div>
+          <div class="concept-desc">전화번호부 역할. A레코드(IP) · CNAME(도메인 연결) · MX(메일)</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">HTTPS</div>
+          <div class="concept-desc">SSL/TLS 암호화 추가 (Let's Encrypt로 무료 자동화 보편화)</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">로드밸런서 &amp; 오토스케일링</div>
+          <div class="concept-desc">트래픽 폭주 시 부하 분산 및 자동 서버 증설</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">Nginx</span>
+        <span class="kw">Docker</span>
+        <span class="kw">CI/CD</span>
+        <span class="kw">DNS</span>
+        <span class="kw">HTTPS</span>
+        <span class="kw">로드밸런서</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 한눈에 보기 ── -->
+  <div class="sec-card" id="overview">
+    <div class="sec-header">
+      <div class="sec-icon green">📊</div>
+      <div class="sec-meta">
+        <div class="sec-label green">OVERVIEW · 전체 흐름</div>
+        <div class="sec-title">한눈에 보기</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p style="color:var(--text2); font-size:.88rem; margin-bottom:1.2rem">분야별 초기 / 중기 / 현대로 어떻게 변해왔는지 압축 비교.</p>
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>분야</th>
+            <th><span class="tag-early">초기</span> 단순화 / 수동</th>
+            <th><span class="tag-mid">중기</span> 표준화 / 분리</th>
+            <th><span class="tag-modern">현대</span> 자동화 / 클라우드</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>프론트엔드</td>
+            <td>HTML 정적 문서, 인라인 CSS</td>
+            <td>JS/jQuery, 분리된 CSS, AJAX</td>
+            <td>React, SPA, SSR, 번들링(Vite)</td>
+          </tr>
+          <tr>
+            <td>백엔드</td>
+            <td>CGI, 서버에서 직접 HTML 렌더링</td>
+            <td>MVC 패턴, REST API, 세션/쿠키</td>
+            <td>마이크로서비스, 비동기/동시성, JWT</td>
+          </tr>
+          <tr>
+            <td>DB &amp; 스토리지</td>
+            <td>파일 시스템, 서버 직접 로드</td>
+            <td>관계형 DB(RDB), SQL</td>
+            <td>NoSQL, 객체 스토리지(S3), CDN, Supabase</td>
+          </tr>
+          <tr>
+            <td>웹서버 &amp; 배포</td>
+            <td>Apache(프로세스), FTP 배포</td>
+            <td>Nginx(이벤트 기반), Git 협업</td>
+            <td>Docker(컨테이너), CI/CD, PaaS(Vercel)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- NEXT STEP -->
+  <div class="next-step">
+    <h2>뿌리를 알았다면,<br>실전 빌더가 될 차례.</h2>
+    <p>치팅시트로 흐름을 잡았다면, 회의록 자동화 파이프라인을 직접 설치하고 실행해보세요.</p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap">
+      <a class="btn-solid"   href="/" style="padding:.6rem 1.4rem; font-size:.9rem">🚀 설치 가이드 보기</a>
+      <a class="btn-outline" href="https://vibecoding-univ.com" target="_blank" style="padding:.6rem 1.4rem; font-size:.9rem">🎓 바이브코딩대학 바로가기</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🎙️ 회의록 자동화 시스템 &nbsp;·&nbsp; <a href="https://github.com/seiKKim/meeting">github.com/seiKKim/meeting</a></p>
+  <p style="margin-top:.4rem">치팅시트 원본: <a href="https://vibecoding-univ.com/cheatsheet" target="_blank">바이브코딩대학 뿌리강의</a></p>
+</footer>
+
+</body>
+</html>
