@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>클로드 디자인 완벽 가이드 | 빌더 조쉬</title>
+<style>
+  :root {
+    --bg:     #0a130a;
+    --card:   #122012;
+    --card2:  #162816;
+    --cardin: #0f1c0f;
+    --border: #1e3a1e;
+    --border2:#254025;
+    --green:  #22c55e;
+    --green2: #16a34a;
+    --green3: #4ade80;
+    --text:   #f0f5f0;
+    --text2:  #a0b0a0;
+    --text3:  #6b7a6b;
+    --yellow: #fbbf24;
+    --red:    #f87171;
+    --blue:   #60a5fa;
+    --purple: #a78bfa;
+    --orange: #fb923c;
+    --mono:   'Consolas','Fira Code',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,19,10,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:2rem;padding:0 2rem;height:60px;}
+  .nav-logo{display:flex;align-items:center;gap:.6rem;font-size:1rem;font-weight:800;color:var(--green);text-decoration:none;white-space:nowrap;}
+  .nav-logo-icon{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#052e16;}
+  .nav-links{display:flex;align-items:center;gap:1.4rem;flex:1;}
+  .nav-links a{color:var(--text2);text-decoration:none;font-size:.83rem;transition:color .2s;white-space:nowrap;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-sep{width:1px;height:16px;background:var(--border2);flex-shrink:0;}
+  .nav-page-link{color:var(--green)!important;font-weight:600;}
+  .nav-btns{display:flex;gap:.6rem;flex-shrink:0;}
+  .btn-outline{border:1px solid var(--border2);border-radius:8px;padding:.4rem 1rem;font-size:.82rem;color:var(--text2);background:none;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;}
+  .btn-solid{border:none;border-radius:8px;padding:.4rem 1rem;font-size:.82rem;color:#052e16;background:var(--green);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;}
+
+  /* PAGE */
+  .page{max-width:960px;margin:0 auto;padding:80px 2rem 4rem;}
+
+  /* VIDEO HEADER */
+  .yt-header{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:1.8rem;margin-bottom:2rem;display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:center;}
+  @media(max-width:600px){.yt-header{grid-template-columns:1fr;}}
+  .yt-badge{display:inline-flex;align-items:center;gap:.4rem;background:#1a0a0a;border:1px solid #f8717133;border-radius:999px;padding:.25rem .8rem;font-size:.72rem;font-weight:700;color:#f87171;margin-bottom:.8rem;}
+  .yt-title{font-size:1.35rem;font-weight:800;line-height:1.3;margin-bottom:.6rem;}
+  .yt-meta{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.6rem;}
+  .yt-meta-item{font-size:.78rem;color:var(--text2);display:flex;align-items:center;gap:.3rem;}
+  .yt-thumb{background:linear-gradient(135deg,#1a2e1a,#0a1a0a);border:1px solid var(--border);border-radius:12px;width:180px;height:100px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;flex-shrink:0;}
+  @media(max-width:600px){.yt-thumb{width:100%;height:80px;}}
+
+  /* SECTION CARD */
+  .sec-card{border:1px solid var(--border);border-radius:16px;background:var(--card);margin-bottom:1.5rem;overflow:hidden;scroll-margin-top:72px;}
+  .sec-header{padding:1.4rem 1.8rem 1.1rem;border-bottom:1px solid var(--border);background:var(--card2);display:flex;align-items:flex-start;gap:1rem;}
+  .sec-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+  .sec-icon.green {background:#14532d;}
+  .sec-icon.blue  {background:#1e3a5f;}
+  .sec-icon.purple{background:#2e1a5f;}
+  .sec-icon.orange{background:#431407;}
+  .sec-icon.yellow{background:#422006;}
+  .sec-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.2rem;}
+  .sec-label.green {color:var(--green);}
+  .sec-label.blue  {color:var(--blue);}
+  .sec-label.purple{color:var(--purple);}
+  .sec-label.orange{color:var(--orange);}
+  .sec-label.yellow{color:var(--yellow);}
+  .sec-title{font-size:1.4rem;font-weight:800;}
+  .sec-body{padding:1.4rem 1.8rem;}
+
+  /* SUB CARDS */
+  .sub-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.3rem;}
+  @media(max-width:600px){.sub-cards{grid-template-columns:1fr;}}
+  .sub-card{background:var(--cardin);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;}
+  .sub-card-label{font-size:.72rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+  .sub-card-text{font-size:.87rem;color:var(--text2);line-height:1.65;}
+  .sub-card-text strong{color:var(--text);}
+  .sub-card-quote{font-size:.9rem;color:var(--text);font-weight:600;line-height:1.6;}
+
+  /* SECTION LABEL inside body */
+  .body-label{display:flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:700;color:var(--green3);text-transform:uppercase;letter-spacing:.06em;margin:1.3rem 0 .7rem;padding-bottom:.4rem;border-bottom:1px solid var(--border);}
+  .body-label::before{content:'⚡';}
+
+  /* TIMELINE */
+  .timeline{display:flex;flex-direction:column;}
+  .tl-item{display:grid;grid-template-columns:80px 1fr;gap:1rem;padding:.75rem 0;border-bottom:1px solid var(--border);}
+  .tl-item:last-child{border-bottom:none;}
+  .tl-time{color:var(--green);font-size:.74rem;font-weight:700;font-family:var(--mono);padding-top:.15rem;}
+  .tl-name{font-weight:700;font-size:.9rem;margin-bottom:.2rem;}
+  .tl-desc{color:var(--text2);font-size:.82rem;line-height:1.6;}
+
+  /* STEP FLOW */
+  .steps{display:flex;flex-direction:column;gap:1rem;}
+  .step-item{display:grid;grid-template-columns:36px 1fr;gap:1rem;align-items:start;}
+  .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--green));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:#052e16;flex-shrink:0;}
+  .step-title{font-weight:700;font-size:.95rem;margin-bottom:.3rem;}
+  .step-desc{font-size:.85rem;color:var(--text2);line-height:1.65;}
+  .step-desc strong{color:var(--text);}
+
+  /* CONCEPTS */
+  .concepts{display:flex;flex-direction:column;gap:.55rem;}
+  .concept-item{background:var(--cardin);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;display:grid;grid-template-columns:150px 1fr;gap:1rem;}
+  @media(max-width:600px){.concept-item{grid-template-columns:1fr;}}
+  .concept-term{font-weight:700;font-size:.83rem;color:var(--green3);font-family:var(--mono);}
+  .concept-desc{font-size:.82rem;color:var(--text2);line-height:1.6;}
+
+  /* DESIGN SYSTEM CARDS */
+  .ds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:1rem;}
+  .ds-card{background:var(--cardin);border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:border-color .2s,transform .15s;}
+  .ds-card:hover{border-color:var(--green);transform:translateY(-2px);}
+  .ds-icon{font-size:1.8rem;margin-bottom:.7rem;}
+  .ds-name{font-weight:700;font-size:.95rem;margin-bottom:.3rem;}
+  .ds-meta{font-size:.75rem;color:var(--text3);margin-bottom:.5rem;}
+  .ds-desc{font-size:.82rem;color:var(--text2);line-height:1.6;}
+  .ds-tag{display:inline-block;background:var(--green);color:#052e16;border-radius:999px;padding:.1rem .55rem;font-size:.68rem;font-weight:700;margin-top:.5rem;}
+  .ds-tag.blue{background:var(--blue);color:#fff;}
+
+  /* CALLOUT */
+  .callout{border-radius:10px;padding:.85rem 1.1rem;display:flex;gap:.7rem;align-items:flex-start;margin:.7rem 0;}
+  .callout-icon{font-size:1rem;flex-shrink:0;margin-top:.1rem;}
+  .callout-title{font-weight:700;font-size:.84rem;margin-bottom:.15rem;}
+  .callout-text{font-size:.82rem;color:var(--text2);line-height:1.6;}
+  .callout.tip {background:#052e1655;border:1px solid #16a34a44;}
+  .callout.tip .callout-title{color:var(--green);}
+  .callout.warn{background:#27180255;border:1px solid #d9770644;}
+  .callout.warn .callout-title{color:var(--yellow);}
+  .callout.info{background:#0c1f3a55;border:1px solid #3b82f644;}
+  .callout.info .callout-title{color:var(--blue);}
+
+  /* QUOTE */
+  .big-quote{border-left:3px solid var(--green);padding:.8rem 1.2rem;background:var(--cardin);border-radius:0 10px 10px 0;margin:1rem 0;}
+  .big-quote p{font-size:1rem;font-weight:700;color:var(--text);line-height:1.55;}
+  .big-quote span{font-size:.75rem;color:var(--text3);margin-top:.3rem;display:block;}
+
+  /* KEYWORDS */
+  .keywords{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem;}
+  .kw{border:1px solid var(--border2);border-radius:8px;padding:.25rem .7rem;font-size:.78rem;font-weight:600;color:var(--green3);background:#052e1633;font-family:var(--mono);}
+  .kw.yellow{color:var(--yellow);background:#42200622;border-color:#f59e0b33;}
+  .kw.blue{color:var(--blue);background:#0c1a3a55;border-color:#3b82f633;}
+  .kw.red{color:#fca5a5;background:#3f0f0f55;border-color:#f8717133;}
+
+  /* PROMPT BOX */
+  .prompt-box{background:#080f08;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:.7rem 0;}
+  .prompt-head{display:flex;align-items:center;justify-content:space-between;padding:.4rem .9rem;background:var(--cardin);border-bottom:1px solid var(--border);font-size:.72rem;color:var(--text3);}
+  .prompt-dots{display:flex;gap:.35rem;}
+  .prompt-dots span{width:9px;height:9px;border-radius:50%;}
+  .d1{background:#f87171;}.d2{background:#fbbf24;}.d3{background:#22c55e;}
+  pre{padding:.9rem 1.1rem;font-family:var(--mono);font-size:.8rem;line-height:1.75;overflow-x:auto;white-space:pre;margin:0;}
+
+  /* NEXT STEP */
+  .next-step{background:linear-gradient(135deg,var(--card2),#0a2010);border:1px solid var(--border);border-radius:16px;padding:2.5rem;text-align:center;margin-top:2rem;}
+  .next-step h2{font-size:1.5rem;font-weight:800;margin-bottom:.6rem;}
+  .next-step p{color:var(--text2);margin-bottom:1.5rem;}
+
+  /* DIVIDER */
+  hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+
+  /* FOOTER */
+  footer{text-align:center;padding:2rem;color:var(--text3);font-size:.78rem;border-top:1px solid var(--border);}
+  footer a{color:var(--green);text-decoration:none;}
+
+  code{background:var(--cardin);border:1px solid var(--border);border-radius:4px;padding:.1em .4em;font-family:var(--mono);font-size:.8em;color:var(--green3);}
+  h3{font-size:1rem;font-weight:700;margin:1.2rem 0 .6rem;}
+
+  /* FLOW BAR */
+  .flow-bar{border:1px solid var(--border);border-radius:14px;background:var(--card);padding:1rem 1.5rem;margin:1.5rem 0;}
+  .flow-label{font-size:.72rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem;}
+  .flow-steps{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+  .flow-step{display:inline-flex;align-items:center;gap:.35rem;border-radius:8px;padding:.4rem .85rem;font-size:.8rem;font-weight:600;}
+  .flow-step.s1{background:#14532d;color:var(--green3);border:1px solid #16a34a44;}
+  .flow-step.s2{background:#1e3a5f;color:var(--blue);border:1px solid #3b82f644;}
+  .flow-step.s3{background:#2e1a5f;color:var(--purple);border:1px solid #7c3aed44;}
+  .flow-step.s4{background:#431407;color:var(--orange);border:1px solid #f9731644;}
+  .flow-arrow{color:var(--text3);font-size:.85rem;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">🎙</div>
+    회의록 자동화
+  </a>
+  <div class="nav-links">
+    <a href="#intro">소개</a>
+    <a href="#design-system">디자인 시스템</a>
+    <a href="#workflow">제작 워크플로우</a>
+    <a href="#prototype">프로토타입</a>
+    <a href="#tips">핵심 팁</a>
+    <span class="nav-sep"></span>
+    <a href="/" class="nav-page-link">📋 설치 가이드</a>
+    <a href="/cheatsheet" class="nav-page-link">📚 치팅시트</a>
+  </div>
+  <div class="nav-btns">
+    <a class="btn-outline" href="https://youtu.be/gNgHnkJc29M" target="_blank">▶ 영상 보기</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- VIDEO HEADER -->
+  <div class="yt-header">
+    <div>
+      <div class="yt-badge">▶ YouTube · 빌더 조쉬 Builder Josh</div>
+      <div class="yt-title">클로드 디자인 초보자도 완벽하게 잘 쓰는 방법<br>알려드립니다. 99%가 '시스템' 없이 접근합니다.</div>
+      <div class="yt-meta">
+        <span class="yt-meta-item">👤 빌더 조쉬 Builder Josh</span>
+        <span class="yt-meta-item">👥 구독자 6.11만</span>
+        <span class="yt-meta-item">👍 좋아요 2천</span>
+        <span class="yt-meta-item">⏱ 약 28분</span>
+      </div>
+    </div>
+    <div class="yt-thumb">🎨</div>
+  </div>
+
+  <!-- FLOW BAR -->
+  <div class="flow-bar">
+    <div class="flow-label">영상 핵심 워크플로우</div>
+    <div class="flow-steps">
+      <span class="flow-step s1">🗂 디자인 시스템 세팅</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step s2">📄 PRD 작성</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step s3">🖼 프로토타입 생성</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step s4">💻 Claude Code 연동</span>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="sec-card" id="intro">
+    <div class="sec-header">
+      <div class="sec-icon green">🚀</div>
+      <div>
+        <div class="sec-label green">00:43 ~ 02:10 · 소개</div>
+        <div class="sec-title">Claude Design란?</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">왜 주목받는가</div>
+          <div class="sub-card-text">클로드 디자인 출시 후 <strong>피그마 주가 83% 하락</strong>. 단순 일반인용이 아닌 현직 디자이너들의 피그마 의존도를 직격한 서비스로 평가.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">만든 사람은?</div>
+          <div class="sub-card-text">클로드 디자인 담당 디자이너 <strong>Jenny — 전직 Figma 출신</strong>. 하루 일과: 코딩 50% · 피그마 30% · 커뮤니케이션 20%.</div>
+        </div>
+      </div>
+
+      <div class="big-quote">
+        <p>"프로 디자이너 입장에서 가장 성능이 좋은 모델. 클로드가 하네스(Harness)의 중요성을 가장 잘 이해하고 있는 회사다."</p>
+        <span>— 빌더 조쉬 (27:29)</span>
+      </div>
+
+      <div class="body-label">Claude Design 화면 구성</div>
+      <div class="concepts">
+        <div class="concept-item">
+          <div class="concept-term">프로토타입</div>
+          <div class="concept-desc">실제 화면 디자인을 만드는 공간. 앱/웹 UI를 직접 생성하고 인터랙션 적용 가능.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">슬라이드덱</div>
+          <div class="concept-desc">별도 PPT 형태의 프레젠테이션 제작. 디자인 시스템 적용 시 일관된 고품질 슬라이드 생성.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">프롬 템플릿</div>
+          <div class="concept-desc">프로토타입 + PPT 등이 묶인 패키지 형태. 특정 목적에 맞는 디자인 세트.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">디자인 시스템 탭</div>
+          <div class="concept-desc">가장 핵심 기능. 피그마 파일을 업로드해 AI가 디자인 규칙을 학습하는 공간.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">Claude Design</span>
+        <span class="kw">Figma 대체</span>
+        <span class="kw">인터랙티브 프로토타입</span>
+        <span class="kw">디자인 AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN SYSTEM -->
+  <div class="sec-card" id="design-system">
+    <div class="sec-header">
+      <div class="sec-icon blue">🗂</div>
+      <div>
+        <div class="sec-label blue">02:10 ~ 17:00 · 핵심 첫 단계</div>
+        <div class="sec-title">디자인 시스템 세팅</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">왜 먼저 해야 하나</div>
+          <div class="sub-card-text">디자인 시스템은 <strong>디자이너의 하네스(Harness)</strong>다. 폰트·컬러·버튼이 사전 세팅되면 일관되고 퀄리티 높은 디자인이 자동으로 나온다.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">핵심 메시지</div>
+          <div class="sub-card-quote">"디자인 시스템 = 디자이너의 하네스. 레고 조립하듯 미리 세팅하면 퀄리티가 달라진다."</div>
+        </div>
+      </div>
+
+      <div class="body-label">추천 디자인 시스템</div>
+      <div class="ds-grid">
+        <div class="ds-card">
+          <div class="ds-icon">🍎</div>
+          <div class="ds-name">Apple iOS Design System</div>
+          <div class="ds-meta">Figma Community · 인기 1위</div>
+          <div class="ds-desc">전 세계에서 가장 많이 쓰는 디자인 시스템. iOS/iPadOS 앱 디자인에 최적.</div>
+          <span class="ds-tag">글로벌 표준</span>
+        </div>
+        <div class="ds-card">
+          <div class="ds-icon">🎨</div>
+          <div class="ds-name">Google Material 3</div>
+          <div class="ds-meta">구글 공식 디자인 시스템</div>
+          <div class="ds-desc">구글 생태계 앱 디자인 기준. Android 앱 및 바이브코딩 시 구글 가이드라인 준수에 필수.</div>
+          <span class="ds-tag blue">안드로이드 표준</span>
+        </div>
+        <div class="ds-card">
+          <div class="ds-icon">🇰🇷</div>
+          <div class="ds-name">원티드 디자인 시스템</div>
+          <div class="ds-meta">Figma Community · 한국 특화</div>
+          <div class="ds-desc">한국 정서에 맞게 커스터마이징된 오픈소스 시스템. Pretendard 폰트 기반. <strong>한국 유저 최추천.</strong></div>
+          <span class="ds-tag">한국어 최추천</span>
+        </div>
+      </div>
+
+      <div class="body-label">설치 방법 (Step by Step)</div>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Figma Community에서 다운로드</div>
+            <div class="step-desc"><code>figma.com</code> → 좌측 커뮤니티 탭 → Design Resources → <strong>UI Kits</strong> → 원하는 시스템 선택 → <strong>Open in Figma</strong> → <strong>Make a copy</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">로컬 파일로 저장</div>
+            <div class="step-desc">Figma 상단 메뉴 → <strong>File → Save local copy</strong> → .fig 파일 다운로드 완료</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Claude Design에 업로드</div>
+            <div class="step-desc"><code>claude.ai</code> → 사이드바 <strong>디자인 탭</strong> → <strong>Design System → Create New</strong> → <strong>Upload Figma File</strong> → 다운로드한 .fig 파일 선택</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">AI 분석 대기 (약 5분)</div>
+            <div class="step-desc">"It will take about 5 minutes" 메시지 후 AI가 파일 전체 해석. 컬러·폰트·컴포넌트 자동 추출.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-title">Publish 버튼 클릭</div>
+            <div class="step-desc">Review Draft → 확인 후 <strong>Publish</strong> 클릭. 이후 새 디자인 생성 시 이 시스템이 자동 적용됨.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div>
+          <div class="callout-title">Pretendard 폰트 설정</div>
+          <div class="callout-text">원티드 디자인 시스템 사용 시 Pretendard 폰트가 필요합니다. 구글에서 "pretendard" 검색 → 눈누(noonnu.cc) → 글꼴 다운로드 → Claude Design에 업로드.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">Figma Community</span>
+        <span class="kw">UI Kits</span>
+        <span class="kw">Material 3</span>
+        <span class="kw">원티드 디자인 시스템</span>
+        <span class="kw">Pretendard</span>
+        <span class="kw">Publish</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW -->
+  <div class="sec-card" id="workflow">
+    <div class="sec-header">
+      <div class="sec-icon purple">📄</div>
+      <div>
+        <div class="sec-label purple">18:44 ~ 22:29 · PRD → 디자인</div>
+        <div class="sec-title">PRD부터 프로토타입까지</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">PRD란?</div>
+          <div class="sub-card-text"><strong>Product Requirements Document</strong>. AI가 읽을 수 있는 최소한의 요구사항 기획서. 이걸 먼저 만들면 훨씬 구체적인 디자인이 나온다.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">이 영상의 실습 예제</div>
+          <div class="sub-card-text"><strong>카카오T 시니어</strong> — 시니어(노인)와 자녀가 함께 쓰는 택시 앱 PRD 작성 후 원티드 디자인 시스템으로 구현.</div>
+        </div>
+      </div>
+
+      <div class="body-label">STEP 1 — Claude에서 PRD 생성</div>
+      <div class="prompt-box">
+        <div class="prompt-head"><div class="prompt-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><span>claude.ai 입력 프롬프트</span></div>
+        <pre>시니어들이 이용할 수 있는 택시 앱의 PRD를 만들어 주세요</pre>
+      </div>
+      <div class="callout info">
+        <div class="callout-icon">📋</div>
+        <div>
+          <div class="callout-title">생성되는 PRD 구성</div>
+          <div class="callout-text">목적 요약 → 배경 및 시장 분석 → 문제 정의 → 타겟 페르소나 → 핵심 기능 요구사항 → 성공 지표</div>
+        </div>
+      </div>
+
+      <div class="body-label">STEP 2 — PRD를 Claude Design에 붙여넣기</div>
+      <div class="prompt-box">
+        <div class="prompt-head"><div class="prompt-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><span>Claude Design 입력 프롬프트 (원티드 디자인 시스템 선택 후)</span></div>
+        <pre>첨부한 PRD 기반으로 프로토타입을 만들어 줘.
+PRD를 통해서 가설을 직접 내가 세 개를 뽑아 보고
+각 가설에 해당하는 플로우를 화면 다섯 개 이상 뽑아 줘.
+팀과 같이 논의하고 싶어.</pre>
+      </div>
+
+      <div class="body-label">생성된 3가지 시나리오 (실습 결과)</div>
+      <div class="concepts">
+        <div class="concept-item">
+          <div class="concept-term">A안 · 음성 AI</div>
+          <div class="concept-desc">음성으로 택시를 호출하는 AI 플로우. "오늘도 서울대병원 가세요?" 형태의 맥락 인식. 노란색 계열 디자인.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">B안 · 단순 대형 UI</div>
+          <div class="concept-desc">시니어에게 적합한 크고 단순한 버튼 위주 화면. AI가 목적지를 제안하고, 사용자는 크게 표시된 선택지만 누르면 됨.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">C안 · 자녀 연동 (채택)</div>
+          <div class="concept-desc">시니어 화면 + 자녀 화면 실시간 싱크. 탑승 여부 트래킹, 도착 시 자녀에게 자동 알림. 가장 완성도 높은 시나리오.</div>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">✏️</div>
+        <div>
+          <div class="callout-title">에디트 모드 활용</div>
+          <div class="callout-text">생성된 화면 요소를 탭하면 텍스트 수정, 색상 변경, 위치 조정이 가능합니다. 다만 Figma 수준의 자유도는 아직 제한적.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">PRD</span>
+        <span class="kw">가설 3개</span>
+        <span class="kw">플로우 5화면 이상</span>
+        <span class="kw">에디트 모드</span>
+        <span class="kw">팀 논의용</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROTOTYPE -->
+  <div class="sec-card" id="prototype">
+    <div class="sec-header">
+      <div class="sec-icon orange">🖼</div>
+      <div>
+        <div class="sec-label orange">22:29 ~ 27:00 · 인터랙션 & 연동</div>
+        <div class="sec-title">인터랙티브 프로토타입 & Claude Code 연동</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="sub-cards">
+        <div class="sub-card">
+          <div class="sub-card-label">정적 → 인터랙티브</div>
+          <div class="sub-card-text">시안 화면을 <strong>"클릭 가능한 움직이는 화면"</strong>으로 전환. 실제 사용자 테스트와 팀 프레젠테이션에 바로 활용 가능.</div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-card-label">Claude Code 연동</div>
+          <div class="sub-card-text">Share → <strong>Handoff to Claude Code</strong>로 프로토타입 전체를 코드로 변환. 실제 배포 가능한 앱으로 이어짐.</div>
+        </div>
+      </div>
+
+      <div class="body-label">인터랙티브 프로토타입 생성 방법</div>
+      <div class="prompt-box">
+        <div class="prompt-head"><div class="prompt-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div><span>Claude Design 추가 프롬프트</span></div>
+        <pre>시안을 기반으로 해서 인터랙티브 프로토타입을 만들어 보자</pre>
+      </div>
+
+      <div class="body-label">Claude Code 연동 절차</div>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Share 버튼 클릭</div>
+            <div class="step-desc">Claude Design 우상단 Share → 여러 내보내기 옵션 표시</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Handoff to Claude Code 선택</div>
+            <div class="step-desc">자동으로 프롬프트 생성됨: "Fetch design file" — 이 웹사이트 내용을 Claude Code로 옮기는 명령어.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Copy Command → Claude Code에 붙여넣기</div>
+            <div class="step-desc">Claude Code 터미널에 붙여넣기하면 디자인 파일을 불러와 수정 가능한 상태로 변환.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div>
+          <div class="callout-title">토큰 소모 주의</div>
+          <div class="callout-text">Claude Design은 크레딧 소모량이 매우 큽니다. Pro 계정 기준 디자인 시스템 하나 만들면 추가 화면 생성이 어려울 수 있음. 디자인 시스템을 .md 파일로 다운로드해 Claude Code에서 재사용하는 방식 권장.</div>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div>
+          <div class="callout-title">디자인 시스템 재활용 꿀팁</div>
+          <div class="callout-text">Share → <strong>Download Project File</strong>로 디자인 시스템 파일 저장 → <code>design.md</code>로 변환해 Claude Code 컨텍스트에 항상 포함. 이렇게 하면 Claude Design 없이도 동일한 디자인 시스템으로 코딩 가능.</div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">인터랙티브 프로토타입</span>
+        <span class="kw">Handoff to Claude Code</span>
+        <span class="kw">design.md</span>
+        <span class="kw blue">Download Project File</span>
+        <span class="kw red">토큰 소모 주의</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="sec-card" id="tips">
+    <div class="sec-header">
+      <div class="sec-icon yellow">⭐</div>
+      <div>
+        <div class="sec-label yellow">전체 영상 핵심 요약</div>
+        <div class="sec-title">빌더 조쉬가 강조한 핵심 팁</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="body-label">Claude Design 품질 평가 (프로 디자이너 시각)</div>
+      <div class="concepts">
+        <div class="concept-item">
+          <div class="concept-term">현재 수준</div>
+          <div class="concept-desc">"주니어 디자이너가 보조 화면을 만들어 준 수준" — Gemini나 Claude Code보다 훨씬 높은 디자인 품질을 보여줌.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">강점 영역</div>
+          <div class="concept-desc">앱 디자인, 웹사이트 UI에서 압도적 성능. 그리드·레이아웃 정렬, 버튼 요소 일관성이 특히 뛰어남.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">한계</div>
+          <div class="concept-desc">시니어(10년차+) 디자이너 수준은 아직 아님. 아이콘 보완 필요. 편집 범위 제한적. 토큰 소모 큼.</div>
+        </div>
+        <div class="concept-item">
+          <div class="concept-term">디자이너의 미래 역할</div>
+          <div class="concept-desc">단순 화면 제작보다 <strong>플로우·가설 검증·사용자 테스트</strong> 업무에 집중하게 될 것.</div>
+        </div>
+      </div>
+
+      <div class="body-label">99%가 놓치는 핵심: 시스템 세팅이 먼저다</div>
+      <div class="big-quote">
+        <p>"클로드 디자인에서 가장 좋은 결과를 내려면 디자인 시스템 세팅부터 시작하라. 시스템 없이 바로 만들면 퀄리티가 절반이다."</p>
+        <span>— 빌더 조쉬 (02:10)</span>
+      </div>
+
+      <div class="body-label">한눈에 보기 — 전체 워크플로우</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-time">STEP 01</div>
+          <div><div class="tl-name">Figma Community → 디자인 시스템 다운로드</div><div class="tl-desc">Apple iOS / Material 3 / 원티드 중 선택 → .fig 파일 저장</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">STEP 02</div>
+          <div><div class="tl-name">Claude Design → Design System 업로드 & Publish</div><div class="tl-desc">claude.ai → 디자인 탭 → Create New Design System → 파일 업로드 → 5분 대기 → Publish</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">STEP 03</div>
+          <div><div class="tl-name">Claude에서 PRD 작성</div><div class="tl-desc">"[서비스명] PRD 만들어 줘" → 생성된 문서 복사</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">STEP 04</div>
+          <div><div class="tl-name">Claude Design → New Prototype 생성</div><div class="tl-desc">디자인 시스템 선택 → PRD 붙여넣기 → 가설 3개 + 화면 5개 이상 요청</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">STEP 05</div>
+          <div><div class="tl-name">인터랙티브 프로토타입으로 전환</div><div class="tl-desc">"인터랙티브 프로토타입으로 만들어 줘" → 팀 공유 및 사용자 테스트</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">STEP 06</div>
+          <div><div class="tl-name">Claude Code 연동</div><div class="tl-desc">Share → Handoff to Claude Code → 복사 → Claude Code에 붙여넣기 → 실제 코드로 구현</div></div>
+        </div>
+      </div>
+
+      <div class="keywords">
+        <span class="kw">디자인 시스템 = 하네스</span>
+        <span class="kw">PRD 먼저</span>
+        <span class="kw">가설 3개 요청</span>
+        <span class="kw">인터랙티브</span>
+        <span class="kw yellow">토큰 절약: design.md</span>
+        <span class="kw">Claude Code 연동</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEXT STEP -->
+  <div class="next-step">
+    <h2>클로드 디자인을 써봤다면,<br>회의록도 자동화해보세요.</h2>
+    <p>음성 녹음 → AI 요약 → Obsidian 저장까지, 100% 로컬에서 자동 처리합니다.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a class="btn-solid" href="/" style="padding:.6rem 1.4rem;font-size:.9rem">🚀 설치 가이드 보기</a>
+      <a class="btn-outline" href="https://youtu.be/gNgHnkJc29M" target="_blank" style="padding:.6rem 1.4rem;font-size:.9rem">▶ 원본 영상 보기</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>영상 원본: <a href="https://youtu.be/gNgHnkJc29M" target="_blank">빌더 조쉬 Builder Josh — 클로드 디자인 완벽 가이드</a></p>
+  <p style="margin-top:.4rem">🎙️ 회의록 자동화 시스템 &nbsp;·&nbsp; <a href="https://github.com/seiKKim/meeting">github.com/seiKKim/meeting</a></p>
+</footer>
+
+</body>
+</html>
