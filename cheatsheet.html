@@ -41,10 +41,12 @@
   }
   .nav-logo { display: flex; align-items: center; gap: .6rem; font-size: 1rem; font-weight: 800; color: var(--green); text-decoration: none; white-space: nowrap; }
   .nav-logo-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #052e16; }
-  .nav-links { display: flex; gap: 1.6rem; flex: 1; }
-  .nav-links a { color: var(--text2); text-decoration: none; font-size: .85rem; transition: color .2s; }
+  .nav-links { display: flex; align-items: center; gap: 1.4rem; flex: 1; }
+  .nav-links a { color: var(--text2); text-decoration: none; font-size: .83rem; transition: color .2s; white-space: nowrap; }
   .nav-links a:hover { color: var(--text); }
-  .nav-btns { display: flex; gap: .6rem; }
+  .nav-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; }
+  .nav-page-link { color: var(--green) !important; font-weight: 600; }
+  .nav-btns { display: flex; gap: .6rem; flex-shrink: 0; }
   .btn-outline { border: 1px solid var(--border2); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--text2); background: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
   .btn-solid   { border: none; border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: #052e16; background: var(--green); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
 
@@ -166,13 +168,16 @@
     회의록 자동화
   </a>
   <div class="nav-links">
-    <a href="/#step0">설치 가이드</a>
-    <a href="/cheatsheet" style="color:var(--green)">뿌리강의 치팅시트</a>
-    <a href="/#faq">문제 해결</a>
+    <a href="#lec01">1강 프론트엔드</a>
+    <a href="#lec02">2강 백엔드</a>
+    <a href="#lec03">3강 DB&amp;스토리지</a>
+    <a href="#lec04">4강 웹서버&amp;배포</a>
+    <a href="#overview">한눈에 보기</a>
+    <span class="nav-sep"></span>
+    <a href="/" class="nav-page-link">📋 설치 가이드</a>
   </div>
   <div class="nav-btns">
     <a class="btn-outline" href="https://github.com/seiKKim/meeting" target="_blank">⭐ GitHub</a>
-    <a class="btn-solid"   href="/">설치 가이드</a>
   </div>
 </nav>
 
