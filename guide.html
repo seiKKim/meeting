@@ -53,7 +53,8 @@
   .nav-links a { color: var(--text2); text-decoration: none; font-size: .83rem; transition: color .2s; white-space: nowrap; }
   .nav-links a:hover { color: var(--text); }
   .nav-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; }
-  .nav-page-link { color: var(--green) !important; font-weight: 600; }
+  .nav-page-link { color: var(--text2) !important; }
+  .nav-page-active { color: var(--text) !important; font-weight: 700; font-size: .83rem; white-space: nowrap; }
   .nav-btns { display: flex; gap: .6rem; flex-shrink: 0; }
   .btn-outline {
     border: 1px solid var(--border2); border-radius: 8px;
@@ -293,8 +294,9 @@
     <a href="#models">모델 선택</a>
     <a href="#faq">문제 해결</a>
     <span class="nav-sep"></span>
-    <a href="/cheatsheet" class="nav-page-link">📚 치팅시트</a>
-    <a href="/claude-design" class="nav-page-link">🎨 클로드 디자인</a>
+    <span class="nav-page-active">설치 가이드</span>
+    <a href="/cheatsheet" class="nav-page-link">치팅시트</a>
+    <a href="/claude-design" class="nav-page-link">클로드 디자인</a>
   </div>
   <div class="nav-btns">
     <a class="btn-outline" href="https://github.com/seiKKim/meeting" target="_blank">⭐ GitHub</a>
