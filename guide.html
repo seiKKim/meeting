@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>회의록 자동화 시스템 가이드</title>
+<title>우당시 — 우리는 당신의 시간을 벌어드립니다</title>
 <style>
   :root {
     --bg:        #0a130a;
@@ -39,14 +39,16 @@
   }
   .nav-logo {
     display: flex; align-items: center; gap: .6rem;
-    font-size: 1rem; font-weight: 800; color: var(--green);
-    text-decoration: none; white-space: nowrap;
+    text-decoration: none; white-space: nowrap; line-height: 1.1;
   }
   .nav-logo-icon {
-    width: 32px; height: 32px; border-radius: 8px;
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
     background: var(--green); display: flex; align-items: center; justify-content: center;
     font-size: 1rem; color: #052e16;
   }
+  .nav-logo-text { display: flex; flex-direction: column; gap: 1px; }
+  .nav-logo-name { font-size: 1rem; font-weight: 900; color: var(--green); letter-spacing: -.01em; }
+  .nav-logo-sub  { font-size: .62rem; color: var(--text3); font-weight: 500; letter-spacing: .02em; }
   .nav-links { display: flex; align-items: center; gap: 1.4rem; flex: 1; }
   .nav-links a { color: var(--text2); text-decoration: none; font-size: .83rem; transition: color .2s; white-space: nowrap; }
   .nav-links a:hover { color: var(--text); }
@@ -278,8 +280,11 @@
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="#">
-    <div class="nav-logo-icon">🎙</div>
-    회의록 자동화
+    <div class="nav-logo-icon">⏱</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">우당시</span>
+      <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
+    </div>
   </a>
   <div class="nav-links">
     <a href="#step1">설치</a>
@@ -308,7 +313,7 @@
   </div>
 
   <!-- BADGE -->
-  <div class="badge"><span class="dot"></span> MEETING AUTOMATION GUIDE · 설치부터 운영까지</div>
+  <div class="badge"><span class="dot"></span> 우당시 · 우리는 당신의 시간을 벌어드립니다</div>
 
   <!-- HERO -->
   <div class="hero">
@@ -840,7 +845,7 @@
 </div>
 
 <footer>
-  <p>🎙️ 회의록 자동화 시스템 &nbsp;·&nbsp; <a href="https://github.com/seiKKim/meeting">github.com/seiKKim/meeting</a> &nbsp;·&nbsp; 100% 로컬 처리</p>
+  <p>⏱ 우당시 &nbsp;·&nbsp; 우리는 당신의 시간을 벌어드립니다 &nbsp;·&nbsp; <a href="https://github.com/seiKKim/meeting">github.com/seiKKim/meeting</a></p>
   <p style="margin-top:.4rem">Whisper by OpenAI &nbsp;·&nbsp; Ollama &nbsp;·&nbsp; gemma4:12b by Google &nbsp;·&nbsp; Obsidian</p>
 </footer>
 
