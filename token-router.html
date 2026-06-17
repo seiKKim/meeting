@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>토큰 비용 99% 절감 가이드 | 우당시</title>
+<style>
+  :root {
+    --bg:        #0a130a;
+    --bg2:       #0d1a0d;
+    --card:      #122012;
+    --card2:     #162816;
+    --cardin:    #0f1c0f;
+    --border:    #1e3a1e;
+    --border2:   #254025;
+    --green:     #22c55e;
+    --green2:    #16a34a;
+    --green3:    #4ade80;
+    --green-dim: #14532d;
+    --text:      #f0f5f0;
+    --text2:     #a0b0a0;
+    --text3:     #6b7a6b;
+    --yellow:    #fbbf24;
+    --red:       #f87171;
+    --blue:      #60a5fa;
+    --purple:    #a78bfa;
+    --orange:    #fb923c;
+    --mono:      'Consolas', 'Fira Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,19,10,.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 2rem;
+    padding: 0 2rem; height: 60px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: .6rem; text-decoration: none; white-space: nowrap; line-height: 1.1; }
+  .nav-logo-icon { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #052e16; }
+  .nav-logo-text { display: flex; flex-direction: column; gap: 1px; }
+  .nav-logo-name { font-size: 1rem; font-weight: 900; color: var(--green); letter-spacing: -.01em; }
+  .nav-logo-sub  { font-size: .62rem; color: var(--text3); font-weight: 500; letter-spacing: .02em; }
+  .nav-links { display: flex; align-items: center; gap: 1.4rem; flex: 1; }
+  .nav-links a { color: var(--text2); text-decoration: none; font-size: .83rem; transition: color .2s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; }
+  .nav-page-link { color: var(--text2) !important; }
+  .nav-page-active { color: var(--text) !important; font-weight: 700; font-size: .83rem; white-space: nowrap; }
+  .nav-btns { display: flex; gap: .6rem; flex-shrink: 0; }
+  .btn-outline { border: 1px solid var(--border2); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--text2); background: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+  .btn-solid   { border: none; border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: #052e16; background: var(--green); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+
+  /* ── PAGE ── */
+  .page { max-width: 960px; margin: 0 auto; padding: 80px 2rem 4rem; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    border: 1px solid var(--border2); border-radius: 999px;
+    padding: .3rem 1rem; font-size: .78rem; font-weight: 700;
+    color: var(--text2); background: var(--card); margin-bottom: 1.2rem;
+    letter-spacing: .04em;
+  }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+  /* ── HERO ── */
+  .hero { padding: 2rem 0 2.5rem; }
+  .hero h1 { font-size: 2.8rem; font-weight: 900; line-height: 1.15; margin-bottom: 1rem; }
+  .hero h1 span { color: var(--green); }
+  .hero p { color: var(--text2); font-size: 1rem; max-width: 640px; line-height: 1.7; margin-bottom: 1.5rem; }
+
+  /* ── STAT CARDS ── */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem; text-align: center; }
+  .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--green); line-height: 1; }
+  .stat-label { font-size: .78rem; color: var(--text2); margin-top: .4rem; }
+
+  /* ── PRINCIPLE BOX ── */
+  .principle {
+    background: linear-gradient(135deg, #052e16, #0a2010);
+    border: 1px solid var(--green-dim); border-radius: 14px;
+    padding: 1.8rem 2rem; margin: 2rem 0;
+    display: flex; align-items: flex-start; gap: 1.2rem;
+  }
+  .principle-icon { font-size: 2rem; flex-shrink: 0; }
+  .principle-text h3 { font-size: 1.1rem; font-weight: 800; color: var(--green3); margin-bottom: .4rem; }
+  .principle-text p  { color: var(--text2); font-size: .9rem; }
+
+  /* ── DIVIDER ── */
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  /* ── SECTION CARD ── */
+  .sec-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sec-header { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--card2); }
+  .sec-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; background: var(--green-dim); }
+  .sec-meta { display: flex; flex-direction: column; gap: 2px; }
+  .sec-label { font-size: .72rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .1em; }
+  .sec-title { font-size: 1.15rem; font-weight: 800; color: var(--text); }
+  .sec-body  { padding: 1.5rem; }
+
+  /* ── STEP LIST ── */
+  .step-list { list-style: none; display: flex; flex-direction: column; gap: 1.4rem; }
+  .step-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: var(--green); color: #052e16;
+    font-size: .78rem; font-weight: 900; display: flex; align-items: center; justify-content: center;
+  }
+  .step-content { flex: 1; }
+  .step-content h4 { font-size: .95rem; font-weight: 700; margin-bottom: .3rem; }
+  .step-content p  { font-size: .88rem; color: var(--text2); margin-bottom: .6rem; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #060e06; border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.2rem; margin: .5rem 0;
+    font-family: var(--mono); font-size: .83rem; color: var(--green3);
+    overflow-x: auto; position: relative;
+  }
+  .code-block .comment { color: var(--text3); }
+  .code-block .keyword { color: var(--yellow); }
+  .code-label {
+    font-size: .7rem; font-weight: 700; color: var(--text3); text-transform: uppercase;
+    letter-spacing: .08em; margin-bottom: .4rem;
+  }
+  .copy-btn {
+    position: absolute; top: .6rem; right: .6rem;
+    background: var(--card2); border: 1px solid var(--border2);
+    border-radius: 6px; padding: .25rem .6rem;
+    font-size: .72rem; color: var(--text3); cursor: pointer;
+    transition: all .2s;
+  }
+  .copy-btn:hover { color: var(--green); border-color: var(--green); }
+  code { background: var(--cardin); border: 1px solid var(--border); border-radius: 4px; padding: .1em .4em; font-family: var(--mono); font-size: .8em; color: var(--green3); }
+
+  /* ── OS TAB ── */
+  .os-tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+  .os-tab {
+    padding: .45rem 1.1rem; border-radius: 8px; font-size: .82rem; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border2); color: var(--text3); background: none;
+    transition: all .2s;
+  }
+  .os-tab.active { background: var(--green); color: #052e16; border-color: var(--green); }
+  .os-panel { display: none; }
+  .os-panel.active { display: block; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    display: flex; gap: .8rem; align-items: flex-start;
+    border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0;
+  }
+  .callout.info { background: #1a2a3a; border: 1px solid #2a4a6a; }
+  .callout.warn { background: #2a1a00; border: 1px solid #5a3a00; }
+  .callout.ok   { background: #052e16; border: 1px solid var(--green-dim); }
+  .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout-title { font-size: .85rem; font-weight: 700; margin-bottom: .2rem; }
+  .callout.info .callout-title { color: var(--blue); }
+  .callout.warn .callout-title { color: var(--yellow); }
+  .callout.ok   .callout-title { color: var(--green3); }
+  .callout-text { font-size: .83rem; color: var(--text2); line-height: 1.6; }
+
+  /* ── TOOL TABS ── */
+  .tool-tabs { display: flex; gap: .5rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .tool-tab {
+    padding: .45rem 1.1rem; border-radius: 8px; font-size: .82rem; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border2); color: var(--text3); background: none;
+    transition: all .2s;
+  }
+  .tool-tab[data-tool="claude"].active { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .tool-tab[data-tool="codex"].active  { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .tool-tab[data-tool="anti"].active   { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .tool-panel { display: none; }
+  .tool-panel.active { display: block; }
+
+  /* ── FLOW ── */
+  .flow { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin: 1rem 0; }
+  .flow-box {
+    background: var(--cardin); border: 1px solid var(--border); border-radius: 8px;
+    padding: .5rem 1rem; font-size: .82rem; font-weight: 600;
+  }
+  .flow-box.local  { border-color: var(--green-dim); color: var(--green3); }
+  .flow-box.cloud  { border-color: #2a2a5a; color: var(--blue); }
+  .flow-arrow { color: var(--text3); font-size: 1rem; }
+
+  /* ── KEYWORDS ── */
+  .keywords { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
+  .kw {
+    background: var(--cardin); border: 1px solid var(--border);
+    border-radius: 6px; padding: .25rem .7rem; font-size: .75rem;
+    color: var(--text2); font-family: var(--mono);
+  }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: .85rem; margin: 1rem 0; }
+  .data-table th { background: var(--cardin); color: var(--text2); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: .6rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: .65rem 1rem; border-bottom: 1px solid var(--border); color: var(--text2); }
+  .data-table td:first-child { color: var(--text); font-weight: 600; font-family: var(--mono); font-size: .8rem; }
+  .data-table .ok { color: var(--green); font-weight: 700; }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; padding: 2.5rem; color: var(--text3); font-size: .78rem; border-top: 1px solid var(--border); }
+  footer a { color: var(--green); text-decoration: none; }
+
+  h3 { font-size: 1rem; font-weight: 700; margin: 1.2rem 0 .6rem; color: var(--text); }
+  .mt { margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">⏱</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">우당시</span>
+      <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="#how">작동 원리</a>
+    <a href="#install">설치</a>
+    <a href="#tools">AI 도구 연동</a>
+    <a href="#usage">사용 시나리오</a>
+    <a href="#faq">문제 해결</a>
+    <span class="nav-sep"></span>
+    <a href="/" class="nav-page-link">설치 가이드</a>
+    <a href="/cheatsheet" class="nav-page-link">치팅시트</a>
+    <a href="/claude-design" class="nav-page-link">클로드 디자인</a>
+    <span class="nav-page-active">토큰 절감</span>
+  </div>
+  <div class="nav-btns">
+    <a class="btn-outline" href="https://github.com/sleeplesshan/token-router" target="_blank">⭐ GitHub</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- BADGE -->
+  <div class="badge"><span class="dot"></span> TOKEN-ROUTER · AI 코딩 도구 토큰 비용 절감</div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>AI 코딩 비용을<br><span>99%</span> 줄이는 방법</h1>
+    <p>대용량 로그나 소스코드를 AI에 보낼 때 토큰이 폭발적으로 소모됩니다. Token-Router는 작은 로컬 AI가 필요한 부분만 추려낸 뒤, 핵심만 Claude Code·Codex·안티그래비티에 전달합니다. 비용은 99% 줄고 정확도는 그대로입니다.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-num">99%</div>
+      <div class="stat-label">토큰 비용 절감</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">5초</div>
+      <div class="stat-label">로컬 처리 시간</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">0원</div>
+      <div class="stat-label">로컬 모델 비용</div>
+    </div>
+  </div>
+
+  <!-- PRINCIPLE -->
+  <div class="principle">
+    <div class="principle-icon">💡</div>
+    <div class="principle-text">
+      <h3>핵심 원리: 탐색은 무료로, 추론은 정밀하게</h3>
+      <p>2,000줄짜리 파일을 통째로 보내면 41,711 토큰이 소모됩니다. Token-Router는 작은 로컬 AI(Gemma 4 2B)가 관련 줄 번호만 뽑아내고, 실제로는 131줄(131 토큰)만 Claude·Codex에 전달합니다. 손실 없이 원문을 그대로 추출하기 때문에 품질 저하가 없습니다.</p>
+    </div>
+  </div>
+
+  <hr class="divider" id="how">
+
+  <!-- HOW IT WORKS -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon">🔄</div>
+      <div class="sec-meta">
+        <div class="sec-label">작동 원리</div>
+        <div class="sec-title">3단계 처리 흐름</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="flow">
+        <div class="flow-box local">① 로컬 Gemma 4 2B<br><small style="color:var(--text3)">관련 줄 번호 탐색</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box local">② Python 스크립트<br><small style="color:var(--text3)">원문 라인 추출</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-box cloud">③ Claude / Codex<br><small style="color:var(--text3)">핵심만 받아 추론</small></div>
+      </div>
+
+      <ul class="step-list mt">
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>로컬 탐색 — 돈이 안 드는 단계</h4>
+            <p>내 PC에 설치된 Gemma 4 2B(약 2GB 모델)가 "database timeout 에러가 어느 줄에 있어?"라는 질문을 받으면, 전체 파일을 훑어 해당 줄 번호만 뽑아냅니다. 인터넷 연결도, 비용도 없습니다.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>원문 추출 — 손실 없이 정확하게</h4>
+            <p>Python 스크립트가 줄 번호를 받아 원본 파일에서 해당 부분을 그대로 잘라냅니다. 요약이나 번역이 아니라 원문 그대로이기 때문에 에러 메시지 하나도 빠지지 않습니다.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>클라우드 추론 — 핵심만 전달</h4>
+            <p>Claude Code나 Codex가 41,000토큰 대신 131토큰만 받습니다. 비용은 99% 줄고, AI는 핵심에만 집중하기 때문에 더 정확한 답변이 나옵니다.</p>
+          </div>
+        </li>
+      </ul>
+
+      <table class="data-table mt">
+        <thead><tr><th>케이스</th><th>원본 토큰</th><th>처리 후 토큰</th><th>절감률</th><th>소요 시간</th></tr></thead>
+        <tbody>
+          <tr><td>인프라 로그 (2,000줄)</td><td>41,711</td><td>131</td><td class="ok">99.69%</td><td>5.37초</td></tr>
+          <tr><td>레거시 소스코드 (2,155줄)</td><td>7,520</td><td>70</td><td class="ok">99.06%</td><td>4.46초</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider" id="install">
+
+  <!-- 사전 준비: Ollama -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon">📦</div>
+      <div class="sec-meta">
+        <div class="sec-label">STEP 00 · 먼저 설치</div>
+        <div class="sec-title">Ollama 설치 (처음 한 번만)</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p style="color:var(--text2); font-size:.9rem; margin-bottom:1rem">Ollama는 AI 모델을 내 PC에서 돌릴 수 있게 해주는 무료 프로그램입니다. 이미 설치되어 있다면 건너뛰세요.</p>
+
+      <div class="os-tabs" id="ollama-tabs">
+        <button class="os-tab active" onclick="switchOS('ollama', 'win')">🪟 Windows</button>
+        <button class="os-tab" onclick="switchOS('ollama', 'mac')">🍎 Mac</button>
+      </div>
+
+      <div id="ollama-win" class="os-panel active">
+        <ul class="step-list">
+          <li class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Ollama 설치 파일 다운로드</h4>
+              <p>아래 사이트에서 Windows용 설치 파일을 받아 실행합니다.</p>
+              <div class="code-block"><span class="comment"># 브라우저에서 접속</span>
+https://ollama.com/download/windows</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>설치 확인</h4>
+              <p>설치 후 <strong>PowerShell</strong> 또는 <strong>명령 프롬프트(cmd)</strong>를 열고 아래를 입력합니다.</p>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+ollama --version</div>
+              <p><code>ollama version X.X.X</code> 처럼 버전이 나오면 성공입니다.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Gemma 4 2B 모델 다운로드 (~2GB)</h4>
+              <p>아래 명령어를 입력하면 로컬 AI 모델이 다운로드됩니다. Wi-Fi 환경에서 약 5~10분 소요됩니다.</p>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+ollama pull gemma4:e2b-it-q4_K_M</div>
+              <div class="callout warn">
+                <div class="callout-icon">⚠️</div>
+                <div>
+                  <div class="callout-title">JSON 오류가 자주 발생하는 경우</div>
+                  <div class="callout-text">Gemma 4 2B 대신 더 안정적인 Qwen 2.5 Coder 7B 모델을 사용하세요. 크기는 크지만 오류가 거의 없습니다.<br><br>
+                  <code>ollama pull qwen2.5-coder:7b</code></div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div id="ollama-mac" class="os-panel">
+        <ul class="step-list">
+          <li class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Homebrew로 설치 (권장)</h4>
+              <p>Homebrew가 없다면 먼저 <a href="https://brew.sh" target="_blank" style="color:var(--green)">brew.sh</a>에서 설치하세요. 그 후 터미널에서:</p>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+brew install ollama</div>
+              <p style="margin-top:.5rem">또는 <a href="https://ollama.com/download/mac" target="_blank" style="color:var(--green)">ollama.com/download/mac</a>에서 macOS 앱으로 설치할 수도 있습니다.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Ollama 서비스 시작</h4>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+ollama serve</div>
+              <p>이 창은 <strong>열어둔 채로</strong> 새 탭을 열어 다음 단계를 진행하세요.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Gemma 4 2B 모델 다운로드 (~2GB)</h4>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+ollama pull gemma4:e2b-it-q4_K_M</div>
+              <div class="callout warn">
+                <div class="callout-icon">⚠️</div>
+                <div>
+                  <div class="callout-title">JSON 오류가 자주 발생하는 경우</div>
+                  <div class="callout-text">더 안정적인 모델로 교체하세요.<br><br>
+                  <code>ollama pull qwen2.5-coder:7b</code></div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Token-Router 설치 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon">📥</div>
+      <div class="sec-meta">
+        <div class="sec-label">STEP 01 · 다운로드</div>
+        <div class="sec-title">Token-Router 설치</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="os-tabs" id="router-tabs">
+        <button class="os-tab active" onclick="switchOS('router', 'win')">🪟 Windows</button>
+        <button class="os-tab" onclick="switchOS('router', 'mac')">🍎 Mac</button>
+      </div>
+
+      <div id="router-win" class="os-panel active">
+        <ul class="step-list">
+          <li class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Python 설치 확인</h4>
+              <p>PowerShell 또는 cmd를 열고 Python 버전을 확인합니다. <strong>3.10 이상</strong>이어야 합니다.</p>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+python --version</div>
+              <p>Python이 없거나 버전이 낮으면 <a href="https://python.org/downloads" target="_blank" style="color:var(--green)">python.org/downloads</a>에서 설치하세요.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Token-Router 다운로드</h4>
+              <p>Git이 있다면:</p>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+git clone https://github.com/sleeplesshan/token-router.git
+cd token-router</div>
+              <p style="margin-top:.5rem">Git이 없다면 <a href="https://github.com/sleeplesshan/token-router" target="_blank" style="color:var(--green)">GitHub 페이지</a>에서 <strong>Code → Download ZIP</strong>으로 받아서 압축을 풀어두세요.</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>필요 패키지 설치</h4>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+pip install requests</div>
+              <div class="callout ok">
+                <div class="callout-icon">✅</div>
+                <div>
+                  <div class="callout-title">설치 완료 확인</div>
+                  <div class="callout-text"><code>python scripts/router.py --help</code> 를 입력했을 때 사용법이 나오면 성공입니다.</div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div id="router-mac" class="os-panel">
+        <ul class="step-list">
+          <li class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Python 설치 확인</h4>
+              <p>터미널을 열고 Python 버전을 확인합니다. <strong>3.10 이상</strong>이어야 합니다.</p>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+python3 --version</div>
+              <p>없다면: <code>brew install python3</code> 또는 <a href="https://python.org/downloads" target="_blank" style="color:var(--green)">python.org</a>에서 설치</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Token-Router 다운로드</h4>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+git clone https://github.com/sleeplesshan/token-router.git
+cd token-router</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>필요 패키지 설치</h4>
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+pip3 install requests</div>
+              <div class="callout ok">
+                <div class="callout-icon">✅</div>
+                <div>
+                  <div class="callout-title">설치 완료 확인</div>
+                  <div class="callout-text"><code>python3 scripts/router.py --help</code> 를 입력했을 때 사용법이 나오면 성공입니다.</div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" id="tools">
+
+  <!-- AI 도구별 연동 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon">🔌</div>
+      <div class="sec-meta">
+        <div class="sec-label">STEP 02 · AI 도구 연동</div>
+        <div class="sec-title">Claude Code · Codex · 안티그래비티 설정</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="tool-tabs">
+        <button class="tool-tab active" data-tool="claude" onclick="switchTool('claude')">🟣 Claude Code</button>
+        <button class="tool-tab" data-tool="codex" onclick="switchTool('codex')">🔵 OpenAI Codex</button>
+        <button class="tool-tab" data-tool="anti" onclick="switchTool('anti')">🟠 안티그래비티</button>
+      </div>
+
+      <!-- CLAUDE CODE -->
+      <div id="tool-claude" class="tool-panel active">
+        <div class="callout info">
+          <div class="callout-icon">ℹ️</div>
+          <div>
+            <div class="callout-title">Claude Code란?</div>
+            <div class="callout-text">Anthropic이 만든 AI 코딩 CLI 도구입니다. 터미널에서 <code>claude</code> 명령어로 코드 작성·디버깅을 도와줍니다.</div>
+          </div>
+        </div>
+
+        <div class="os-tabs" id="claude-tabs" style="margin-top:1rem">
+          <button class="os-tab active" onclick="switchOS('claude', 'win')">🪟 Windows</button>
+          <button class="os-tab" onclick="switchOS('claude', 'mac')">🍎 Mac</button>
+        </div>
+
+        <div id="claude-win" class="os-panel active">
+          <ul class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>token-router 폴더를 프로젝트에 복사</h4>
+                <p>Token-Router를 내 프로젝트 폴더 안에 넣어두면 Claude Code가 자동으로 인식합니다.</p>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># 예: 내 프로젝트가 C:\work\myproject 라면</span>
+xcopy /E /I token-router C:\work\myproject\token-router</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>CLAUDE.md에 Token-Router 지침 추가</h4>
+                <p>프로젝트 루트의 <code>CLAUDE.md</code> 파일에 아래 내용을 추가합니다. 없으면 새로 만드세요.</p>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment">## Token-Router 사용 지침</span>
+
+대용량 파일(로그, 긴 소스코드, 에이전트 문서)을 직접 읽지 말고
+아래 스크립트로 라우팅하세요:
+
+<span class="keyword">에러 로그 분석:</span>
+python scripts/router.py error_log &lt;파일경로&gt; --query "&lt;검색어&gt;"
+
+<span class="keyword">긴 소스코드 분석:</span>
+python scripts/router.py heavy_code &lt;파일경로&gt; --query "&lt;검색어&gt;"</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Claude Code에서 사용</h4>
+                <p>프로젝트 폴더에서 Claude Code를 실행 후 자연어로 지시합니다.</p>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># Claude Code 실행</span>
+claude
+
+<span class="comment"># 프롬프트 예시</span>
+deploy.log 파일에서 "database timeout" 에러를 token-router로 분석해줘</div>
+                <div class="callout ok" style="margin-top:.8rem">
+                  <div class="callout-icon">✅</div>
+                  <div><div class="callout-text">Claude가 CLAUDE.md를 읽고 자동으로 Token-Router 스크립트를 호출해서 필요한 부분만 추출한 뒤 분석합니다.</div></div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div id="claude-mac" class="os-panel">
+          <ul class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>token-router 폴더를 프로젝트에 복사</h4>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># 예: 내 프로젝트가 ~/work/myproject 라면</span>
+cp -R token-router ~/work/myproject/token-router</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>CLAUDE.md에 Token-Router 지침 추가</h4>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment">## Token-Router 사용 지침</span>
+
+대용량 파일(로그, 긴 소스코드, 에이전트 문서)을 직접 읽지 말고
+아래 스크립트로 라우팅하세요:
+
+<span class="keyword">에러 로그 분석:</span>
+python3 scripts/router.py error_log &lt;파일경로&gt; --query "&lt;검색어&gt;"
+
+<span class="keyword">긴 소스코드 분석:</span>
+python3 scripts/router.py heavy_code &lt;파일경로&gt; --query "&lt;검색어&gt;"</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Claude Code에서 사용</h4>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># Claude Code 실행</span>
+claude
+
+<span class="comment"># 프롬프트 예시</span>
+deploy.log 파일에서 "database timeout" 에러를 token-router로 분석해줘</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CODEX -->
+      <div id="tool-codex" class="tool-panel">
+        <div class="callout info">
+          <div class="callout-icon">ℹ️</div>
+          <div>
+            <div class="callout-title">OpenAI Codex CLI란?</div>
+            <div class="callout-text">OpenAI가 만든 터미널 AI 코딩 도구입니다. <code>codex</code> 명령어로 코드 작성·실행·디버깅을 도와줍니다. Token-Router를 <strong>스킬(Skill)</strong>로 등록하면 자동으로 호출됩니다.</div>
+          </div>
+        </div>
+
+        <div class="os-tabs" id="codex-tabs" style="margin-top:1rem">
+          <button class="os-tab active" onclick="switchOS('codex', 'win')">🪟 Windows</button>
+          <button class="os-tab" onclick="switchOS('codex', 'mac')">🍎 Mac</button>
+        </div>
+
+        <div id="codex-win" class="os-panel active">
+          <ul class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Codex 스킬 폴더에 Token-Router 등록</h4>
+                <p>Codex는 <code>~/.codex/skills/</code> 폴더에 있는 도구를 자동 인식합니다.</p>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># PowerShell에서 실행</span>
+mkdir "$env:USERPROFILE\.codex\skills" -Force
+xcopy /E /I token-router "$env:USERPROFILE\.codex\skills\token-router"</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Codex에서 바로 사용</h4>
+                <p>등록 후 Codex 대화에서 <code>$token-router</code>로 호출합니다.</p>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># Codex 프롬프트 예시</span>
+Use $token-router to analyze deploy.log with query "payment timeout"
+
+Use $token-router agent_context to route AGENTS.md for "deployment approval"</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div id="codex-mac" class="os-panel">
+          <ul class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Codex 스킬 폴더에 Token-Router 등록</h4>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+mkdir -p ~/.codex/skills
+cp -R token-router ~/.codex/skills/token-router</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Codex에서 바로 사용</h4>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># Codex 프롬프트 예시</span>
+Use $token-router to analyze deploy.log with query "payment timeout"
+
+Use $token-router agent_context to route AGENTS.md for "deployment approval"</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 안티그래비티 -->
+      <div id="tool-anti" class="tool-panel">
+        <div class="callout info">
+          <div class="callout-icon">ℹ️</div>
+          <div>
+            <div class="callout-title">안티그래비티 설정 방법</div>
+            <div class="callout-text">안티그래비티를 포함한 OpenAI 호환 AI 코딩 도구는 Token-Router 출력을 직접 붙여넣거나, 커스텀 지침(시스템 프롬프트)에 라우터 사용 방법을 추가하면 됩니다.</div>
+          </div>
+        </div>
+
+        <div class="os-tabs" id="anti-tabs" style="margin-top:1rem">
+          <button class="os-tab active" onclick="switchOS('anti', 'win')">🪟 Windows</button>
+          <button class="os-tab" onclick="switchOS('anti', 'mac')">🍎 Mac</button>
+        </div>
+
+        <div id="anti-win" class="os-panel active">
+          <ul class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Router를 먼저 실행해서 결과를 클립보드에 복사</h4>
+                <p>터미널에서 Token-Router를 실행하고, 출력 결과를 복사합니다.</p>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># 에러 로그 분석 후 결과를 클립보드로</span>
+python scripts/router.py error_log deploy.log --query "database timeout" | clip</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>안티그래비티에 붙여넣기</h4>
+                <p>안티그래비티 채팅창에 <strong>Ctrl+V</strong>로 붙여넣고 질문을 추가합니다.</p>
+                <div class="code-block">
+<span class="comment"># 예시 프롬프트</span>
+아래는 deploy.log에서 추출한 관련 로그입니다:
+[여기에 클립보드 내용 붙여넣기]
+
+이 에러의 원인과 해결 방법을 알려줘.</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>안티그래비티 시스템 프롬프트에 자동화 지침 추가 (선택)</h4>
+                <p>안티그래비티 설정에서 커스텀 지침(Custom Instructions)을 지원한다면, 아래 내용을 추가하면 AI가 스스로 라우터를 활용합니다.</p>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+대용량 파일 분석 시 token-router 스크립트를 먼저 실행하세요:
+python scripts/router.py error_log &lt;파일&gt; --query "&lt;검색어&gt;"
+결과만 분석에 사용하고, 원본 파일 전체를 읽지 마세요.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div id="anti-mac" class="os-panel">
+          <ul class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Router를 먼저 실행해서 결과를 클립보드에 복사</h4>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># 에러 로그 분석 후 결과를 클립보드로</span>
+python3 scripts/router.py error_log deploy.log --query "database timeout" | pbcopy</div>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>안티그래비티에 붙여넣기</h4>
+                <p>안티그래비티 채팅창에 <strong>Cmd+V</strong>로 붙여넣고 질문을 추가합니다.</p>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>시스템 프롬프트에 자동화 지침 추가 (선택)</h4>
+                <div class="code-block" style="position:relative">
+                  <button class="copy-btn" onclick="copyCode(this)">복사</button>
+대용량 파일 분석 시 token-router 스크립트를 먼저 실행하세요:
+python3 scripts/router.py error_log &lt;파일&gt; --query "&lt;검색어&gt;"
+결과만 분석에 사용하고, 원본 파일 전체를 읽지 마세요.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider" id="usage">
+
+  <!-- 사용 시나리오 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-meta">
+        <div class="sec-label">STEP 03 · 실전 사용</div>
+        <div class="sec-title">3가지 사용 시나리오</div>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <h3>시나리오 1 — 에러 로그 분석 (error_log)</h3>
+      <p style="color:var(--text2); font-size:.88rem; margin-bottom:.8rem">배포 로그나 에러 로그가 수천 줄일 때 사용합니다. "payment timeout" 같은 특정 에러를 검색하면 관련 줄만 뽑아냅니다.</p>
+      <div class="os-tabs" id="sc1-tabs">
+        <button class="os-tab active" onclick="switchOS('sc1', 'win')">🪟 Windows</button>
+        <button class="os-tab" onclick="switchOS('sc1', 'mac')">🍎 Mac</button>
+      </div>
+      <div id="sc1-win" class="os-panel active">
+        <div class="code-block" style="position:relative">
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># 기본 사용</span>
+set OLLAMA_NUM_CTX=4096
+set OLLAMA_KEEP_ALIVE=0s
+python scripts/router.py error_log deploy.log --query "database migration timeout"
+
+<span class="comment"># 다른 모델 사용 시</span>
+set OLLAMA_MODEL=qwen2.5-coder:7b
+python scripts/router.py error_log deploy.log --query "payment failed"</div>
+      </div>
+      <div id="sc1-mac" class="os-panel">
+        <div class="code-block" style="position:relative">
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># 기본 사용</span>
+OLLAMA_NUM_CTX=4096 OLLAMA_KEEP_ALIVE=0s \
+python3 scripts/router.py error_log deploy.log --query "database migration timeout"
+
+<span class="comment"># 다른 모델 사용 시</span>
+OLLAMA_MODEL=qwen2.5-coder:7b \
+python3 scripts/router.py error_log deploy.log --query "payment failed"</div>
+      </div>
+
+      <hr class="divider">
+
+      <h3>시나리오 2 — 긴 소스코드 분석 (heavy_code)</h3>
+      <p style="color:var(--text2); font-size:.88rem; margin-bottom:.8rem">수백~수천 줄의 소스 파일에서 특정 기능·버그를 찾을 때 사용합니다.</p>
+      <div class="os-tabs" id="sc2-tabs">
+        <button class="os-tab active" onclick="switchOS('sc2', 'win')">🪟 Windows</button>
+        <button class="os-tab" onclick="switchOS('sc2', 'mac')">🍎 Mac</button>
+      </div>
+      <div id="sc2-win" class="os-panel active">
+        <div class="code-block" style="position:relative">
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+set OLLAMA_NUM_CTX=4096
+set OLLAMA_KEEP_ALIVE=0s
+python scripts/router.py heavy_code src/service.py --query "token expiration logic"</div>
+      </div>
+      <div id="sc2-mac" class="os-panel">
+        <div class="code-block" style="position:relative">
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+OLLAMA_NUM_CTX=4096 OLLAMA_KEEP_ALIVE=0s \
+python3 scripts/router.py heavy_code src/service.py --query "token expiration logic"</div>
+      </div>
+
+      <hr class="divider">
+
+      <h3>시나리오 3 — 에이전트 지침 문서 라우팅 (agent_context)</h3>
+      <p style="color:var(--text2); font-size:.88rem; margin-bottom:.8rem"><code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.cursorrules</code> 같은 긴 지침 파일에서 현재 작업과 관련된 규칙만 추출합니다. 매 요청마다 전체 파일을 보내는 토큰 낭비를 막습니다.</p>
+      <div class="os-tabs" id="sc3-tabs">
+        <button class="os-tab active" onclick="switchOS('sc3', 'win')">🪟 Windows</button>
+        <button class="os-tab" onclick="switchOS('sc3', 'mac')">🍎 Mac</button>
+      </div>
+      <div id="sc3-win" class="os-panel active">
+        <div class="code-block" style="position:relative">
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+set OLLAMA_NUM_CTX=4096
+set OLLAMA_KEEP_ALIVE=0s
+python scripts/router.py agent_context docs/AGENTS.md --query "frontend testing workflow"</div>
+      </div>
+      <div id="sc3-mac" class="os-panel">
+        <div class="code-block" style="position:relative">
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+OLLAMA_NUM_CTX=4096 OLLAMA_KEEP_ALIVE=0s \
+python3 scripts/router.py agent_context docs/AGENTS.md --query "frontend testing workflow"</div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider" id="faq">
+
+  <!-- 환경변수 참조 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon">⚙️</div>
+      <div class="sec-meta">
+        <div class="sec-label">설정 참조</div>
+        <div class="sec-title">환경 변수 옵션</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <table class="data-table">
+        <thead><tr><th>변수</th><th>기본값</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td>OLLAMA_MODEL</td><td>gemma4:e2b-it-q4_K_M</td><td>로컬 라우팅 모델. 오류 많으면 qwen2.5-coder:7b로 변경</td></tr>
+          <tr><td>ROUTER_MAX_OUTPUT_LINES</td><td>160</td><td>클라우드 모델로 전달할 최대 줄 수</td></tr>
+          <tr><td>OLLAMA_KEEP_ALIVE</td><td>0s</td><td>처리 후 모델을 VRAM에서 즉시 제거</td></tr>
+          <tr><td>ROUTER_LOG_TAIL_LINES</td><td>200</td><td>대용량 로그의 마지막 N줄 보존</td></tr>
+          <tr><td>OLLAMA_NUM_CTX</td><td>4096</td><td>로컬 모델 컨텍스트 크기</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 문제 해결 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon">🛠️</div>
+      <div class="sec-meta">
+        <div class="sec-label">문제 해결</div>
+        <div class="sec-title">자주 겪는 문제 & 해결</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <ul class="step-list">
+        <li class="step-item">
+          <div class="step-num" style="background:var(--red); color:#fff">!</div>
+          <div class="step-content">
+            <h4>JSON 파싱 오류가 난다</h4>
+            <p>Gemma 4 2B가 JSON을 가끔 잘못 생성합니다. 더 안정적인 모델로 바꾸세요.</p>
+            <div class="os-tabs" id="faq1-tabs">
+              <button class="os-tab active" onclick="switchOS('faq1', 'win')">🪟 Windows</button>
+              <button class="os-tab" onclick="switchOS('faq1', 'mac')">🍎 Mac</button>
+            </div>
+            <div id="faq1-win" class="os-panel active">
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+ollama pull qwen2.5-coder:7b
+set OLLAMA_MODEL=qwen2.5-coder:7b
+python scripts/router.py error_log deploy.log --query "에러 내용"</div>
+            </div>
+            <div id="faq1-mac" class="os-panel">
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+ollama pull qwen2.5-coder:7b
+OLLAMA_MODEL=qwen2.5-coder:7b \
+python3 scripts/router.py error_log deploy.log --query "에러 내용"</div>
+            </div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num" style="background:var(--red); color:#fff">!</div>
+          <div class="step-content">
+            <h4>Ollama가 연결 안 된다</h4>
+            <p>Ollama 서비스가 실행 중인지 확인하세요.</p>
+            <div class="os-tabs" id="faq2-tabs">
+              <button class="os-tab active" onclick="switchOS('faq2', 'win')">🪟 Windows</button>
+              <button class="os-tab" onclick="switchOS('faq2', 'mac')">🍎 Mac</button>
+            </div>
+            <div id="faq2-win" class="os-panel active">
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># Ollama 상태 확인</span>
+ollama list
+
+<span class="comment"># 실행 안 되어 있으면 — 시스템 트레이에서 Ollama 아이콘 클릭 or</span>
+ollama serve</div>
+            </div>
+            <div id="faq2-mac" class="os-panel">
+              <div class="code-block" style="position:relative">
+                <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># 새 터미널 탭에서</span>
+ollama serve
+
+<span class="comment"># 모델 목록 확인</span>
+ollama list</div>
+            </div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num" style="background:var(--red); color:#fff">!</div>
+          <div class="step-content">
+            <h4>python 명령어를 찾을 수 없다 (Windows)</h4>
+            <p>Python이 PATH에 등록되지 않은 경우입니다. 설치 시 "Add Python to PATH"를 체크했는지 확인하세요. 또는 <code>py</code> 명령어를 시도해보세요.</p>
+            <div class="code-block" style="position:relative">
+              <button class="copy-btn" onclick="copyCode(this)">복사</button>
+<span class="comment"># python 대신 py로 시도</span>
+py scripts/router.py error_log deploy.log --query "에러"
+
+<span class="comment"># 또는 전체 경로로 실행</span>
+C:\Python312\python.exe scripts/router.py error_log deploy.log --query "에러"</div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="keywords">
+        <span class="kw">Python 3.10+</span>
+        <span class="kw">Ollama 0.30+</span>
+        <span class="kw">gemma4:e2b-it-q4_K_M</span>
+        <span class="kw">qwen2.5-coder:7b</span>
+        <span class="kw">token-router</span>
+        <span class="kw">OLLAMA_MODEL</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>⏱ 우당시 &nbsp;·&nbsp; 우리는 당신의 시간을 벌어드립니다 &nbsp;·&nbsp; <a href="https://github.com/sleeplesshan/token-router" target="_blank">Token-Router by sleeplesshan</a></p>
+  <p style="margin-top:.4rem">Gemma 4 2B by Google &nbsp;·&nbsp; Ollama &nbsp;·&nbsp; MIT License</p>
+</footer>
+
+<script>
+function switchOS(group, os) {
+  const panels = document.querySelectorAll(`[id^="${group}-"]`);
+  const tabs = document.querySelectorAll(`#${group}-tabs .os-tab`);
+  panels.forEach(p => p.classList.remove('active'));
+  tabs.forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById(`${group}-${os}`);
+  if (panel) panel.classList.add('active');
+  const idx = os === 'win' ? 0 : 1;
+  if (tabs[idx]) tabs[idx].classList.add('active');
+}
+
+function switchTool(tool) {
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tool-${tool}`).classList.add('active');
+  document.querySelector(`.tool-tab[data-tool="${tool}"]`).classList.add('active');
+}
+
+function copyCode(btn) {
+  const block = btn.parentElement;
+  const text = block.innerText.replace('복사', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ 복사됨';
+    setTimeout(() => btn.textContent = '복사', 1500);
+  });
+}
+</script>
+
+</body>
+</html>
