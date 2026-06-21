@@ -6,25 +6,25 @@
 <title>토큰 비용 99% 절감 가이드 | 우당시</title>
 <style>
   :root {
-    --bg:        #0a130a;
-    --bg2:       #0d1a0d;
-    --card:      #122012;
-    --card2:     #162816;
-    --cardin:    #0f1c0f;
-    --border:    #1e3a1e;
-    --border2:   #254025;
-    --green:     #22c55e;
-    --green2:    #16a34a;
-    --green3:    #4ade80;
-    --green-dim: #14532d;
-    --text:      #f0f5f0;
-    --text2:     #a0b0a0;
-    --text3:     #6b7a6b;
-    --yellow:    #fbbf24;
-    --red:       #f87171;
-    --blue:      #60a5fa;
-    --purple:    #a78bfa;
-    --orange:    #fb923c;
+    --bg:        #ffffff;
+    --bg2:       #f8fafc;
+    --card:      #ffffff;
+    --card2:     #f8fafc;
+    --cardin:    #f1f5f9;
+    --border:    #e2e8f0;
+    --border2:   #cbd5e1;
+    --green:     #16a34a;
+    --green2:    #15803d;
+    --green3:    #22c55e;
+    --green-dim: #dcfce7;
+    --text:      #111827;
+    --text2:     #4b5563;
+    --text3:     #9ca3af;
+    --yellow:    #d97706;
+    --red:       #dc2626;
+    --blue:      #2563eb;
+    --purple:    #7c3aed;
+    --orange:    #ea580c;
     --mono:      'Consolas', 'Fira Code', monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,8 +34,8 @@
   /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(10,19,10,.95); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); box-shadow: 0 1px 0 var(--border);
     display: flex; align-items: center; gap: 2rem;
     padding: 0 2rem; height: 60px;
   }
@@ -44,18 +44,20 @@
   .nav-logo-text { display: flex; flex-direction: column; gap: 1px; }
   .nav-logo-name { font-size: 1rem; font-weight: 900; color: var(--green); letter-spacing: -.01em; }
   .nav-logo-sub  { font-size: .62rem; color: var(--text3); font-weight: 500; letter-spacing: .02em; }
-  .nav-links { display: flex; align-items: center; gap: 1.4rem; flex: 1; }
-  .nav-links a { color: var(--text2); text-decoration: none; font-size: .83rem; transition: color .2s; white-space: nowrap; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; }
-  .nav-page-link { color: var(--text2) !important; }
-  .nav-page-active { color: var(--text) !important; font-weight: 700; font-size: .83rem; white-space: nowrap; }
+  .nav-pages { display: flex; align-items: stretch; flex: 1; height: 60px; }
+  .nav-page { display: flex; align-items: center; padding: 0 1rem; color: var(--text2); text-decoration: none; font-size: .83rem; font-weight: 500; white-space: nowrap; transition: color .2s; border-bottom: 2px solid transparent; }
+  .nav-page:hover { color: var(--text); }
+  .nav-page.active { color: var(--green); font-weight: 700; border-bottom-color: var(--green); }
+  .sub-nav { position: fixed; top: 60px; left: 0; right: 0; z-index: 99; background: rgba(255,255,255,0.97); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); display: flex; align-items: stretch; padding: 0 2rem; height: 40px; gap: 0; }
+  .sub-nav a { display: flex; align-items: center; padding: 0 .9rem; color: var(--text3); text-decoration: none; font-size: .78rem; font-weight: 500; white-space: nowrap; border-bottom: 2px solid transparent; transition: color .2s; }
+  .sub-nav a:hover { color: var(--text2); }
+  .sub-nav a.active { color: var(--green); border-bottom-color: var(--green); }
   .nav-btns { display: flex; gap: .6rem; flex-shrink: 0; }
   .btn-outline { border: 1px solid var(--border2); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--text2); background: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
   .btn-solid   { border: none; border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: #052e16; background: var(--green); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
 
   /* ── PAGE ── */
-  .page { max-width: 960px; margin: 0 auto; padding: 80px 2rem 4rem; }
+  .page { max-width: 960px; margin: 0 auto; padding: 100px 2rem 4rem; }
 
   /* ── BADGE ── */
   .badge {
@@ -81,13 +83,13 @@
 
   /* ── PRINCIPLE BOX ── */
   .principle {
-    background: linear-gradient(135deg, #052e16, #0a2010);
-    border: 1px solid var(--green-dim); border-radius: 14px;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border: 1px solid #86efac; border-radius: 14px;
     padding: 1.8rem 2rem; margin: 2rem 0;
     display: flex; align-items: flex-start; gap: 1.2rem;
   }
   .principle-icon { font-size: 2rem; flex-shrink: 0; }
-  .principle-text h3 { font-size: 1.1rem; font-weight: 800; color: var(--green3); margin-bottom: .4rem; }
+  .principle-text h3 { font-size: 1.1rem; font-weight: 800; color: var(--green2); margin-bottom: .4rem; }
   .principle-text p  { color: var(--text2); font-size: .9rem; }
 
   /* ── DIVIDER ── */
@@ -116,13 +118,13 @@
 
   /* ── CODE BLOCK ── */
   .code-block {
-    background: #060e06; border: 1px solid var(--border);
+    background: #1e293b; border: 1px solid #334155;
     border-radius: 10px; padding: 1rem 1.2rem; margin: .5rem 0;
-    font-family: var(--mono); font-size: .83rem; color: var(--green3);
+    font-family: var(--mono); font-size: .83rem; color: #86efac;
     overflow-x: auto; position: relative;
   }
-  .code-block .comment { color: var(--text3); }
-  .code-block .keyword { color: var(--yellow); }
+  .code-block .comment { color: #64748b; }
+  .code-block .keyword { color: #fde68a; }
   .code-label {
     font-size: .7rem; font-weight: 700; color: var(--text3); text-transform: uppercase;
     letter-spacing: .08em; margin-bottom: .4rem;
@@ -135,7 +137,7 @@
     transition: all .2s;
   }
   .copy-btn:hover { color: var(--green); border-color: var(--green); }
-  code { background: var(--cardin); border: 1px solid var(--border); border-radius: 4px; padding: .1em .4em; font-family: var(--mono); font-size: .8em; color: var(--green3); }
+  code { background: var(--cardin); border: 1px solid var(--border); border-radius: 4px; padding: .1em .4em; font-family: var(--mono); font-size: .8em; color: var(--green2); }
 
   /* ── OS TAB ── */
   .os-tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
@@ -153,14 +155,14 @@
     display: flex; gap: .8rem; align-items: flex-start;
     border-radius: 10px; padding: 1rem 1.2rem; margin: .8rem 0;
   }
-  .callout.info { background: #1a2a3a; border: 1px solid #2a4a6a; }
-  .callout.warn { background: #2a1a00; border: 1px solid #5a3a00; }
-  .callout.ok   { background: #052e16; border: 1px solid var(--green-dim); }
+  .callout.info { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .callout.warn { background: #fffbeb; border: 1px solid #fde68a; }
+  .callout.ok   { background: #f0fdf4; border: 1px solid #86efac; }
   .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .1rem; }
   .callout-title { font-size: .85rem; font-weight: 700; margin-bottom: .2rem; }
   .callout.info .callout-title { color: var(--blue); }
   .callout.warn .callout-title { color: var(--yellow); }
-  .callout.ok   .callout-title { color: var(--green3); }
+  .callout.ok   .callout-title { color: var(--green2); }
   .callout-text { font-size: .83rem; color: var(--text2); line-height: 1.6; }
 
   /* ── TOOL TABS ── */
@@ -182,8 +184,8 @@
     background: var(--cardin); border: 1px solid var(--border); border-radius: 8px;
     padding: .5rem 1rem; font-size: .82rem; font-weight: 600;
   }
-  .flow-box.local  { border-color: var(--green-dim); color: var(--green3); }
-  .flow-box.cloud  { border-color: #2a2a5a; color: var(--blue); }
+  .flow-box.local  { border-color: #86efac; color: var(--green2); background: #f0fdf4; }
+  .flow-box.cloud  { border-color: #93c5fd; color: var(--blue); background: #eff6ff; }
   .flow-arrow { color: var(--text3); font-size: 1rem; }
 
   /* ── KEYWORDS ── */
@@ -220,22 +222,24 @@
       <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
     </div>
   </a>
-  <div class="nav-links">
-    <a href="#how">작동 원리</a>
-    <a href="#install">설치</a>
-    <a href="#tools">AI 도구 연동</a>
-    <a href="#usage">사용 시나리오</a>
-    <a href="#faq">문제 해결</a>
-    <span class="nav-sep"></span>
-    <a href="/" class="nav-page-link">설치 가이드</a>
-    <a href="/cheatsheet" class="nav-page-link">치팅시트</a>
-    <a href="/claude-design" class="nav-page-link">클로드 디자인</a>
-    <span class="nav-page-active">토큰 절감</span>
+  <div class="nav-pages">
+    <a href="/" class="nav-page">설치 가이드</a>
+    <a href="/cheatsheet" class="nav-page">치팅시트</a>
+    <a href="/claude-design" class="nav-page">클로드 디자인</a>
+    <a href="/token-router" class="nav-page active">토큰 절감</a>
   </div>
   <div class="nav-btns">
     <a class="btn-outline" href="https://github.com/sleeplesshan/token-router" target="_blank">⭐ GitHub</a>
   </div>
 </nav>
+
+<div class="sub-nav">
+  <a href="#how">작동 원리</a>
+  <a href="#install">설치</a>
+  <a href="#tools">AI 도구 연동</a>
+  <a href="#usage">사용 시나리오</a>
+  <a href="#faq">문제 해결</a>
+</div>
 
 <div class="page">
 

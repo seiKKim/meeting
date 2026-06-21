@@ -6,25 +6,25 @@
 <title>뿌리강의 치팅시트 | 회의록 자동화 시스템</title>
 <style>
   :root {
-    --bg:        #0a130a;
-    --bg2:       #0d1a0d;
-    --card:      #122012;
-    --card2:     #162816;
-    --cardin:    #0f1c0f;
-    --border:    #1e3a1e;
-    --border2:   #254025;
-    --green:     #22c55e;
-    --green2:    #16a34a;
-    --green3:    #4ade80;
-    --green-dim: #14532d;
-    --text:      #f0f5f0;
-    --text2:     #a0b0a0;
-    --text3:     #6b7a6b;
-    --yellow:    #fbbf24;
-    --red:       #f87171;
-    --blue:      #60a5fa;
-    --purple:    #a78bfa;
-    --orange:    #fb923c;
+    --bg:        #ffffff;
+    --bg2:       #f8fafc;
+    --card:      #ffffff;
+    --card2:     #f8fafc;
+    --cardin:    #f1f5f9;
+    --border:    #e2e8f0;
+    --border2:   #cbd5e1;
+    --green:     #16a34a;
+    --green2:    #15803d;
+    --green3:    #22c55e;
+    --green-dim: #dcfce7;
+    --text:      #111827;
+    --text2:     #4b5563;
+    --text3:     #9ca3af;
+    --yellow:    #d97706;
+    --red:       #dc2626;
+    --blue:      #2563eb;
+    --purple:    #7c3aed;
+    --orange:    #ea580c;
     --mono:      'Consolas', 'Fira Code', monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,34 +34,40 @@
   /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(10,19,10,.95); backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 2rem;
+    display: flex; align-items: center;
     padding: 0 2rem; height: 60px;
   }
-  .nav-logo { display: flex; align-items: center; gap: .6rem; text-decoration: none; white-space: nowrap; line-height: 1.1; }
-  .nav-logo-icon { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #052e16; }
+  .nav-logo { display: flex; align-items: center; gap: .6rem; text-decoration: none; white-space: nowrap; margin-right: 1.5rem; flex-shrink: 0; }
+  .nav-logo-icon { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #fff; }
   .nav-logo-text { display: flex; flex-direction: column; gap: 1px; }
-  .nav-logo-name { font-size: 1rem; font-weight: 900; color: var(--green); letter-spacing: -.01em; }
-  .nav-logo-sub  { font-size: .62rem; color: var(--text3); font-weight: 500; letter-spacing: .02em; }
-  .nav-links { display: flex; align-items: center; gap: 1.4rem; flex: 1; }
-  .nav-links a { color: var(--text2); text-decoration: none; font-size: .83rem; transition: color .2s; white-space: nowrap; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-sep { width: 1px; height: 16px; background: var(--border2); flex-shrink: 0; }
-  .nav-page-link { color: var(--text2) !important; }
-  .nav-page-active { color: var(--text) !important; font-weight: 700; pointer-events: none; }
+  .nav-logo-name { font-size: .95rem; font-weight: 900; color: var(--text); letter-spacing: -.01em; }
+  .nav-logo-sub  { font-size: .58rem; color: var(--text3); font-weight: 500; }
+  .nav-pages { display: flex; align-items: stretch; flex: 1; height: 60px; }
+  .nav-page { display: flex; align-items: center; padding: 0 1rem; text-decoration: none; font-size: .86rem; font-weight: 500; color: var(--text2); white-space: nowrap; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+  .nav-page:hover { color: var(--text); }
+  .nav-page.active { color: var(--green); font-weight: 700; border-bottom-color: var(--green); }
   .nav-btns { display: flex; gap: .6rem; flex-shrink: 0; }
-  .btn-outline { border: 1px solid var(--border2); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--text2); background: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
-  .btn-solid   { border: none; border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: #052e16; background: var(--green); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+  .btn-outline { border: 1px solid var(--border2); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--text2); background: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; transition: border-color .2s, color .2s; }
+  .btn-outline:hover { border-color: var(--green); color: var(--green); }
+  .btn-solid { border: none; border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: #fff; background: var(--green); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+
+  /* ── SUB NAV ── */
+  .sub-nav { position: fixed; top: 60px; left: 0; right: 0; z-index: 99; background: rgba(255,255,255,0.97); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); display: flex; align-items: stretch; padding: 0 2rem; height: 40px; overflow-x: auto; scrollbar-width: none; }
+  .sub-nav::-webkit-scrollbar { display: none; }
+  .sub-nav a { display: flex; align-items: center; padding: 0 .85rem; text-decoration: none; font-size: .80rem; color: var(--text3); white-space: nowrap; border-bottom: 2px solid transparent; transition: color .2s; }
+  .sub-nav a:hover { color: var(--text2); }
+  .sub-nav a.active { color: var(--green); border-bottom-color: var(--green); font-weight: 600; }
 
   /* ── LAYOUT ── */
-  .page { max-width: 960px; margin: 0 auto; padding: 80px 2rem 4rem; }
+  .page { max-width: 960px; margin: 0 auto; padding: 100px 2rem 4rem; }
 
   /* ── BREADCRUMB ── */
   .breadcrumb { display: flex; align-items: center; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .bc-item { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--border2); border-radius: 999px; padding: .3rem .9rem; font-size: .78rem; color: var(--text2); background: var(--card); text-decoration: none; transition: border-color .2s; }
   .bc-item:hover { border-color: var(--green); color: var(--green); }
-  .bc-item.active { border-color: var(--green); color: var(--green); background: #052e1644; }
+  .bc-item.active { border-color: var(--green); color: var(--green); background: var(--green-dim); }
   .bc-arrow { color: var(--text3); font-size: .8rem; }
 
   /* ── BADGE ── */
@@ -87,10 +93,10 @@
   .sec-card { border: 1px solid var(--border); border-radius: 16px; background: var(--card); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 72px; }
   .sec-header { padding: 1.5rem 1.8rem 1.2rem; border-bottom: 1px solid var(--border); background: var(--card2); display: flex; align-items: flex-start; gap: 1rem; }
   .sec-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
-  .sec-icon.blue   { background: #1e3a5f; }
-  .sec-icon.green  { background: #14532d; }
-  .sec-icon.purple { background: #2e1a5f; }
-  .sec-icon.orange { background: #431407; }
+  .sec-icon.blue   { background: #dbeafe; }
+  .sec-icon.green  { background: #dcfce7; }
+  .sec-icon.purple { background: #ede9fe; }
+  .sec-icon.orange { background: #ffedd5; }
   .sec-meta { }
   .sec-label { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .2rem; }
   .sec-label.blue   { color: var(--blue); }
@@ -131,22 +137,22 @@
   .concepts { display: flex; flex-direction: column; gap: .6rem; }
   .concept-item { background: var(--cardin); border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; display: grid; grid-template-columns: 160px 1fr; gap: 1rem; align-items: start; }
   @media(max-width:600px){ .concept-item { grid-template-columns: 1fr; } }
-  .concept-term { font-weight: 700; font-size: .85rem; color: var(--green3); font-family: var(--mono); }
+  .concept-term { font-weight: 700; font-size: .85rem; color: var(--green2); font-family: var(--mono); }
   .concept-desc { font-size: .83rem; color: var(--text2); line-height: 1.6; }
 
   /* ── KEYWORDS ── */
   .keywords { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.3rem; }
-  .kw { border: 1px solid var(--border2); border-radius: 8px; padding: .25rem .7rem; font-size: .78rem; font-weight: 600; color: var(--green3); background: #052e1633; font-family: var(--mono); }
+  .kw { border: 1px solid var(--border); border-radius: 8px; padding: .25rem .7rem; font-size: .78rem; font-weight: 600; color: var(--green2); background: var(--green-dim); font-family: var(--mono); }
 
   /* ── COMPARE TABLE ── */
   .cmp-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
   .cmp-table th { padding: .6rem .8rem; text-align: left; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); background: var(--cardin); border-bottom: 1px solid var(--border); }
   .cmp-table td { padding: .65rem .8rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
-  .cmp-table td:first-child { color: var(--green3); font-weight: 700; white-space: nowrap; }
+  .cmp-table td:first-child { color: var(--green2); font-weight: 700; white-space: nowrap; }
   .cmp-table tr:last-child td { border-bottom: none; }
-  .tag-early  { display: inline-block; background: #1a0a0244; color: var(--orange); border: 1px solid #f97316333; border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
-  .tag-mid    { display: inline-block; background: #0c1a3a44; color: var(--blue);   border: 1px solid #3b82f633;  border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
-  .tag-modern { display: inline-block; background: #052e1644; color: var(--green3); border: 1px solid #22c55e33;  border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
+  .tag-early  { display: inline-block; background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
+  .tag-mid    { display: inline-block; background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd;  border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
+  .tag-modern { display: inline-block; background: #dcfce7; color: var(--green2); border: 1px solid #86efac; border-radius: 4px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; margin-bottom: .15rem; }
 
   /* ── NEXT STEP ── */
   .next-step { background: linear-gradient(135deg, var(--card2), #0a2010); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; text-align: center; margin-top: 2rem; }
@@ -160,7 +166,7 @@
   footer { text-align: center; padding: 2.5rem; color: var(--text3); font-size: .78rem; border-top: 1px solid var(--border); }
   footer a { color: var(--green); text-decoration: none; }
 
-  code { background: var(--cardin); border: 1px solid var(--border); border-radius: 4px; padding: .1em .4em; font-family: var(--mono); font-size: .8em; color: var(--green3); }
+  code { background: var(--cardin); border: 1px solid var(--border); border-radius: 4px; padding: .1em .4em; font-family: var(--mono); font-size: .8em; color: var(--green2); }
 </style>
 </head>
 <body>
@@ -174,19 +180,21 @@
       <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
     </div>
   </a>
-  <div class="nav-links">
-    <a href="#lec01">1강</a>
-    <a href="#lec02">2강</a>
-    <a href="#lec03">3강</a>
-    <a href="#lec04">4강</a>
-    <a href="#overview">한눈에 보기</a>
-    <span class="nav-sep"></span>
-    <a href="/" class="nav-page-link">설치 가이드</a>
-    <span class="nav-page-active">치팅시트</span>
-    <a href="/claude-design" class="nav-page-link">클로드 디자인</a>
-    <a href="/token-router" class="nav-page-link">토큰 절감</a>
+  <div class="nav-pages">
+    <a href="/" class="nav-page">설치 가이드</a>
+    <a href="/cheatsheet" class="nav-page active">치팅시트</a>
+    <a href="/claude-design" class="nav-page">클로드 디자인</a>
+    <a href="/token-router" class="nav-page">토큰 절감</a>
   </div>
 </nav>
+
+<div class="sub-nav">
+  <a href="#lec01">1강 프론트엔드</a>
+  <a href="#lec02">2강 백엔드</a>
+  <a href="#lec03">3강 DB &amp; 스토리지</a>
+  <a href="#lec04">4강 웹서버 &amp; 배포</a>
+  <a href="#overview">한눈에 보기</a>
+</div>
 
 <div class="page">
 
