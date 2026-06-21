@@ -53,6 +53,15 @@
   .sub-nav a:hover{color:var(--text2);}
   .sub-nav a.active{color:var(--green);border-bottom-color:var(--green);font-weight:600;}
 
+  /* ── DROPDOWN ── */
+  .nav-group { position: relative; display: flex; align-items: stretch; }
+  .nav-group:hover .nav-dropdown { display: flex; }
+  .nav-dropdown { display: none; position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.08); flex-direction: column; min-width: 220px; padding: .4rem 0; z-index: 200; }
+  .nav-dd-item { padding: .65rem 1.2rem; color: var(--text2); text-decoration: none; font-size: .83rem; font-weight: 500; white-space: nowrap; transition: background .15s, color .15s; display: block; }
+  .nav-dd-item:hover { background: var(--bg2); color: var(--text); }
+  .nav-group > .nav-page::after { content: ' ▾'; font-size: .7em; opacity: .5; }
+  .nav-dd-item.active { color: var(--green); font-weight: 700; background: var(--green-dim); }
+
   /* PAGE */
   .page{max-width:960px;margin:0 auto;padding:100px 2rem 4rem;}
 
@@ -202,10 +211,21 @@
     </div>
   </a>
   <div class="nav-pages">
-    <a href="/" class="nav-page">설치 가이드</a>
-    <a href="/cheatsheet" class="nav-page">치팅시트</a>
-    <a href="/claude-design" class="nav-page active">클로드 디자인</a>
-    <a href="/token-router" class="nav-page">토큰 절감</a>
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page active">가이드</a>
+      <div class="nav-dropdown">
+        <a href="/claude-design" class="nav-dd-item active">🎨 Claude 디자인</a>
+        <a href="/token-router" class="nav-dd-item">💰 토큰 절감 99%</a>
+      </div>
+    </div>
+    <a href="/cheatsheet" class="nav-page">코딩이란?</a>
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page">Tip</a>
+      <div class="nav-dropdown">
+        <a href="/tip" class="nav-dd-item">🎙 회의록 자동 완성</a>
+        <a href="/invest" class="nav-dd-item">📈 AI 투자 리서치</a>
+      </div>
+    </div>
   </div>
   <div class="nav-btns">
     <a class="btn-outline" href="https://youtu.be/gNgHnkJc29M" target="_blank">▶ 영상 보기</a>
@@ -649,7 +669,7 @@ PRD를 통해서 가설을 직접 내가 세 개를 뽑아 보고
     <h2>클로드 디자인을 써봤다면,<br>회의록도 자동화해보세요.</h2>
     <p>음성 녹음 → AI 요약 → Obsidian 저장까지, 100% 로컬에서 자동 처리합니다.</p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
-      <a class="btn-solid" href="/" style="padding:.6rem 1.4rem;font-size:.9rem">🚀 설치 가이드 보기</a>
+      <a class="btn-solid" href="/tip" style="padding:.6rem 1.4rem;font-size:.9rem">🚀 Tip 보기</a>
       <a class="btn-outline" href="https://youtu.be/gNgHnkJc29M" target="_blank" style="padding:.6rem 1.4rem;font-size:.9rem">▶ 원본 영상 보기</a>
     </div>
   </div>

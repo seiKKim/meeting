@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 투자 리서치 가이드 | 우당시</title>
+<style>
+  :root {
+    --bg: #ffffff; --bg2: #f8fafc; --card: #ffffff; --card2: #f8fafc;
+    --cardin: #f1f5f9; --border: #e2e8f0; --border2: #cbd5e1;
+    --green: #16a34a; --green2: #15803d; --green3: #22c55e; --green-dim: #dcfce7;
+    --text: #111827; --text2: #4b5563; --text3: #9ca3af;
+    --yellow: #d97706; --red: #dc2626; --blue: #2563eb; --purple: #7c3aed;
+    --mono: 'Consolas', 'Fira Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+
+  /* ── NAV ── */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 2rem; padding: 0 2rem; height: 60px; }
+  .nav-logo { display: flex; align-items: center; gap: .6rem; text-decoration: none; white-space: nowrap; line-height: 1.1; }
+  .nav-logo-icon { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #052e16; }
+  .nav-logo-text { display: flex; flex-direction: column; gap: 1px; }
+  .nav-logo-name { font-size: 1rem; font-weight: 900; color: var(--green); letter-spacing: -.01em; }
+  .nav-logo-sub  { font-size: .62rem; color: var(--text3); font-weight: 500; letter-spacing: .02em; }
+  .nav-pages { display: flex; align-items: stretch; flex: 1; height: 60px; }
+  .nav-page { display: flex; align-items: center; padding: 0 1rem; color: var(--text2); text-decoration: none; font-size: .83rem; font-weight: 500; white-space: nowrap; transition: color .2s; border-bottom: 2px solid transparent; }
+  .nav-page:hover { color: var(--text); }
+  .nav-page.active { color: var(--green); font-weight: 700; border-bottom-color: var(--green); }
+  .sub-nav { position: fixed; top: 60px; left: 0; right: 0; z-index: 99; background: rgba(255,255,255,0.97); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); display: flex; align-items: stretch; padding: 0 2rem; height: 40px; }
+  .sub-nav a { display: flex; align-items: center; padding: 0 .9rem; color: var(--text3); text-decoration: none; font-size: .78rem; font-weight: 500; white-space: nowrap; border-bottom: 2px solid transparent; transition: color .2s; }
+  .sub-nav a:hover { color: var(--text2); }
+  .sub-nav a.active { color: var(--green); border-bottom-color: var(--green); }
+  .nav-btns { display: flex; gap: .6rem; flex-shrink: 0; }
+  .btn-outline { border: 1px solid var(--border2); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--text2); background: none; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+  .btn-solid { border: none; border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: #fff; background: var(--blue); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; }
+
+  /* ── DROPDOWN ── */
+  .nav-group { position: relative; display: flex; align-items: stretch; }
+  .nav-group:hover .nav-dropdown { display: flex; }
+  .nav-dropdown { display: none; position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.08); flex-direction: column; min-width: 220px; padding: .4rem 0; z-index: 200; }
+  .nav-dd-item { padding: .65rem 1.2rem; color: var(--text2); text-decoration: none; font-size: .83rem; font-weight: 500; white-space: nowrap; transition: background .15s, color .15s; display: block; }
+  .nav-dd-item:hover { background: var(--bg2); color: var(--text); }
+  .nav-group > .nav-page::after { content: ' ▾'; font-size: .7em; opacity: .5; }
+  .nav-dd-item.active { color: var(--green); font-weight: 700; background: var(--green-dim); }
+
+  /* ── PAGE ── */
+  .page { max-width: 960px; margin: 0 auto; padding: 100px 2rem 4rem; }
+
+  /* ── BADGE ── */
+  .badge { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--border2); border-radius: 999px; padding: .3rem 1rem; font-size: .78rem; font-weight: 700; color: var(--text2); background: var(--card); margin-bottom: 1.2rem; letter-spacing: .04em; }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+
+  /* ── HERO ── */
+  .hero { padding: 2rem 0 2.5rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 900; line-height: 1.15; margin-bottom: 1rem; }
+  .hero h1 span { color: var(--blue); }
+  .hero p { color: var(--text2); font-size: 1rem; max-width: 640px; line-height: 1.8; margin-bottom: 1.5rem; }
+
+  /* ── PROMPT BOX ── */
+  .prompt-box { background: #1e293b; border: 1px solid #334155; border-radius: 14px; overflow: hidden; margin: 1.5rem 0; }
+  .prompt-head { background: #0f172a; padding: .6rem 1.2rem; font-size: .75rem; color: #94a3b8; font-family: var(--mono); display: flex; align-items: center; gap: .6rem; }
+  .prompt-head::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #22c55e; }
+  .prompt-body { padding: 1.2rem 1.5rem; font-family: var(--mono); font-size: .82rem; color: #e2e8f0; line-height: 1.8; overflow-x: auto; }
+  .prompt-body .cmt { color: #64748b; }
+  .prompt-body .kw { color: #93c5fd; }
+  .prompt-body .str { color: #86efac; }
+
+  /* ── SECTION CARD ── */
+  .sec-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sec-header { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--card2); }
+  .sec-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .sec-icon.blue { background: #dbeafe; }
+  .sec-icon.green { background: var(--green-dim); }
+  .sec-icon.purple { background: #ede9fe; }
+  .sec-icon.orange { background: #ffedd5; }
+  .sec-icon.red { background: #fee2e2; }
+  .sec-meta { display: flex; flex-direction: column; gap: 2px; }
+  .sec-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+  .sec-label.blue { color: var(--blue); }
+  .sec-label.green { color: var(--green); }
+  .sec-label.purple { color: var(--purple); }
+  .sec-label.orange { color: var(--yellow); }
+  .sec-label.red { color: var(--red); }
+  .sec-title { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+  .sec-body  { padding: 1.5rem; }
+
+  /* ── CMD TAG ── */
+  .cmd { display: inline-block; background: #1e293b; color: #86efac; font-family: var(--mono); font-size: .8rem; font-weight: 700; padding: .2rem .6rem; border-radius: 6px; margin-bottom: .6rem; letter-spacing: .03em; }
+
+  /* ── STEP LIST ── */
+  .step-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+  .step-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .step-num { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 900; }
+  .step-num.blue { background: #dbeafe; color: var(--blue); }
+  .step-num.green { background: var(--green-dim); color: var(--green2); }
+  .step-num.purple { background: #ede9fe; color: var(--purple); }
+  .step-content { flex: 1; }
+  .step-content h4 { font-size: .93rem; font-weight: 700; margin-bottom: .25rem; }
+  .step-content p  { font-size: .87rem; color: var(--text2); }
+
+  /* ── OUTPUT BLOCK ── */
+  .output-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; margin-top: .8rem; }
+  .output-item { display: flex; gap: .7rem; align-items: flex-start; font-size: .87rem; color: var(--text2); }
+  .output-item::before { content: '›'; color: var(--green); font-weight: 900; flex-shrink: 0; margin-top: .05rem; }
+
+  /* ── DIVIDER ── */
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  /* ── CALLOUT ── */
+  .callout { display: flex; gap: .8rem; align-items: flex-start; border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .callout.info  { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .callout.warn  { background: #fffbeb; border: 1px solid #fde68a; }
+  .callout.ok    { background: #f0fdf4; border: 1px solid #86efac; }
+  .callout.tip   { background: #faf5ff; border: 1px solid #d8b4fe; }
+  .callout-icon  { font-size: 1.1rem; flex-shrink: 0; }
+  .callout-title { font-size: .85rem; font-weight: 700; margin-bottom: .2rem; }
+  .callout.info  .callout-title { color: var(--blue); }
+  .callout.warn  .callout-title { color: var(--yellow); }
+  .callout.ok    .callout-title { color: var(--green2); }
+  .callout.tip   .callout-title { color: var(--purple); }
+  .callout-text  { font-size: .83rem; color: var(--text2); line-height: 1.6; }
+
+  /* ── SELF-CHECK ── */
+  .check-group { margin-bottom: 1.8rem; }
+  .check-group-title { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: .8rem; display: flex; align-items: center; gap: .5rem; }
+  .check-group-title .icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+  .check-item { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: .85rem 1.1rem; font-size: .87rem; color: var(--text2); display: flex; gap: .8rem; align-items: flex-start; cursor: pointer; transition: border-color .2s, background .2s; }
+  .check-item:hover { border-color: var(--border2); background: var(--cardin); }
+  .check-item .q-num { font-size: .72rem; font-weight: 800; color: var(--text3); min-width: 20px; margin-top: .1rem; font-family: var(--mono); }
+  .check-item .q-text { line-height: 1.6; }
+  .check-item .q-text strong { color: var(--text); font-weight: 700; }
+  .check-item .q-sub { font-size: .8rem; color: var(--text3); margin-top: .25rem; }
+
+  /* ── EMOTION TAG ── */
+  .emotion-card { border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1rem; border: 1px solid; }
+  .emotion-card.red   { background: #fff5f5; border-color: #fca5a5; }
+  .emotion-card.amber { background: #fffbeb; border-color: #fcd34d; }
+  .emotion-card.green { background: #f0fdf4; border-color: #86efac; }
+  .emotion-card-title { font-size: .88rem; font-weight: 800; margin-bottom: .5rem; }
+  .emotion-card.red   .emotion-card-title { color: var(--red); }
+  .emotion-card.amber .emotion-card-title { color: #b45309; }
+  .emotion-card.green .emotion-card-title { color: var(--green2); }
+  .emotion-card p { font-size: .83rem; color: var(--text2); line-height: 1.6; }
+
+  /* ── COMMAND GRID ── */
+  .cmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+  @media (max-width: 640px) { .cmd-grid { grid-template-columns: 1fr; } }
+  .cmd-card { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.2rem; }
+  .cmd-card .tag { font-family: var(--mono); font-size: .78rem; font-weight: 700; padding: .2rem .6rem; border-radius: 6px; display: inline-block; margin-bottom: .5rem; }
+  .cmd-card .tag.blue   { background: #dbeafe; color: var(--blue); }
+  .cmd-card .tag.green  { background: var(--green-dim); color: var(--green2); }
+  .cmd-card .tag.purple { background: #ede9fe; color: var(--purple); }
+  .cmd-card .tag.orange { background: #ffedd5; color: #c2410c; }
+  .cmd-card .tag.red    { background: #fee2e2; color: var(--red); }
+  .cmd-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: .3rem; }
+  .cmd-card p  { font-size: .82rem; color: var(--text2); line-height: 1.6; }
+
+  /* ── SETUP STEPS ── */
+  .setup-step { display: flex; gap: 1.2rem; margin-bottom: 1.8rem; align-items: flex-start; }
+  .step-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 900; font-size: .95rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .15rem; }
+  .step-body { flex: 1; }
+  .step-body h4 { font-size: .98rem; font-weight: 800; color: var(--text); margin-bottom: .45rem; }
+  .step-body p  { font-size: .87rem; color: var(--text2); line-height: 1.7; }
+
+  /* ── UI MOCKUP ── */
+  .ui-mock { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: .8rem 0; }
+  .ui-mock-bar { background: #1e293b; padding: .45rem 1rem; display: flex; align-items: center; gap: .4rem; }
+  .ui-mock-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .ui-mock-url { background: #334155; border-radius: 5px; padding: .15rem .7rem; font-size: .72rem; color: #94a3b8; font-family: var(--mono); margin-left: .4rem; }
+  .ui-mock-body { display: flex; }
+  .ui-mock-sidebar { width: 170px; background: var(--bg2); border-right: 1px solid var(--border); padding: .7rem .6rem; flex-shrink: 0; }
+  .ui-mock-sidebar-item { padding: .35rem .6rem; border-radius: 6px; font-size: .76rem; color: var(--text2); margin-bottom: .25rem; }
+  .ui-mock-sidebar-item.hl { background: var(--green-dim); color: var(--green2); font-weight: 700; border: 1.5px solid var(--green3); }
+  .ui-mock-sidebar-item.new { color: var(--blue); font-weight: 600; }
+  .ui-mock-sidebar-section { font-size: .65rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; padding: .5rem .6rem .15rem; }
+  .ui-mock-main { flex: 1; display: flex; flex-direction: column; }
+  .ui-mock-chat { flex: 1; padding: .9rem 1rem; display: flex; flex-direction: column; gap: .5rem; }
+  .ui-mock-bubble { background: var(--cardin); border-radius: 10px; padding: .5rem .8rem; font-size: .76rem; color: var(--text2); max-width: 88%; line-height: 1.5; }
+  .ui-mock-bubble.user { background: #dbeafe; color: #1e40af; align-self: flex-end; }
+  .ui-mock-input-area { border-top: 1px solid var(--border); padding: .5rem .8rem; display: flex; align-items: center; gap: .5rem; background: var(--bg); }
+  .ui-mock-input { flex: 1; border: 1.5px solid var(--blue); border-radius: 8px; padding: .4rem .8rem; font-size: .76rem; color: var(--text); background: var(--bg); font-family: var(--mono); }
+  .ui-mock-send { background: var(--blue); color: #fff; border: none; border-radius: 7px; padding: .35rem .8rem; font-size: .76rem; font-weight: 700; white-space: nowrap; }
+
+  /* ── METHOD CARDS ── */
+  .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: .8rem 0; }
+  @media(max-width:600px) { .method-grid { grid-template-columns: 1fr; } }
+  .method-card { border-radius: 12px; padding: 1.1rem 1.2rem; border: 1px solid; }
+  .method-card.a { background: #f0f9ff; border-color: #bae6fd; }
+  .method-card.b { background: #f0fdf4; border-color: #86efac; }
+  .method-card-title { font-size: .92rem; font-weight: 800; margin-bottom: .6rem; }
+  .method-card.a .method-card-title { color: #0369a1; }
+  .method-card.b .method-card-title { color: var(--green2); }
+  .method-card ol { padding-left: 1.1rem; display: flex; flex-direction: column; gap: .35rem; font-size: .82rem; color: var(--text2); line-height: 1.6; }
+  .method-note { margin-top: .7rem; font-size: .76rem; padding: .4rem .6rem; border-radius: 6px; font-weight: 600; }
+  .method-card.a .method-note { color: #0369a1; background: #e0f2fe; }
+  .method-card.b .method-note { color: var(--green2); background: var(--green-dim); }
+
+  /* ── COPY BTN ── */
+  .copy-btn-wrap { display: flex; justify-content: flex-end; margin-top: .5rem; }
+  .copy-prompt-btn { background: var(--green); color: #052e16; border: none; border-radius: 6px; padding: .35rem .9rem; font-size: .78rem; font-weight: 700; cursor: pointer; transition: opacity .2s; display: inline-flex; align-items: center; gap: .3rem; }
+  .copy-prompt-btn:hover { opacity: .85; }
+
+  kbd { background: var(--cardin); border: 1px solid var(--border2); border-radius: 4px; padding: .1em .4em; font-size: .8em; font-family: var(--mono); color: var(--text); }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; padding: 2.5rem; color: var(--text3); font-size: .78rem; border-top: 1px solid var(--border); }
+
+  code { background: var(--cardin); border: 1px solid var(--border); border-radius: 4px; padding: .1em .4em; font-family: var(--mono); font-size: .8em; color: var(--blue); }
+  h3 { font-size: 1rem; font-weight: 700; margin: 1.4rem 0 .6rem; color: var(--text); }
+  .mt { margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">⏱</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">우당시</span>
+      <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
+    </div>
+  </a>
+  <div class="nav-pages">
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page">가이드</a>
+      <div class="nav-dropdown">
+        <a href="/claude-design" class="nav-dd-item">🎨 Claude 디자인</a>
+        <a href="/token-router" class="nav-dd-item">💰 토큰 절감 99%</a>
+      </div>
+    </div>
+    <a href="/cheatsheet" class="nav-page">코딩이란?</a>
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page active">Tip</a>
+      <div class="nav-dropdown">
+        <a href="/tip" class="nav-dd-item">🎙 회의록 자동 완성</a>
+        <a href="/invest" class="nav-dd-item active">📈 AI 투자 리서치</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="sub-nav">
+  <a href="#intro">소개</a>
+  <a href="#setup">시작하기</a>
+  <a href="#commands">명령어 가이드</a>
+  <a href="#cs-detail">/cs 추적 관찰</a>
+  <a href="#self-check">감정 점검 질문</a>
+</div>
+
+<div class="page">
+
+  <!-- BADGE -->
+  <div class="badge"><span class="dot"></span> TIP · AI 투자 리서치 어시스턴트</div>
+
+  <!-- HERO -->
+  <div class="hero" id="intro">
+    <h1>Claude로<br><span>투자 리서치</span>하는 법</h1>
+    <p>섹터 조감부터 종목 스크리닝, 실적 분석, 보유 종목 추적까지 — 아래 프롬프트를 Claude에 붙여넣으면 개인 투자자를 위한 AI 리서치 애널리스트가 됩니다.</p>
+  </div>
+
+  <!-- PROMPT -->
+  <div class="prompt-box">
+    <div class="prompt-head">
+      Claude 시스템 프롬프트
+      <button class="copy-prompt-btn" id="copy-btn" onclick="copyPrompt()">📋 복사하기</button>
+    </div>
+    <div class="prompt-body" id="prompt-content">
+<span class="str">당신은 개인 투자자를 돕는 투자 리서치 애널리스트다.</span><br>
+<span class="cmt">사용자가 /명령어 형식으로 입력하면 해당 규칙을 따라 응답하라.</span><br>
+<br>
+<span class="kw">공통 원칙:</span><br>
+- 모든 수치와 사실에는 출처를 표기한다.<br>
+- 추정·불확실한 값은 명확히 구분 표시한다.<br>
+- 매수·매도를 지시하지 않는다. 최종 판단은 사용자에게 있다.<br>
+- 실시간 시세는 제공할 수 없음을 안다.<br>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">👇</span>
+    <div>
+      <div class="callout-title">처음이라면 아래 '시작하기'부터 읽어보세요</div>
+      <div class="callout-text">Claude가 무엇인지, 어디에 붙여넣어야 하는지, 어떻게 사용하는지 — A부터 Z까지 화면 예시와 함께 설명합니다.</div>
+    </div>
+  </div>
+
+  <hr class="divider" id="setup">
+
+  <!-- ── 시작하기 A~Z ── -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon blue">🚀</div>
+      <div class="sec-meta">
+        <span class="sec-label blue">시작하기 — A부터 Z까지</span>
+        <span class="sec-title">처음이라도 5분이면 설정 완료</span>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="callout ok" style="margin-bottom:1.4rem">
+        <span class="callout-icon">📋</span>
+        <div>
+          <div class="callout-title">준비물</div>
+          <div class="callout-text">인터넷이 연결된 PC 또는 스마트폰 &nbsp;·&nbsp; Claude 계정 (무료) &nbsp;·&nbsp; 이 페이지</div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="setup-step">
+        <div class="step-circle">1</div>
+        <div class="step-body">
+          <h4>claude.ai 접속 후 계정 만들기</h4>
+          <p>브라우저 주소창에 <strong>claude.ai</strong> 를 입력하고 접속합니다.<br>
+          처음이라면 <strong>Sign up</strong>을 클릭해 Google 계정 또는 이메일로 회원가입하세요.<br>
+          무료 플랜으로 시작해도 충분합니다.</p>
+          <div class="ui-mock" style="margin-top:.8rem">
+            <div class="ui-mock-bar">
+              <div class="ui-mock-dot" style="background:#ef4444"></div>
+              <div class="ui-mock-dot" style="background:#f59e0b"></div>
+              <div class="ui-mock-dot" style="background:#22c55e"></div>
+              <div class="ui-mock-url">claude.ai</div>
+            </div>
+            <div style="padding:2rem;text-align:center;background:var(--bg2)">
+              <div style="font-size:1.3rem;font-weight:900;color:var(--text);margin-bottom:1rem">Welcome to Claude</div>
+              <div style="display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap">
+                <div style="background:#fff;border:1px solid var(--border2);border-radius:8px;padding:.5rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--text2)">🔵 Google로 계속하기</div>
+                <div style="background:var(--blue);color:#fff;border-radius:8px;padding:.5rem 1.2rem;font-size:.82rem;font-weight:700">이메일로 가입</div>
+              </div>
+              <div style="margin-top:.8rem;font-size:.75rem;color:var(--text3)">이미 계정이 있다면 Log in 클릭</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="setup-step">
+        <div class="step-circle">2</div>
+        <div class="step-body">
+          <h4>이 페이지 위쪽의 프롬프트 복사하기</h4>
+          <p>페이지 위쪽 검은 박스(프롬프트 박스)의 <strong>📋 복사하기</strong> 버튼을 클릭하세요.<br>
+          또는 검은 박스 안 텍스트를 드래그 → <kbd>Ctrl+C</kbd> (Mac: <kbd>⌘C</kbd>)</p>
+          <div class="callout tip" style="margin-top:.7rem">
+            <span class="callout-icon">☝️</span>
+            <div><div class="callout-text">위로 스크롤하면 <strong>검은 배경의 프롬프트 박스</strong>가 있습니다. 오른쪽 상단 <strong>📋 복사하기</strong> 버튼을 누르면 클립보드에 자동으로 복사됩니다.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="setup-step">
+        <div class="step-circle">3</div>
+        <div class="step-body">
+          <h4>Claude에 붙여넣기 — 2가지 방법 중 선택</h4>
+          <p style="margin-bottom:.8rem">상황에 맞게 아래 두 방법 중 하나를 선택하세요.</p>
+          <div class="method-grid">
+            <div class="method-card a">
+              <div class="method-card-title">⚡ 방법 A — 빠른 1회성 사용</div>
+              <ol>
+                <li>Claude 화면 왼쪽 상단 <strong>+ New chat</strong> 클릭</li>
+                <li>채팅 입력창 클릭 후 <kbd>Ctrl+V</kbd> 로 붙여넣기</li>
+                <li><kbd>Enter</kbd> 또는 전송 버튼(↑) 클릭</li>
+                <li>Claude 확인 응답이 오면 완료</li>
+              </ol>
+              <div class="method-note">⚠️ 이 대화창에서만 유효. 새 채팅 열 때마다 다시 붙여넣어야 함</div>
+            </div>
+            <div class="method-card b">
+              <div class="method-card-title">⭐ 방법 B — 추천 · 한 번만 설정</div>
+              <ol>
+                <li>Claude 왼쪽 메뉴 <strong>Projects</strong> 클릭</li>
+                <li><strong>+ New project</strong> 클릭</li>
+                <li>프로젝트 이름: <strong>투자 리서치</strong> 입력</li>
+                <li><strong>Project instructions</strong> 영역에 <kbd>Ctrl+V</kbd></li>
+                <li>저장 → 이 프로젝트에서 새 채팅 시작</li>
+              </ol>
+              <div class="method-note">✅ 이후 이 프로젝트에서 여는 모든 대화에 자동 적용</div>
+            </div>
+          </div>
+
+          <h3 style="margin-top:1.4rem">방법 B 화면 — Projects 위치와 설정 영역</h3>
+          <div class="ui-mock">
+            <div class="ui-mock-bar">
+              <div class="ui-mock-dot" style="background:#ef4444"></div>
+              <div class="ui-mock-dot" style="background:#f59e0b"></div>
+              <div class="ui-mock-dot" style="background:#22c55e"></div>
+              <div class="ui-mock-url">claude.ai</div>
+            </div>
+            <div class="ui-mock-body">
+              <div class="ui-mock-sidebar">
+                <div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.5rem;padding:.2rem .4rem">Claude</div>
+                <div class="ui-mock-sidebar-item new">+ New chat</div>
+                <div class="ui-mock-sidebar-section">Projects</div>
+                <div class="ui-mock-sidebar-item hl">★ 투자 리서치</div>
+                <div class="ui-mock-sidebar-item new" style="font-size:.73rem">+ New project</div>
+                <div class="ui-mock-sidebar-section">Recent</div>
+                <div class="ui-mock-sidebar-item" style="font-size:.73rem;opacity:.5">이전 대화...</div>
+              </div>
+              <div class="ui-mock-main">
+                <div class="ui-mock-chat">
+                  <div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.4rem">Project instructions</div>
+                  <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:.7rem .9rem;font-size:.75rem;color:var(--text2);line-height:1.6">
+                    당신은 개인 투자자를 돕는 투자 리서치 애널리스트다.<br>
+                    사용자가 /명령어 형식으로 입력하면...<br>
+                    <span style="color:var(--text3)">(복사한 프롬프트 전체가 들어갑니다)</span>
+                  </div>
+                  <div style="margin-top:.5rem;font-size:.74rem;color:var(--green2);font-weight:600">✅ 저장 완료 — 이 프로젝트의 모든 대화에 자동 적용됩니다</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="setup-step">
+        <div class="step-circle">4</div>
+        <div class="step-body">
+          <h4>설정 확인 — Claude가 이렇게 답하면 준비 완료</h4>
+          <p style="margin-bottom:.8rem">프롬프트를 전송하면 Claude가 아래처럼 응답합니다. 이 응답이 오면 설정 성공입니다.</p>
+          <div class="ui-mock">
+            <div class="ui-mock-bar">
+              <div class="ui-mock-dot" style="background:#ef4444"></div>
+              <div class="ui-mock-dot" style="background:#f59e0b"></div>
+              <div class="ui-mock-dot" style="background:#22c55e"></div>
+              <div class="ui-mock-url">claude.ai — 투자 리서치</div>
+            </div>
+            <div class="ui-mock-main">
+              <div class="ui-mock-chat">
+                <div class="ui-mock-bubble user">당신은 개인 투자자를 돕는 투자 리서치 애널리스트다...</div>
+                <div class="ui-mock-bubble" style="max-width:95%">
+                  네, 이해했습니다. 저는 <strong>투자 리서치 애널리스트</strong>로서 응답하겠습니다. 📊<br><br>
+                  아래 명령어를 사용해 리서치를 시작하세요:<br>
+                  <span style="color:var(--green2);font-family:monospace;font-size:.8rem">/sector /screen /earnings /converge /cs</span>
+                </div>
+              </div>
+              <div class="ui-mock-input-area">
+                <div class="ui-mock-input">/sector 반도체 초급</div>
+                <div class="ui-mock-send">↑</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="setup-step" style="margin-bottom:0">
+        <div class="step-circle" style="background:var(--green)">✓</div>
+        <div class="step-body">
+          <h4>첫 번째 명령어 입력해보기</h4>
+          <p style="margin-bottom:.8rem">이제 아래 예제 중 하나를 그대로 복사해서 입력해보세요.</p>
+          <div class="prompt-box" style="margin:.5rem 0">
+            <div class="prompt-head">추천 첫 명령어 — 관심 산업 조감</div>
+            <div class="prompt-body">/sector 반도체 초급</div>
+          </div>
+          <div class="prompt-box" style="margin:.5rem 0">
+            <div class="prompt-head">또는 — 종목 비교</div>
+            <div class="prompt-body">/screen 삼성전자, SK하이닉스, 마이크론</div>
+          </div>
+          <div class="prompt-box" style="margin:.5rem 0">
+            <div class="prompt-head">또는 — 보유 종목 등록</div>
+            <div class="prompt-body">/cs 삼성전자 매수이유: AI 서버 HBM 수요 증가, 저PBR 매력</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider" id="commands">
+
+  <!-- COMMANDS -->
+  <div class="callout info" style="margin-bottom:1.2rem">
+    <span class="callout-icon">✏️</span>
+    <div>
+      <div class="callout-title">사용법이 어렵지 않아요</div>
+      <div class="callout-text">Claude 채팅창에 <strong>명령어 + 원하는 내용</strong>을 입력하면 끝입니다. 아래 예제를 그대로 복사해서 붙여넣어 보세요.</div>
+    </div>
+  </div>
+
+  <!-- /sector -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon blue">🗺</div>
+      <div class="sec-meta">
+        <span class="sec-label blue">/sector — 섹터 조감</span>
+        <span class="sec-title">관심 산업 전체를 한 장으로 정리해줍니다</span>
+      </div>
+    </div>
+    <div class="sec-body">
+      <h3>입력 형식</h3>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">형식</div>
+        <div class="prompt-body"><span class="kw">/sector</span> <span class="str">산업명</span> <span class="cmt">(선택: 초급 / 중급 / 전문가)</span></div>
+      </div>
+      <h3>예제 — 이걸 그대로 복사해서 붙여넣어 보세요</h3>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">예제 ①  초보자용</div>
+        <div class="prompt-body">/sector AI 전력 인프라 초급</div>
+      </div>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">예제 ②  전문가용</div>
+        <div class="prompt-body">/sector 국내 방산 전문가</div>
+      </div>
+      <h3>Claude가 돌려주는 것</h3>
+      <ul class="output-list">
+        <li class="output-item">산업 한눈에 보기 — 3줄 요약</li>
+        <li class="output-item">시장 규모·성장 전망 (수치 + 출처)</li>
+        <li class="output-item">업스트림→미드스트림→다운스트림 단계별 핵심 플레이어 표</li>
+        <li class="output-item">규제·정책·거시 리스크 분석</li>
+        <li class="output-item">투자자가 주목할 3가지 포인트</li>
+      </ul>
+      <div class="callout ok" style="margin-top:1rem">
+        <span class="callout-icon">💡</span>
+        <div>
+          <div class="callout-title">Tip</div>
+          <div class="callout-text"><strong>초급</strong>을 붙이면 어려운 용어를 쉽게 풀어줍니다. 처음 공부하는 산업이라면 꼭 붙여보세요. 지식수준을 생략하면 중간 수준으로 응답합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- /screen -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon green">🔍</div>
+      <div class="sec-meta">
+        <span class="sec-label green">/screen — 종목 스크리닝</span>
+        <span class="sec-title">여러 종목을 같은 기준으로 한 번에 비교합니다</span>
+      </div>
+    </div>
+    <div class="sec-body">
+      <h3>입력 형식</h3>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">형식</div>
+        <div class="prompt-body"><span class="kw">/screen</span> <span class="str">기업명1, 기업명2, 기업명3</span>  <span class="cmt">또는  섹터명만 입력</span></div>
+      </div>
+      <h3>예제</h3>
+      <div class="prompt-box" style="margin:.5rem 0 .7rem">
+        <div class="prompt-head">예제 ①  기업 직접 지정</div>
+        <div class="prompt-body">/screen HD현대일렉트릭, 효성중공업, LS일렉트릭</div>
+      </div>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">예제 ②  섹터명만 — AI가 대표기업 선정</div>
+        <div class="prompt-body">/screen 국내 전력기기 섹터</div>
+      </div>
+      <h3>Claude가 돌려주는 것</h3>
+      <ul class="output-list">
+        <li class="output-item">시가총액 / 매출 성장률 / 영업이익률·ROE / PER·PBR 비교표</li>
+        <li class="output-item">핵심 모멘텀 (수주잔고·신사업) 비교</li>
+        <li class="output-item">기업별 한 줄 투자 포인트</li>
+        <li class="output-item">상대적 매력도 순위 + 근거</li>
+        <li class="output-item">더 깊게 볼 1~2개 종목 추천 (→ /earnings 연결 제안)</li>
+      </ul>
+      <div class="callout ok" style="margin-top:1rem">
+        <span class="callout-icon">💡</span>
+        <div>
+          <div class="callout-title">Tip</div>
+          <div class="callout-text">어떤 기업을 봐야 할지 모를 때는 <strong>섹터명만</strong> 입력하세요. AI가 대표 기업 4~6개를 직접 골라서 비교해줍니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- /earnings -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon purple">📊</div>
+      <div class="sec-meta">
+        <span class="sec-label purple">/earnings — 실적 분석</span>
+        <span class="sec-title">기업의 성적표를 숫자로 파헤칩니다</span>
+      </div>
+    </div>
+    <div class="sec-body">
+      <h3>입력 형식</h3>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">형식</div>
+        <div class="prompt-body"><span class="kw">/earnings</span> <span class="str">기업명</span></div>
+      </div>
+      <h3>예제</h3>
+      <div class="prompt-box" style="margin:.5rem 0 .7rem">
+        <div class="prompt-head">예제 ①  기본</div>
+        <div class="prompt-body">/earnings 효성중공업</div>
+      </div>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">예제 ②  DART 파일 첨부 시 (더 정확)</div>
+        <div class="prompt-body">/earnings 효성중공업   ← 사업보고서 PDF 파일도 함께 첨부</div>
+      </div>
+      <h3>Claude가 돌려주는 것</h3>
+      <ul class="output-list">
+        <li class="output-item">직전 분기 vs 전년 동기 실적 요약 (매출·영업이익·순이익)</li>
+        <li class="output-item">추이 차트 시각화</li>
+        <li class="output-item">영업이익률·순이익률·ROE 변화와 원인 분석</li>
+        <li class="output-item">부채비율·현금흐름 재무 건전성 점검</li>
+        <li class="output-item">긍정 신호 / 부정 신호 구분 정리</li>
+      </ul>
+      <div class="callout ok" style="margin-top:1rem">
+        <span class="callout-icon">💡</span>
+        <div>
+          <div class="callout-title">Tip — 더 정확하게 분석하려면</div>
+          <div class="callout-text"><a href="https://dart.fss.or.kr" target="_blank" style="color:var(--green2);font-weight:700">DART(dart.fss.or.kr)</a>에서 사업보고서 PDF를 내려받아 채팅창에 파일로 첨부하면, 공시 원문 기준으로 더 정밀하게 분석해줍니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- /converge -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon orange">📝</div>
+      <div class="sec-meta">
+        <span class="sec-label orange">/converge — 심층 보고서</span>
+        <span class="sec-title">한 기업을 A부터 Z까지 9개 섹션으로 정리합니다</span>
+      </div>
+    </div>
+    <div class="sec-body">
+      <h3>입력 형식</h3>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">형식</div>
+        <div class="prompt-body"><span class="kw">/converge</span> <span class="str">기업명</span></div>
+      </div>
+      <h3>예제</h3>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">예제</div>
+        <div class="prompt-body">/converge 효성중공업</div>
+      </div>
+      <h3>Claude가 돌려주는 것 — 9개 섹션 보고서</h3>
+      <ul class="output-list">
+        <li class="output-item">① Executive Summary — 한 페이지 요약</li>
+        <li class="output-item">② 산업 개요·밸류체인 내 위치</li>
+        <li class="output-item">③ 기업 개요·사업구조</li>
+        <li class="output-item">④ 경쟁력 분석 (해자)</li>
+        <li class="output-item">⑤ 재무 분석 (차트 포함)</li>
+        <li class="output-item">⑥ 밸류에이션</li>
+        <li class="output-item">⑦ 투자 포인트 (Bull)</li>
+        <li class="output-item">⑧ 리스크 (Bear)</li>
+        <li class="output-item">⑨ 종합 결론</li>
+      </ul>
+      <div class="callout tip" style="margin-top:1rem">
+        <span class="callout-icon">⚡</span>
+        <div>
+          <div class="callout-title">추천 순서</div>
+          <div class="callout-text">같은 대화에서 <code>/sector</code> → <code>/screen</code> → <code>/earnings</code> 를 먼저 실행한 뒤 <code>/converge</code>를 입력하면, 앞선 리서치 결과를 모두 통합해 훨씬 풍부한 보고서를 만들어줍니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- /cs 요약 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon red">📌</div>
+      <div class="sec-meta">
+        <span class="sec-label red">/cs — 추적 관찰</span>
+        <span class="sec-title">보유 종목의 논거를 주기적으로 점검합니다</span>
+      </div>
+    </div>
+    <div class="sec-body">
+      <h3>입력 형식 — 2가지 모드</h3>
+      <div class="prompt-box" style="margin:.5rem 0 .7rem">
+        <div class="prompt-head">등록 모드 — 처음 살 때</div>
+        <div class="prompt-body"><span class="kw">/cs</span> <span class="str">종목명</span> <span class="kw">매수이유:</span> <span class="str">이유를 자유롭게 적기</span></div>
+      </div>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">점검 모드 — 주기적으로</div>
+        <div class="prompt-body"><span class="kw">/cs</span> <span class="str">종목명</span></div>
+      </div>
+      <h3>예제</h3>
+      <div class="prompt-box" style="margin:.5rem 0 .7rem">
+        <div class="prompt-head">예제 ①  등록</div>
+        <div class="prompt-body">/cs 효성중공업 매수이유: 전력 인프라 수요 증가, 수주잔고 사상 최대, PER 저평가</div>
+      </div>
+      <div class="prompt-box" style="margin:.5rem 0 1rem">
+        <div class="prompt-head">예제 ②  2주 후 점검</div>
+        <div class="prompt-body">/cs 효성중공업</div>
+      </div>
+      <h3>Claude가 돌려주는 것</h3>
+      <ul class="output-list">
+        <li class="output-item">📌 최초 매수 이유 상기</li>
+        <li class="output-item">📰 최근 1~2주 뉴스·목표주가 변동 (출처 포함)</li>
+        <li class="output-item">📅 다가오는 실적 발표·배당 일정</li>
+        <li class="output-item">🧭 논거 판정: 유효 / 강화 / 흔들림</li>
+        <li class="output-item">논거가 흔들릴 경우 → 아래 감정 점검 질문으로 연결</li>
+      </ul>
+      <div class="callout warn" style="margin-top:1rem">
+        <span class="callout-icon">⚠️</span>
+        <div>
+          <div class="callout-title">가장 중요한 명령어</div>
+          <div class="callout-text">사고 나서 잊어버리는 게 가장 큰 실수입니다. <strong>살 때 등록하고, 2주에 한 번 점검</strong>하는 습관만 지켜도 감정적 매매를 크게 줄일 수 있습니다. 상세 사용법은 아래 섹션을 참고하세요.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" id="cs-detail">
+
+  <!-- /cs 상세 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon red">📌</div>
+      <div class="sec-meta">
+        <span class="sec-label red">/cs — 추적 관찰</span>
+        <span class="sec-title">보유 종목을 체계적으로 추적하는 방법</span>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <h3>① 등록 모드 — 매수 이유를 기록한다</h3>
+      <div class="prompt-box" style="margin:.6rem 0 1rem">
+        <div class="prompt-head">예시 입력</div>
+        <div class="prompt-body"><span class="str">/cs 효성중공업 매수이유: 전력 인프라 수요 증가, 수주잔고 사상 최대</span></div>
+      </div>
+      <ul class="output-list">
+        <li class="output-item">종목명 · 등록일 · 매수 이유를 정리해 확인합니다.</li>
+        <li class="output-item">매도 고려 조건(논거 소멸 시점)도 함께 명시하도록 유도합니다.</li>
+        <li class="output-item">이 기록은 이후 점검 모드에서 기준선으로 사용됩니다.</li>
+      </ul>
+
+      <h3 class="mt">② 점검 모드 — 주기적으로 논거를 검토한다</h3>
+      <div class="prompt-box" style="margin:.6rem 0 1rem">
+        <div class="prompt-head">예시 입력</div>
+        <div class="prompt-body"><span class="str">/cs 효성중공업</span></div>
+      </div>
+      <ul class="step-list">
+        <li class="step-item">
+          <div class="step-num blue">1</div>
+          <div class="step-content">
+            <h4>📌 최초 매수 이유 상기</h4>
+            <p>이전 대화에서 등록한 매수 이유를 먼저 보여줍니다. "내가 왜 샀는가"를 기억에 의존하지 않도록 합니다.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num blue">2</div>
+          <div class="step-content">
+            <h4>📰 그동안의 변화</h4>
+            <p>최근 1~2주 주요 뉴스, 목표주가·투자의견 변동을 웹 검색으로 정리합니다. (출처 포함)</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num blue">3</div>
+          <div class="step-content">
+            <h4>📅 다가오는 일정</h4>
+            <p>실적 발표, 배당 기준일, 주요 컨퍼런스 등 캘린더 일정을 미리 확인합니다.</p>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num blue">4</div>
+          <div class="step-content">
+            <h4>🧭 논거 판정</h4>
+            <p>최초 매수 이유가 <strong>① 유효 / ② 강화 / ③ 흔들림</strong> 중 어디에 해당하는지 판정합니다.<br>논거가 흔들리고 감정적 판단이 의심될 때는 아래 "스스로 점검할 질문"으로 연결됩니다.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider" id="self-check">
+
+  <!-- 감정 점검 질문 -->
+  <div class="sec-card">
+    <div class="sec-header">
+      <div class="sec-icon purple">🧠</div>
+      <div class="sec-meta">
+        <span class="sec-label purple">스스로 점검할 질문</span>
+        <span class="sec-title">논거가 흔들릴 때 꺼내는 자가진단 체크리스트</span>
+      </div>
+    </div>
+    <div class="sec-body">
+
+      <div class="callout tip">
+        <span class="callout-icon">🎯</span>
+        <div>
+          <div class="callout-title">이 체크리스트를 쓰는 타이밍</div>
+          <div class="callout-text">주가가 크게 흔들렸을 때 · 충동적으로 사고 싶거나 팔고 싶을 때 · /cs 점검 결과 논거가 "흔들림"으로 판정됐을 때</div>
+        </div>
+      </div>
+
+      <!-- 그룹 1 -->
+      <div class="check-group mt">
+        <div class="check-group-title">
+          <div class="check-icon" style="background:#dbeafe;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;">📋</div>
+          매수 논거 점검
+        </div>
+        <ul class="check-list">
+          <li class="check-item">
+            <span class="q-num">Q1</span>
+            <div class="q-text">
+              <strong>내가 이 주식을 산 이유는 지금도 유효한가?</strong>
+              <div class="q-sub">매수 당시 기록한 논거를 다시 꺼내 읽어보자. 기억이 아닌 기록을 봐야 한다.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q2</span>
+            <div class="q-text">
+              <strong>논거가 바뀌었다면, 그것은 새로운 사실 때문인가 — 아니면 가격이 떨어졌기 때문인가?</strong>
+              <div class="q-sub">가격 하락이 논거 변경의 이유가 돼서는 안 된다. 사실이 바뀌었는지 확인하라.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q3</span>
+            <div class="q-text">
+              <strong>지금 이 주식을 처음 보는 사람에게도 같은 이유로 추천할 수 있는가?</strong>
+              <div class="q-sub">"원금을 회복해야 하니까"는 논거가 아니다. 처음 본 사람에게 설득력 있는 이유여야 한다.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q4</span>
+            <div class="q-text">
+              <strong>내가 세운 매도 조건에 해당하는 상황인가?</strong>
+              <div class="q-sub">매수 전 정해뒀던 "이런 상황이면 판다"는 조건을 지금 상황과 대조하라.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 그룹 2 -->
+      <div class="check-group">
+        <div class="check-group-title">
+          <div class="check-icon" style="background:#ffe4e6;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;">❤️‍🔥</div>
+          감정 vs 사실 구분
+        </div>
+        <ul class="check-list">
+          <li class="check-item">
+            <span class="q-num">Q5</span>
+            <div class="q-text">
+              <strong>지금의 결정이 데이터에 근거한 것인가 — 아니면 손실 회피 심리 때문인가?</strong>
+              <div class="q-sub">손실이 아프기 때문에 팔지 못하는 것과, 논거가 살아있어서 보유하는 것은 완전히 다르다.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q6</span>
+            <div class="q-text">
+              <strong>"더 오를 것 같다"는 근거는 무엇인가 — 느낌인가, 사실인가?</strong>
+              <div class="q-sub">구체적인 근거를 한 문장으로 적을 수 없다면, 그것은 희망이지 분석이 아니다.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q7</span>
+            <div class="q-text">
+              <strong>손실 중이라서 팔기 싫은 것인가 — 아니면 진짜로 상황이 개선될 것이라 믿는 것인가?</strong>
+              <div class="q-sub">두 가지를 혼동하는 것이 가장 흔한 실수다. 분리해서 생각하라.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q8</span>
+            <div class="q-text">
+              <strong>지금 이 결정을 6개월 후의 나는 어떻게 평가할 것인가?</strong>
+              <div class="q-sub">단기 감정에서 벗어나 미래의 시점에서 지금을 바라보자.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 그룹 3 -->
+      <div class="check-group">
+        <div class="check-group-title">
+          <div class="check-icon" style="background:#dcfce7;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;">🌐</div>
+          시장 맥락 점검
+        </div>
+        <ul class="check-list">
+          <li class="check-item">
+            <span class="q-num">Q9</span>
+            <div class="q-text">
+              <strong>내 종목이 하락한 것이 섹터 전체 하락인가 — 기업 특유의 문제인가?</strong>
+              <div class="q-sub">섹터 하락이면 일시적일 수 있다. 기업 특유의 문제라면 논거 자체를 재검토해야 한다.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q10</span>
+            <div class="q-text">
+              <strong>현재 거시 환경(금리·환율·정책)은 내 최초 투자 가설에 어떤 영향을 주는가?</strong>
+              <div class="q-sub">처음 투자할 때 가정했던 거시 조건이 지금도 유효한지 확인하라.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q11</span>
+            <div class="q-text">
+              <strong>경쟁사·대체재의 변화가 내 종목의 경쟁력에 영향을 주고 있는가?</strong>
+              <div class="q-sub">처음 투자할 때 없었던 새로운 경쟁 요인이 등장했는지 확인하라.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 그룹 4 -->
+      <div class="check-group">
+        <div class="check-group-title">
+          <div class="check-icon" style="background:#ede9fe;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;">⚖️</div>
+          포지션·원칙 점검
+        </div>
+        <ul class="check-list">
+          <li class="check-item">
+            <span class="q-num">Q12</span>
+            <div class="q-text">
+              <strong>이 종목의 포트폴리오 비중은 적절한가?</strong>
+              <div class="q-sub">한 종목에 과도하게 집중되어 있다면, 논거의 옳고 그름과 무관하게 리스크 관리가 필요하다.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q13</span>
+            <div class="q-text">
+              <strong>지금 추가 매수하고 싶다면 — 새로운 정보가 생겼는가, 아니면 단순히 싸 보이기 때문인가?</strong>
+              <div class="q-sub">"싸졌으니 더 사야지"는 물타기로 이어질 수 있다. 논거가 강화된 이유를 구체적으로 적어보자.</div>
+            </div>
+          </li>
+          <li class="check-item">
+            <span class="q-num">Q14</span>
+            <div class="q-text">
+              <strong>지금 이 결정을 친구에게 말한다면 어떻게 설명하겠는가?</strong>
+              <div class="q-sub">설명하기 어렵다면 스스로도 납득이 안 된 결정이다. 논리를 다시 정리하라.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 논거 판정 기준 -->
+      <h3>논거 판정 결과에 따른 행동 원칙</h3>
+      <div class="emotion-card green">
+        <div class="emotion-card-title">✅ 논거 유효 · 강화</div>
+        <p>새로운 부정적 사실이 없고 최초 투자 이유가 살아있다면, 단기 가격 변동에 흔들리지 않는다. 보유 또는 원칙 범위 내 추가를 검토할 수 있다.</p>
+      </div>
+      <div class="emotion-card amber">
+        <div class="emotion-card-title">⚠️ 논거 흔들림</div>
+        <p>일부 가정이 변했지만 핵심은 살아있는 상태. 변화의 크기와 지속성을 추가 조사하고, 포지션 크기를 재검토하는 시점이다. 즉각적 판단을 미루고 1~2주 더 관찰한다.</p>
+      </div>
+      <div class="emotion-card red">
+        <div class="emotion-card-title">❌ 논거 소멸</div>
+        <p>최초 매수 이유가 사실에 의해 부정됐다면, 손실 여부와 무관하게 논거 기반 판단을 내려야 한다. "언젠가 오르겠지"는 논거가 아니다. 이 판단과 책임은 전적으로 투자자 본인에게 있다.</p>
+      </div>
+
+      <div class="callout warn mt">
+        <span class="callout-icon">⚠️</span>
+        <div>
+          <div class="callout-title">중요한 안내</div>
+          <div class="callout-text">이 가이드와 AI 리서치 결과는 투자 참고 자료입니다. 매수·매도를 지시하지 않으며, 모든 투자 판단과 책임은 투자자 본인에게 있습니다. 투자에는 원금 손실 위험이 있습니다.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2025 우당시 — 우리는 당신의 시간을 벌어드립니다
+</footer>
+
+<script>
+function copyPrompt() {
+  var el = document.getElementById('prompt-content');
+  var text = el.innerText;
+  var btn = document.getElementById('copy-btn');
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✅ 복사 완료!';
+    setTimeout(function() { btn.textContent = '📋 복사하기'; }, 2000);
+  }).catch(function() {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✅ 복사 완료!';
+    setTimeout(function() { btn.textContent = '📋 복사하기'; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

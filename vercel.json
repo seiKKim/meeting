@@ -1,8 +1,10 @@
 {
   "rewrites": [
     { "source": "/",            "destination": "/guide.html" },
-    { "source": "/cheatsheet",    "destination": "/cheatsheet.html" },
-    { "source": "/claude-design",  "destination": "/claude-design.html" },
-    { "source": "/token-router",   "destination": "/token-router.html" }
+    { "source": "/tip",         "destination": "/guide.html" },
+    { "source": "/invest",      "destination": "/invest.html" },
+    { "source": "/cheatsheet",  "destination": "/cheatsheet.html" },
+    { "source": "/claude-design", "destination": "/claude-design.html" },
+    { "source": "/token-router",  "destination": "/token-router.html" }
   ]
 }
