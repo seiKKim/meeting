@@ -142,6 +142,30 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .write-btn{background:var(--green);color:#052e16;border:none;border-radius:8px;padding:.42rem 1.05rem;font-size:.81rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;text-decoration:none;}
 .write-btn:hover{opacity:.88;}
 
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;display:none;align-items:center;justify-content:center;}
+.modal-box{background:var(--card);border-radius:16px;width:100%;max-width:500px;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,.18);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);}
+.modal-header h3{font-size:.97rem;font-weight:800;}
+.modal-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text3);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
+.modal-close:hover{background:var(--bg2);color:var(--text);}
+.modal-body{padding:1.3rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.form-group{display:flex;flex-direction:column;gap:.3rem;}
+.form-group label{font-size:.78rem;font-weight:700;color:var(--text2);}
+.form-group input,.form-group select,.form-group textarea{border:1.5px solid var(--border);border-radius:8px;padding:.5rem .75rem;font-size:.86rem;font-family:inherit;color:var(--text);background:var(--bg);transition:border-color .15s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--green3);}
+.form-group textarea{resize:vertical;min-height:110px;line-height:1.6;}
+.modal-footer{display:flex;gap:.5rem;justify-content:flex-end;padding:.9rem 1.5rem;border-top:1px solid var(--border);}
+.btn-cancel{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:.42rem 1rem;font-size:.81rem;font-weight:600;cursor:pointer;}
+.btn-cancel:hover{background:var(--bg2);}
+.btn-submit{background:var(--green);color:#052e16;border:none;border-radius:8px;padding:.42rem 1.1rem;font-size:.81rem;font-weight:700;cursor:pointer;}
+.btn-submit:disabled{opacity:.55;cursor:not-allowed;}
+
+/* LOADING / EMPTY */
+.loading{text-align:center;padding:2.5rem 1rem;color:var(--text3);font-size:.86rem;}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:.85rem;line-height:1.9;}
+.empty-state .icon{font-size:2rem;display:block;margin-bottom:.4rem;}
+
 /* FOOTER */
 footer{text-align:center;padding:2.5rem;color:var(--text3);font-size:.78rem;border-top:1px solid var(--border);}
 </style>
@@ -209,133 +233,10 @@ footer{text-align:center;padding:2.5rem;color:var(--text3);font-size:.78rem;bord
       <!-- BOARD -->
       <div id="tab-board" class="tab-panel active">
         <div class="write-btn-wrap">
-          <a href="#" class="write-btn">✏️ 글쓰기</a>
+          <button class="write-btn" onclick="openModal()">✏️ 글쓰기</button>
         </div>
-        <div class="post-list">
-
-          <div class="post-card" data-cat="auto">
-            <div class="post-top">
-              <span class="post-cat-badge auto">자동화</span>
-              <span class="post-new">NEW</span>
-            </div>
-            <div class="post-title">회의록 자동완성 써보니 진짜 시간이 남아요</div>
-            <div class="post-preview">처음엔 반신반의했는데, 1시간 회의를 20분 만에 정리했습니다. Obsidian에 자동 저장까지 되니 너무 편하네요. 주 3회 정기 미팅이 있는 분들은 꼭 써보세요 👍</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#16a34a">김</div>
-                김민준
-              </div>
-              <div class="post-stats"><span>👁 218</span><span>💬 14</span><span>2시간 전</span></div>
-            </div>
-          </div>
-
-          <div class="post-card" data-cat="invest">
-            <div class="post-top">
-              <span class="post-cat-badge invest">투자/리서치</span>
-              <span class="post-new">NEW</span>
-            </div>
-            <div class="post-title">AI 투자 리서치 프롬프트 실제 사용 후기</div>
-            <div class="post-preview">/분석 명령어로 관심 종목 돌려봤는데 뉴스 요약부터 감정 점검 질문까지 꽤 유용했습니다. 최종 판단은 제가 하지만 판단 근거 정리에 도움이 많이 됐어요.</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#d97706">최</div>
-                최지은
-              </div>
-              <div class="post-stats"><span>👁 163</span><span>💬 9</span><span>4시간 전</span></div>
-            </div>
-          </div>
-
-          <div class="post-card" data-cat="coding">
-            <div class="post-top">
-              <span class="post-cat-badge coding">코딩/에이전트</span>
-              <span class="post-hot">인기</span>
-            </div>
-            <div class="post-title">비개발자인데 Claude로 간단한 웹페이지 만들었어요</div>
-            <div class="post-preview">코딩이란? 가이드를 처음부터 읽고 나서 랜딩페이지 하나 만들었어요. HTML이 이렇게 동작하는 거였군요. 무서웠던 코딩이 이제 좀 친근해졌어요 😊</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#2563eb">이</div>
-                이수빈
-              </div>
-              <div class="post-stats"><span>👁 412</span><span>💬 27</span><span>어제</span></div>
-            </div>
-          </div>
-
-          <div class="post-card" data-cat="general">
-            <div class="post-top">
-              <span class="post-cat-badge general">자유</span>
-            </div>
-            <div class="post-title">Claude 처음 쓰는데 어디서 시작하면 좋을까요?</div>
-            <div class="post-preview">회사에서 AI 써보라는 말을 들어서 찾아왔는데... 무료 플랜으로 시작해도 되나요? 어떤 메뉴부터 보면 좋을지 알려주세요! 정보가 너무 많아서 오히려 혼란스러워요.</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#7c3aed">박</div>
-                박서연
-              </div>
-              <div class="post-stats"><span>👁 89</span><span>💬 6</span><span>어제</span></div>
-            </div>
-          </div>
-
-          <div class="post-card" data-cat="marketing">
-            <div class="post-top">
-              <span class="post-cat-badge marketing">마케팅</span>
-            </div>
-            <div class="post-title">SNS 카피 Claude로 10초 만에 뽑는 팁</div>
-            <div class="post-preview">10개씩 카피 요청하고 그중 최선 3개 고르는 방식으로 작업하니 시간이 절반으로 줄었어요. 톤앤매너 미리 정의해두면 훨씬 좋아요. 프롬프트 공유해드릴게요.</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#c2410c">정</div>
-                정하윤
-              </div>
-              <div class="post-stats"><span>👁 285</span><span>💬 18</span><span>2일 전</span></div>
-            </div>
-          </div>
-
-          <div class="post-card" data-cat="doc">
-            <div class="post-top">
-              <span class="post-cat-badge doc">문서/PPT</span>
-            </div>
-            <div class="post-title">PPT 기획안 Claude가 대신 써줬는데 퀄리티 대박이에요</div>
-            <div class="post-preview">회의 안건을 입력했더니 목차 구성, 각 슬라이드 내용 초안, 발표 흐름까지 뽑아줬어요. 이걸로 30분 만에 10장 완성. 나머지는 디자인만 했습니다.</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#7c3aed">강</div>
-                강다은
-              </div>
-              <div class="post-stats"><span>👁 193</span><span>💬 11</span><span>3일 전</span></div>
-            </div>
-          </div>
-
-          <div class="post-card" data-cat="data">
-            <div class="post-top">
-              <span class="post-cat-badge data">데이터/엑셀</span>
-            </div>
-            <div class="post-title">매월 수작업 Excel 보고서 자동화 성공했어요</div>
-            <div class="post-preview">Claude한테 양식 알려주고 반복 작업을 파이썬 스크립트로 만들어달라고 했더니 VBA 없이도 됐어요. 코딩 몰라도 진짜 됩니다. 월말 야근이 사라졌어요.</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#0891b2">조</div>
-                조유진
-              </div>
-              <div class="post-stats"><span>👁 347</span><span>💬 22</span><span>4일 전</span></div>
-            </div>
-          </div>
-
-          <div class="post-card" data-cat="coding">
-            <div class="post-top">
-              <span class="post-cat-badge coding">코딩/에이전트</span>
-            </div>
-            <div class="post-title">토큰 절감 99% 가이드 읽고 Claude 비용 줄였어요</div>
-            <div class="post-preview">저도 처음엔 막무가내로 긴 프롬프트 쏟아냈는데, 토큰 라우터 전략 쓰니까 품질은 유지되고 비용이 확실히 줄었어요. API 쓰시는 분들한테 특히 추천합니다.</div>
-            <div class="post-meta">
-              <div class="post-author">
-                <div class="post-avatar" style="background:#16a34a">윤</div>
-                윤지호
-              </div>
-              <div class="post-stats"><span>👁 276</span><span>💬 15</span><span>5일 전</span></div>
-            </div>
-          </div>
-
+        <div id="post-list" class="post-list">
+          <div class="loading">불러오는 중...</div>
         </div>
       </div>
 
@@ -515,26 +416,7 @@ footer{text-align:center;padding:2.5rem;color:var(--text3);font-size:.78rem;bord
     <div class="sidebar">
       <div class="sidebar-card">
         <div class="sidebar-title">🔥 지금 뜨는 글</div>
-        <div class="trending-item">
-          <span class="tnum">1</span>
-          <span class="ttitle">비개발자인데 Claude로 간단한 웹페이지 만들었어요</span>
-        </div>
-        <div class="trending-item">
-          <span class="tnum">2</span>
-          <span class="ttitle">매월 수작업 Excel 보고서 자동화 성공했어요</span>
-        </div>
-        <div class="trending-item">
-          <span class="tnum">3</span>
-          <span class="ttitle">SNS 카피 Claude로 10초 만에 뽑는 팁</span>
-        </div>
-        <div class="trending-item">
-          <span class="tnum">4</span>
-          <span class="ttitle">PPT 기획안 Claude가 대신 써줬는데 퀄리티 대박이에요</span>
-        </div>
-        <div class="trending-item">
-          <span class="tnum">5</span>
-          <span class="ttitle">토큰 절감 99% 가이드 읽고 Claude 비용 줄였어요</span>
-        </div>
+        <div id="trending-list"><div class="loading" style="padding:1rem 0">로딩 중...</div></div>
       </div>
 
       <div class="sidebar-card">
@@ -556,38 +438,193 @@ footer{text-align:center;padding:2.5rem;color:var(--text3);font-size:.78rem;bord
   </div>
 </div>
 
+<!-- WRITE MODAL -->
+<div id="write-modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>✏️ 글쓰기</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>작성자</label>
+        <input id="f-author" type="text" placeholder="닉네임을 입력하세요" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>카테고리</label>
+        <select id="f-cat">
+          <option value="general">자유</option>
+          <option value="coding">코딩/에이전트</option>
+          <option value="auto">자동화</option>
+          <option value="marketing">마케팅</option>
+          <option value="doc">문서/PPT</option>
+          <option value="data">데이터/엑셀</option>
+          <option value="invest">투자/리서치</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>제목</label>
+        <input id="f-title" type="text" placeholder="제목을 입력하세요" maxlength="100">
+      </div>
+      <div class="form-group">
+        <label>내용</label>
+        <textarea id="f-content" placeholder="내용을 자유롭게 작성해주세요" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-submit" id="submit-btn" onclick="submitPost()">등록하기</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   © 2025 우당시 — 우리는 당신의 시간을 벌어드립니다
 </footer>
 
-<script>
-var currentTab = 'board';
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+const sb = createClient(
+  'https://ghmxdrjjovbkkhelezeh.supabase.co',
+  'sb_publishable_Ul2p8BNV7lRgFbG4DQu40w_3fCpCB_-'
+);
+
+let currentTab = 'board';
+let currentCat = 'all';
+
+const CAT_LABELS = {
+  coding:'코딩/에이전트', auto:'자동화', marketing:'마케팅',
+  doc:'문서/PPT', data:'데이터/엑셀', invest:'투자/리서치', general:'자유'
+};
+const COLORS = ['#16a34a','#2563eb','#7c3aed','#d97706','#dc2626','#0891b2','#c2410c'];
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function avatarColor(name) {
+  let h = 0; for (let c of name) h += c.charCodeAt(0);
+  return COLORS[h % COLORS.length];
+}
+function timeAgo(d) {
+  const s = Math.floor((Date.now() - new Date(d)) / 1000);
+  if (s < 60) return '방금 전';
+  if (s < 3600) return Math.floor(s/60) + '분 전';
+  if (s < 86400) return Math.floor(s/3600) + '시간 전';
+  if (s < 604800) return Math.floor(s/86400) + '일 전';
+  return Math.floor(s/604800) + '주 전';
+}
+
+function renderPost(p) {
+  const color = avatarColor(p.author);
+  const initial = esc(p.author.charAt(0));
+  return `
+    <div class="post-card">
+      <div class="post-top">
+        <span class="post-cat-badge ${esc(p.cat)}">${esc(CAT_LABELS[p.cat] || p.cat)}</span>
+      </div>
+      <div class="post-title">${esc(p.title)}</div>
+      <div class="post-preview">${esc(p.content)}</div>
+      <div class="post-meta">
+        <div class="post-author">
+          <div class="post-avatar" style="background:${color}">${initial}</div>
+          ${esc(p.author)}
+        </div>
+        <div class="post-stats">
+          <span>👁 ${p.views}</span>
+          <span>${timeAgo(p.created_at)}</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function loadPosts(cat) {
+  const list = document.getElementById('post-list');
+  list.innerHTML = '<div class="loading">불러오는 중...</div>';
+  let q = sb.from('posts').select('*').order('created_at', { ascending: false }).limit(50);
+  if (cat && cat !== 'all') q = q.eq('cat', cat);
+  const { data, error } = await q;
+  if (error) {
+    list.innerHTML = `<div class="empty-state"><span class="icon">⚠️</span>${esc(error.message)}</div>`;
+    return;
+  }
+  if (!data || !data.length) {
+    list.innerHTML = '<div class="empty-state"><span class="icon">📝</span>아직 게시글이 없어요.<br>첫 번째 글을 작성해보세요!</div>';
+    return;
+  }
+  list.innerHTML = data.map(renderPost).join('');
+}
+
+async function loadTrending() {
+  const el = document.getElementById('trending-list');
+  const { data } = await sb.from('posts').select('title,views').order('views', { ascending: false }).limit(5);
+  if (!data || !data.length) {
+    el.innerHTML = '<div style="font-size:.78rem;color:var(--text3);padding:.3rem 0">아직 인기 글이 없어요.</div>';
+    return;
+  }
+  el.innerHTML = data.map((p,i) => `
+    <div class="trending-item">
+      <span class="tnum">${i+1}</span>
+      <span class="ttitle">${esc(p.title)}</span>
+    </div>`).join('');
+}
+
+window.switchTab = function(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('cat-bar').style.display = (tab === 'board') ? 'flex' : 'none';
+  document.getElementById('cat-bar').style.display = tab === 'board' ? 'flex' : 'none';
   currentTab = tab;
-  document.querySelectorAll('.cat-chip').forEach(function(c) { c.classList.remove('active'); });
-  var all = document.querySelector('.cat-chip[data-cat="all"]');
-  if (all) all.classList.add('active');
-  document.getElementById('tab-' + tab).querySelectorAll('[data-cat]').forEach(function(c) { c.classList.remove('hidden'); });
-}
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('.cat-chip[data-cat="all"]').classList.add('active');
+  currentCat = 'all';
+  if (tab === 'board') loadPosts();
+};
 
-function filterCat(btn, cat) {
-  document.querySelectorAll('.cat-chip').forEach(function(c) { c.classList.remove('active'); });
+window.filterCat = function(btn, cat) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
-  var panel = document.getElementById('tab-' + currentTab);
-  panel.querySelectorAll('[data-cat]').forEach(function(card) {
-    if (cat === 'all' || card.dataset.cat === cat) {
-      card.classList.remove('hidden');
-    } else {
-      card.classList.add('hidden');
-    }
-  });
-}
+  currentCat = cat;
+  loadPosts(cat);
+};
+
+window.openModal = function() {
+  document.getElementById('write-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('f-author').focus();
+};
+
+window.closeModal = function() {
+  document.getElementById('write-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  ['f-author','f-title','f-content'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-cat').value = 'general';
+};
+
+window.submitPost = async function() {
+  const author = document.getElementById('f-author').value.trim();
+  const title  = document.getElementById('f-title').value.trim();
+  const content = document.getElementById('f-content').value.trim();
+  const cat = document.getElementById('f-cat').value;
+  if (!author || !title || !content) {
+    alert('작성자, 제목, 내용을 모두 입력해주세요.');
+    return;
+  }
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = '등록 중...';
+  btn.disabled = true;
+  const { error } = await sb.from('posts').insert([{ cat, title, content, author, views: 0 }]);
+  btn.textContent = '등록하기';
+  btn.disabled = false;
+  if (error) { alert('오류: ' + error.message); return; }
+  window.closeModal();
+  await loadPosts(currentCat === 'all' ? null : currentCat);
+  await loadTrending();
+};
+
+loadPosts();
+loadTrending();
 </script>
 </body>
 </html>
