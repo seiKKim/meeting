@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우당시 — 우리는 당신의 시간을 벌어드립니다</title>
+<style>
+:root {
+  --bg:#ffffff;--bg2:#f8fafc;--card:#ffffff;--card2:#f8fafc;
+  --cardin:#f1f5f9;--border:#e2e8f0;--border2:#cbd5e1;
+  --green:#16a34a;--green2:#15803d;--green3:#22c55e;--green-dim:#dcfce7;
+  --text:#111827;--text2:#4b5563;--text3:#9ca3af;
+  --yellow:#d97706;--red:#dc2626;--blue:#2563eb;--purple:#7c3aed;
+  --mono:'Consolas','Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;height:60px;}
+.nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;white-space:nowrap;margin-right:1.5rem;flex-shrink:0;}
+.nav-logo-icon{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;}
+.nav-logo-text{display:flex;flex-direction:column;gap:1px;}
+.nav-logo-name{font-size:.95rem;font-weight:900;color:var(--text);letter-spacing:-.01em;}
+.nav-logo-sub{font-size:.58rem;color:var(--text3);font-weight:500;}
+.nav-pages{display:flex;align-items:stretch;flex:1;height:60px;}
+.nav-page{display:flex;align-items:center;padding:0 1rem;text-decoration:none;font-size:.86rem;font-weight:500;color:var(--text2);white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
+.nav-page:hover{color:var(--text);}
+.nav-page.active{color:var(--green);font-weight:700;border-bottom-color:var(--green);}
+.nav-btns{display:flex;gap:.6rem;flex-shrink:0;}
+.btn-outline{border:1px solid var(--border2);border-radius:8px;padding:.4rem 1rem;font-size:.82rem;color:var(--text2);background:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;}
+
+/* PAGE */
+.page{max-width:1080px;margin:0 auto;padding:80px 2rem 5rem;}
+
+/* ── HERO ── */
+.hero{padding:3.5rem 0 2.8rem;text-align:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border2);border-radius:999px;padding:.3rem 1rem;font-size:.76rem;font-weight:700;color:var(--text2);background:var(--card);margin-bottom:1.4rem;letter-spacing:.05em;}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.3);}}
+.hero h1{font-size:3rem;font-weight:900;line-height:1.15;letter-spacing:-.03em;margin-bottom:1rem;}
+.hero h1 em{font-style:normal;color:var(--green);}
+.hero-sub{font-size:1.05rem;color:var(--text2);max-width:480px;margin:0 auto 2rem;line-height:1.7;}
+.hero-ctas{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;}
+.cta-primary{background:var(--green);color:#fff;border:none;border-radius:10px;padding:.7rem 1.6rem;font-size:.92rem;font-weight:800;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:opacity .2s;}
+.cta-primary:hover{opacity:.88;}
+.cta-secondary{background:none;color:var(--text);border:1.5px solid var(--border2);border-radius:10px;padding:.7rem 1.4rem;font-size:.9rem;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:border-color .2s,color .2s;}
+.cta-secondary:hover{border-color:var(--green3);color:var(--green2);}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2.5rem;}
+.stat-card{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem;text-align:center;}
+.stat-value{font-size:1.9rem;font-weight:900;color:var(--text);font-family:var(--mono);letter-spacing:-.02em;}
+.stat-value.green{color:var(--green2);}
+.stat-label{font-size:.77rem;color:var(--text3);font-weight:600;margin-top:.2rem;}
+
+/* ── QUICK MENU ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.section-title{font-size:.78rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);}
+.section-link{font-size:.78rem;font-weight:600;color:var(--green2);text-decoration:none;}
+.section-link:hover{text-decoration:underline;}
+
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-bottom:3rem;}
+@media(max-width:720px){.quick-grid{grid-template-columns:repeat(2,1fr);}}
+.quick-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:1.4rem 1.2rem;text-decoration:none;display:flex;flex-direction:column;gap:.5rem;transition:border-color .2s,box-shadow .2s,transform .18s;}
+.quick-card:hover{border-color:var(--green3);box-shadow:0 4px 20px rgba(22,163,74,.09);transform:translateY(-2px);}
+.quick-icon{font-size:1.9rem;line-height:1;}
+.quick-label{font-size:.95rem;font-weight:800;color:var(--text);}
+.quick-desc{font-size:.77rem;color:var(--text3);line-height:1.5;}
+.quick-arrow{font-size:.8rem;font-weight:700;color:var(--green2);margin-top:.3rem;}
+
+/* ── LAYOUT ── */
+.dashboard-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;}
+@media(max-width:820px){.dashboard-layout{grid-template-columns:1fr;}}
+
+/* ── RECENT POSTS ── */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.4rem;}
+.panel-title{font-size:.9rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:.4rem;}
+.panel-title .live{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;}
+
+.post-item{display:flex;flex-direction:column;gap:.25rem;padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;}
+.post-item:last-child{border-bottom:none;padding-bottom:0;}
+.post-item:hover .post-item-title{color:var(--green2);}
+.post-item-top{display:flex;align-items:center;gap:.4rem;}
+.pi-cat{font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:999px;border:1px solid;}
+.pi-cat.coding{background:#dbeafe;border-color:#bfdbfe;color:var(--blue);}
+.pi-cat.auto{background:#f0fdf4;border-color:#86efac;color:var(--green2);}
+.pi-cat.marketing{background:#fff7ed;border-color:#fed7aa;color:#c2410c;}
+.pi-cat.doc{background:#faf5ff;border-color:#d8b4fe;color:var(--purple);}
+.pi-cat.data{background:#ecfdf5;border-color:#6ee7b7;color:#065f46;}
+.pi-cat.invest{background:#fffbeb;border-color:#fcd34d;color:#92400e;}
+.pi-cat.general{background:var(--card2);border-color:var(--border2);color:var(--text3);}
+.post-item-title{font-size:.88rem;font-weight:700;color:var(--text);line-height:1.4;transition:color .15s;}
+.post-item-meta{display:flex;align-items:center;gap:.6rem;font-size:.72rem;color:var(--text3);}
+
+.loading-row{padding:1.5rem 0;text-align:center;font-size:.82rem;color:var(--text3);}
+
+/* ── SIDEBAR PANELS ── */
+.sidebar{display:flex;flex-direction:column;gap:1rem;position:sticky;top:76px;}
+
+.trend-item{display:flex;align-items:flex-start;gap:.6rem;padding:.55rem 0;border-bottom:1px solid var(--border);}
+.trend-item:last-child{border-bottom:none;padding-bottom:0;}
+.trend-num{font-size:.7rem;font-weight:900;color:var(--text3);min-width:16px;font-family:var(--mono);margin-top:.15rem;}
+.trend-title{font-size:.8rem;font-weight:600;color:var(--text2);line-height:1.4;cursor:pointer;}
+.trend-title:hover{color:var(--text);}
+.trend-views{font-size:.7rem;color:var(--text3);margin-top:.1rem;}
+
+/* ── GUIDES SECTION ── */
+.guides-section{margin-top:3rem;}
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:640px){.guide-grid{grid-template-columns:1fr;}}
+.guide-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:1.5rem;text-decoration:none;display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s,transform .18s;}
+.guide-card:hover{border-color:var(--green3);box-shadow:0 4px 20px rgba(22,163,74,.1);transform:translateY(-2px);}
+.guide-emoji{font-size:2rem;margin-bottom:.7rem;line-height:1;}
+.guide-badge{display:inline-flex;font-size:.67rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--green2);background:var(--green-dim);border:1px solid var(--green3);border-radius:999px;padding:.15rem .6rem;margin-bottom:.65rem;width:fit-content;}
+.guide-title{font-size:1rem;font-weight:900;color:var(--text);margin-bottom:.45rem;line-height:1.3;}
+.guide-desc{font-size:.81rem;color:var(--text2);line-height:1.65;flex:1;margin-bottom:1rem;}
+.guide-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1rem;}
+.guide-tag{font-size:.66rem;font-weight:600;padding:.12rem .45rem;border-radius:5px;background:var(--card2);border:1px solid var(--border);color:var(--text3);}
+.guide-footer{display:flex;align-items:center;gap:.3rem;font-size:.8rem;font-weight:800;color:var(--green2);}
+.guide-footer span{transition:transform .2s;}
+.guide-card:hover .guide-footer span{transform:translateX(4px);}
+
+/* FOOTER */
+footer{text-align:center;padding:2.5rem;color:var(--text3);font-size:.78rem;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">⏱</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">우당시</span>
+      <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
+    </div>
+  </a>
+  <div class="nav-pages">
+    <a href="/guides" class="nav-page">가이드</a>
+    <a href="/cheatsheet" class="nav-page">코딩이란?</a>
+    <a href="/community?tab=gallery" class="nav-page">Tip</a>
+    <a href="/community" class="nav-page">커뮤니티</a>
+  </div>
+  <div class="nav-btns">
+    <a class="btn-outline" href="https://github.com/seiKKim/meeting" target="_blank">⭐ GitHub</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span> AI 생산성 허브 · 우당시</div>
+    <h1>AI로 <em>시간을 버는</em><br>가장 빠른 방법</h1>
+    <p class="hero-sub">실전 가이드, 프롬프트 갤러리, 스킬 스택까지.<br>지금 당장 업무에 적용할 수 있는 AI 활용법을 모았습니다.</p>
+    <div class="hero-ctas">
+      <a href="/community" class="cta-primary">💬 커뮤니티 참여하기</a>
+      <a href="/guides" class="cta-secondary">📚 가이드 보기 →</a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-value green" id="stat-posts">—</div>
+      <div class="stat-label">커뮤니티 게시글</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">2</div>
+      <div class="stat-label">실전 가이드</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">3</div>
+      <div class="stat-label">프롬프트 템플릿</div>
+    </div>
+  </div>
+
+  <!-- QUICK MENU -->
+  <div class="section-header">
+    <span class="section-title">빠른 메뉴</span>
+  </div>
+  <div class="quick-grid">
+    <a href="/guides" class="quick-card">
+      <span class="quick-icon">📚</span>
+      <span class="quick-label">가이드</span>
+      <span class="quick-desc">Claude 디자인, 토큰 절감 실전 가이드</span>
+      <span class="quick-arrow">보기 →</span>
+    </a>
+    <a href="/cheatsheet" class="quick-card">
+      <span class="quick-icon">🧑‍💻</span>
+      <span class="quick-label">코딩이란?</span>
+      <span class="quick-desc">비개발자를 위한 AI 코딩 입문</span>
+      <span class="quick-arrow">보기 →</span>
+    </a>
+    <a href="/community?tab=gallery" class="quick-card">
+      <span class="quick-icon">✨</span>
+      <span class="quick-label">프롬프트 갤러리</span>
+      <span class="quick-desc">검증된 프롬프트 템플릿 모음</span>
+      <span class="quick-arrow">보기 →</span>
+    </a>
+    <a href="/community" class="quick-card">
+      <span class="quick-icon">💬</span>
+      <span class="quick-label">커뮤니티</span>
+      <span class="quick-desc">팁 공유, 질문, 스킬 스택 교류</span>
+      <span class="quick-arrow">보기 →</span>
+    </a>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="dashboard-layout">
+
+    <!-- 최근 게시글 -->
+    <div class="panel">
+      <div class="panel-title"><span class="live"></span> 최근 게시글</div>
+      <div id="recent-posts"><div class="loading-row">불러오는 중...</div></div>
+      <div style="margin-top:1rem;text-align:right">
+        <a href="/community" class="section-link">전체 보기 →</a>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <!-- 인기 게시글 -->
+      <div class="panel">
+        <div class="panel-title">🔥 인기 게시글</div>
+        <div id="hot-posts"><div class="loading-row">불러오는 중...</div></div>
+      </div>
+
+      <!-- 가이드 바로가기 -->
+      <div class="panel">
+        <div class="panel-title">📚 가이드 바로가기</div>
+        <div style="display:flex;flex-direction:column;gap:.55rem;">
+          <a href="/claude-design" style="display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;border-radius:9px;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:1.3rem">🎨</span>
+            <div>
+              <div style="font-size:.83rem;font-weight:700;color:var(--text)">Claude 디자인 가이드</div>
+              <div style="font-size:.73rem;color:var(--text3)">프롬프트 설계의 핵심 원칙</div>
+            </div>
+          </a>
+          <a href="/token-router" style="display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;border-radius:9px;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:1.3rem">💰</span>
+            <div>
+              <div style="font-size:.83rem;font-weight:700;color:var(--text)">토큰 절감 99% 가이드</div>
+              <div style="font-size:.73rem;color:var(--text3)">AI 비용 최소화 전략</div>
+            </div>
+          </a>
+          <a href="/tip" style="display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;border-radius:9px;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='var(--bg2)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:1.3rem">🎙</span>
+            <div>
+              <div style="font-size:.83rem;font-weight:700;color:var(--text)">회의록 자동 완성</div>
+              <div style="font-size:.73rem;color:var(--text3)">Whisper → Ollama → Obsidian</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- 글쓰기 CTA -->
+      <div class="panel" style="background:var(--green-dim);border-color:var(--green3);text-align:center;padding:1.4rem 1.2rem;">
+        <div style="font-size:1.6rem;margin-bottom:.6rem">✏️</div>
+        <div style="font-size:.9rem;font-weight:800;color:var(--green2);margin-bottom:.35rem">지식을 나눠보세요</div>
+        <div style="font-size:.78rem;color:var(--green2);opacity:.8;margin-bottom:1rem;line-height:1.5">AI 팁, 프롬프트, 경험을<br>커뮤니티에 공유해보세요</div>
+        <a href="/write" style="display:inline-flex;align-items:center;gap:.35rem;background:var(--green);color:#fff;border:none;border-radius:9px;padding:.55rem 1.2rem;font-size:.82rem;font-weight:800;text-decoration:none;">✏️ 글쓰기</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FEATURED GUIDES -->
+  <div class="guides-section">
+    <div class="section-header">
+      <span class="section-title">추천 가이드</span>
+      <a href="/guides" class="section-link">전체 보기 →</a>
+    </div>
+    <div class="guide-grid">
+      <a href="/claude-design" class="guide-card">
+        <span class="guide-emoji">🎨</span>
+        <span class="guide-badge">프롬프트 디자인</span>
+        <div class="guide-title">Claude 디자인 완벽 가이드</div>
+        <div class="guide-desc">시스템 프롬프트 구조, 역할 부여, 출력 포맷 제어까지 더 나은 결과를 끌어내는 실전 기법을 배웁니다.</div>
+        <div class="guide-tags">
+          <span class="guide-tag">프롬프트</span>
+          <span class="guide-tag">시스템 프롬프트</span>
+          <span class="guide-tag">실전</span>
+        </div>
+        <div class="guide-footer">가이드 보기 <span>→</span></div>
+      </a>
+      <a href="/token-router" class="guide-card">
+        <span class="guide-emoji">💰</span>
+        <span class="guide-badge">비용 절감</span>
+        <div class="guide-title">토큰 비용 99% 절감 가이드</div>
+        <div class="guide-desc">토큰 라우터 전략으로 AI 사용 비용을 최대 99%까지 절감하는 방법. 실제 라우팅 설정과 비용 계산 예시까지.</div>
+        <div class="guide-tags">
+          <span class="guide-tag">토큰</span>
+          <span class="guide-tag">비용 절감</span>
+          <span class="guide-tag">최적화</span>
+        </div>
+        <div class="guide-footer">가이드 보기 <span>→</span></div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2025 우당시 — 우리는 당신의 시간을 벌어드립니다
+</footer>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const sb = createClient(
+  'https://ghmxdrjjovbkkhelezeh.supabase.co',
+  'sb_publishable_Ul2p8BNV7lRgFbG4DQu40w_3fCpCB_-'
+);
+
+const CAT_LABELS = {
+  coding:'코딩/에이전트', auto:'자동화', marketing:'마케팅',
+  doc:'문서/PPT', data:'데이터/엑셀', invest:'투자/리서치', general:'자유'
+};
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function timeAgo(d){
+  const s = Math.floor((Date.now() - new Date(d)) / 1000);
+  if (s < 60) return '방금 전';
+  if (s < 3600) return Math.floor(s/60) + '분 전';
+  if (s < 86400) return Math.floor(s/3600) + '시간 전';
+  if (s < 604800) return Math.floor(s/86400) + '일 전';
+  return Math.floor(s/604800) + '주 전';
+}
+
+async function loadStats() {
+  const { count } = await sb.from('posts').select('*', { count: 'exact', head: true });
+  if (count !== null) document.getElementById('stat-posts').textContent = count.toLocaleString();
+}
+
+async function loadRecent() {
+  const el = document.getElementById('recent-posts');
+  const { data, error } = await sb.from('posts').select('*').order('created_at', { ascending: false }).limit(7);
+  if (error || !data?.length) {
+    el.innerHTML = '<div class="loading-row">아직 게시글이 없어요. <a href="/write" style="color:var(--green2)">첫 글 작성하기 →</a></div>';
+    return;
+  }
+  el.innerHTML = data.map(p => `
+    <a href="/community" class="post-item">
+      <div class="post-item-top">
+        <span class="pi-cat ${esc(p.cat)}">${esc(CAT_LABELS[p.cat] || p.cat)}</span>
+      </div>
+      <div class="post-item-title">${esc(p.title)}</div>
+      <div class="post-item-meta">
+        <span>${esc(p.author)}</span>
+        <span>·</span>
+        <span>👁 ${p.views ?? 0}</span>
+        <span>·</span>
+        <span>${timeAgo(p.created_at)}</span>
+      </div>
+    </a>`).join('');
+}
+
+async function loadHot() {
+  const el = document.getElementById('hot-posts');
+  const { data, error } = await sb.from('posts').select('title,views,author,created_at').order('views', { ascending: false }).limit(5);
+  if (error || !data?.length) {
+    el.innerHTML = '<div class="loading-row" style="padding:.8rem 0">아직 데이터가 없어요.</div>';
+    return;
+  }
+  el.innerHTML = data.map((p, i) => `
+    <a href="/community" class="trend-item" style="text-decoration:none">
+      <span class="trend-num">${i + 1}</span>
+      <div>
+        <div class="trend-title">${esc(p.title)}</div>
+        <div class="trend-views">👁 ${p.views ?? 0} · ${esc(p.author)}</div>
+      </div>
+    </a>`).join('');
+}
+
+loadStats();
+loadRecent();
+loadHot();
+</script>
+</body>
+</html>
