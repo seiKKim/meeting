@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>글쓰기 | 우당시</title>
+<style>
+:root {
+  --bg:#ffffff;--bg2:#f8fafc;--card:#ffffff;--card2:#f8fafc;
+  --cardin:#f1f5f9;--border:#e2e8f0;--border2:#cbd5e1;
+  --green:#16a34a;--green2:#15803d;--green3:#22c55e;--green-dim:#dcfce7;
+  --text:#111827;--text2:#4b5563;--text3:#9ca3af;
+  --yellow:#d97706;--red:#dc2626;--blue:#2563eb;--purple:#7c3aed;
+  --mono:'Consolas','Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;height:60px;}
+.nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;white-space:nowrap;margin-right:1.5rem;flex-shrink:0;}
+.nav-logo-icon{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;}
+.nav-logo-text{display:flex;flex-direction:column;gap:1px;}
+.nav-logo-name{font-size:.95rem;font-weight:900;color:var(--text);letter-spacing:-.01em;}
+.nav-logo-sub{font-size:.58rem;color:var(--text3);font-weight:500;}
+.nav-pages{display:flex;align-items:stretch;flex:1;height:60px;}
+.nav-page{display:flex;align-items:center;padding:0 1rem;text-decoration:none;font-size:.86rem;font-weight:500;color:var(--text2);white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
+.nav-page:hover{color:var(--text);}
+.nav-page.active{color:var(--green);font-weight:700;border-bottom-color:var(--green);}
+.nav-group{position:relative;display:flex;align-items:stretch;}
+.nav-group:hover .nav-dropdown{display:flex;}
+.nav-dropdown{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.08);flex-direction:column;min-width:220px;padding:.4rem 0;z-index:200;}
+.nav-dd-item{padding:.65rem 1.2rem;color:var(--text2);text-decoration:none;font-size:.83rem;font-weight:500;white-space:nowrap;transition:background .15s,color .15s;display:block;}
+.nav-dd-item:hover{background:var(--bg2);color:var(--text);}
+.nav-group>.nav-page::after{content:' ▾';font-size:.7em;opacity:.5;}
+.nav-dd-item.active{color:var(--green);font-weight:700;background:var(--green-dim);}
+.nav-btns{display:flex;gap:.6rem;flex-shrink:0;}
+.btn-outline{border:1px solid var(--border2);border-radius:8px;padding:.4rem 1rem;font-size:.82rem;color:var(--text2);background:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;}
+
+/* WRITE TOPBAR */
+.write-topbar{position:fixed;top:60px;left:0;right:0;z-index:99;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;height:52px;gap:1rem;}
+.back-btn{display:flex;align-items:center;gap:.4rem;font-size:.84rem;font-weight:600;color:var(--text2);text-decoration:none;white-space:nowrap;transition:color .2s;}
+.back-btn:hover{color:var(--text);}
+.topbar-title{font-size:.86rem;font-weight:700;color:var(--text3);flex:1;}
+.publish-btn{background:var(--green);color:#052e16;border:none;border-radius:8px;padding:.42rem 1.2rem;font-size:.84rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.4rem;white-space:nowrap;transition:opacity .2s;}
+.publish-btn:hover{opacity:.88;}
+.publish-btn:disabled{opacity:.5;cursor:not-allowed;}
+.save-btn{background:none;border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:.42rem .9rem;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.save-btn:hover{background:var(--bg2);}
+
+/* WRITE PAGE */
+.write-page{max-width:780px;margin:0 auto;padding:130px 2rem 5rem;}
+
+/* SECTION LABEL */
+.section-label{font-size:.77rem;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:.6rem;}
+
+/* CATEGORY */
+.cat-section{margin-bottom:1.8rem;}
+.cat-chips{display:flex;gap:.45rem;flex-wrap:wrap;}
+.cat-chip{background:var(--card2);border:1.5px solid var(--border);border-radius:999px;padding:.28rem .85rem;font-size:.78rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;}
+.cat-chip:hover{border-color:var(--border2);color:var(--text);}
+.cat-chip.selected{background:var(--green);border-color:var(--green);color:#fff;}
+
+/* TITLE */
+.title-input{width:100%;border:none;outline:none;font-size:2rem;font-weight:900;color:var(--text);font-family:inherit;line-height:1.25;padding:.2rem 0 1.2rem;background:transparent;resize:none;}
+.title-input::placeholder{color:var(--border2);}
+
+/* DIVIDER */
+.write-divider{border:none;border-top:2px solid var(--border);margin:0 0 1.8rem;}
+
+/* IMAGE UPLOAD */
+.img-section{margin-bottom:1.8rem;}
+.img-drop{border:2px dashed var(--border2);border-radius:14px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden;background:var(--bg2);}
+.img-drop:hover,.img-drop.dragging{border-color:var(--green3);background:var(--green-dim);}
+.img-drop-inner{display:flex;flex-direction:column;align-items:center;gap:.6rem;text-align:center;padding:2rem;}
+.img-drop-icon{font-size:2.2rem;}
+.img-drop-text{font-size:.88rem;font-weight:600;color:var(--text2);}
+.img-drop-sub{font-size:.76rem;color:var(--text3);}
+.img-preview-wrap{position:relative;width:100%;}
+.img-preview-img{width:100%;max-height:420px;object-fit:cover;display:block;}
+.img-preview-overlay{position:absolute;top:.6rem;right:.6rem;display:flex;gap:.4rem;}
+.img-overlay-btn{background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:7px;padding:.3rem .7rem;font-size:.76rem;font-weight:600;cursor:pointer;backdrop-filter:blur(4px);}
+.img-overlay-btn:hover{background:rgba(0,0,0,.7);}
+.img-upload-progress{position:absolute;bottom:0;left:0;right:0;background:rgba(22,163,74,.15);padding:.4rem .8rem;font-size:.75rem;color:var(--green2);font-weight:600;text-align:center;}
+
+/* CONTENT */
+.content-section{margin-bottom:2rem;}
+.content-area{width:100%;border:none;outline:none;font-size:1rem;color:var(--text);font-family:inherit;line-height:1.9;min-height:400px;background:transparent;resize:none;padding:0;}
+.content-area::placeholder{color:var(--border2);}
+.content-footer{display:flex;justify-content:flex-end;margin-top:.4rem;}
+.char-count{font-size:.73rem;color:var(--text3);font-family:var(--mono);}
+
+/* FILE ATTACH */
+.file-section{border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem;margin-bottom:2rem;background:var(--bg2);}
+.file-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;}
+.add-file-btn{background:none;border:1.5px solid var(--border2);color:var(--text2);border-radius:8px;padding:.3rem .8rem;font-size:.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.3rem;}
+.add-file-btn:hover{background:var(--bg);border-color:var(--green3);color:var(--green2);}
+.file-drop-area{border:2px dashed var(--border);border-radius:10px;padding:.9rem;text-align:center;font-size:.8rem;color:var(--text3);transition:border-color .2s,background .2s;cursor:pointer;}
+.file-drop-area:hover,.file-drop-area.dragging{border-color:var(--green3);background:var(--green-dim);color:var(--green2);}
+.file-list{display:flex;flex-direction:column;gap:.45rem;margin-top:.7rem;}
+.file-item{display:flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:.6rem .9rem;}
+.file-icon{font-size:1.1rem;flex-shrink:0;}
+.file-info{flex:1;min-width:0;}
+.file-name{font-size:.82rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+.file-size{font-size:.71rem;color:var(--text3);}
+.file-status{font-size:.73rem;color:var(--green2);font-weight:600;}
+.file-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.9rem;padding:.1rem .3rem;border-radius:4px;flex-shrink:0;}
+.file-remove:hover{background:var(--cardin);color:var(--red);}
+
+/* AUTHOR */
+.author-section{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;align-items:center;gap:1rem;}
+.author-label{font-size:.84rem;font-weight:700;color:var(--text2);white-space:nowrap;}
+.author-input{flex:1;max-width:220px;border:1.5px solid var(--border);border-radius:9px;padding:.5rem .85rem;font-size:.87rem;font-family:inherit;color:var(--text);background:var(--bg);transition:border-color .2s;}
+.author-input:focus{outline:none;border-color:var(--green3);}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:#1e293b;color:#e2e8f0;padding:.7rem 1.2rem;border-radius:10px;font-size:.82rem;font-weight:600;z-index:500;opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* FOOTER */
+footer{text-align:center;padding:2.5rem;color:var(--text3);font-size:.78rem;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">⏱</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">우당시</span>
+      <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
+    </div>
+  </a>
+  <div class="nav-pages">
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page">가이드</a>
+      <div class="nav-dropdown">
+        <a href="/claude-design" class="nav-dd-item">🎨 Claude 디자인</a>
+        <a href="/token-router" class="nav-dd-item">💰 토큰 절감 99%</a>
+      </div>
+    </div>
+    <a href="/cheatsheet" class="nav-page">코딩이란?</a>
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page">Tip</a>
+      <div class="nav-dropdown">
+        <a href="/tip" class="nav-dd-item">🎙 회의록 자동 완성</a>
+        <a href="/invest" class="nav-dd-item">📈 AI 투자 리서치</a>
+      </div>
+    </div>
+    <a href="/community" class="nav-page active">커뮤니티</a>
+  </div>
+  <div class="nav-btns">
+    <a class="btn-outline" href="https://github.com/seiKKim/meeting" target="_blank">⭐ GitHub</a>
+  </div>
+</nav>
+
+<!-- WRITE TOPBAR -->
+<div class="write-topbar">
+  <a href="/community" class="back-btn">← 커뮤니티</a>
+  <span class="topbar-title">새 글 작성</span>
+  <button class="publish-btn" id="publish-btn" onclick="publishPost()">게시하기 →</button>
+</div>
+
+<!-- WRITE PAGE -->
+<div class="write-page">
+
+  <!-- CATEGORY -->
+  <div class="cat-section">
+    <span class="section-label">카테고리</span>
+    <div class="cat-chips">
+      <button class="cat-chip selected" data-cat="general" onclick="selectCat(this,'general')">자유</button>
+      <button class="cat-chip" data-cat="coding" onclick="selectCat(this,'coding')">코딩/에이전트</button>
+      <button class="cat-chip" data-cat="auto" onclick="selectCat(this,'auto')">자동화</button>
+      <button class="cat-chip" data-cat="marketing" onclick="selectCat(this,'marketing')">마케팅</button>
+      <button class="cat-chip" data-cat="doc" onclick="selectCat(this,'doc')">문서/PPT</button>
+      <button class="cat-chip" data-cat="data" onclick="selectCat(this,'data')">데이터/엑셀</button>
+      <button class="cat-chip" data-cat="invest" onclick="selectCat(this,'invest')">투자/리서치</button>
+    </div>
+  </div>
+
+  <!-- TITLE -->
+  <textarea id="f-title" class="title-input" placeholder="제목을 입력하세요" rows="1" maxlength="100" oninput="autoGrow(this)"></textarea>
+
+  <hr class="write-divider">
+
+  <!-- IMAGE UPLOAD -->
+  <div class="img-section">
+    <span class="section-label">대표 이미지</span>
+    <div id="img-drop" class="img-drop" onclick="document.getElementById('img-input').click()">
+      <div id="img-placeholder" class="img-drop-inner">
+        <span class="img-drop-icon">🖼</span>
+        <span class="img-drop-text">이미지를 드래그하거나 클릭해서 업로드</span>
+        <span class="img-drop-sub">JPG, PNG, GIF, WEBP — 최대 10MB</span>
+      </div>
+      <div id="img-preview-wrap" class="img-preview-wrap" style="display:none">
+        <img id="img-preview" class="img-preview-img" src="" alt="미리보기">
+        <div class="img-preview-overlay">
+          <button class="img-overlay-btn" onclick="changeImage(event)">🔄 변경</button>
+          <button class="img-overlay-btn" onclick="removeImage(event)">✕ 제거</button>
+        </div>
+        <div id="img-progress" class="img-upload-progress" style="display:none">⏳ 업로드 중...</div>
+      </div>
+    </div>
+    <input id="img-input" type="file" accept="image/*" style="display:none" onchange="handleImageSelect(this)">
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-section">
+    <span class="section-label">내용</span>
+    <textarea id="f-content" class="content-area" placeholder="내용을 자유롭게 작성하세요...&#10;&#10;마크다운 형식으로 작성하면 더욱 풍부하게 표현할 수 있어요." oninput="autoGrow(this);updateCharCount()"></textarea>
+    <div class="content-footer">
+      <span class="char-count" id="char-count">0자</span>
+    </div>
+  </div>
+
+  <!-- FILE ATTACHMENTS -->
+  <div class="file-section">
+    <div class="file-header">
+      <span class="section-label" style="margin:0">📎 파일 첨부</span>
+      <button class="add-file-btn" onclick="document.getElementById('file-input').click()">+ 파일 추가</button>
+    </div>
+    <div id="file-drop-area" class="file-drop-area">
+      파일을 드래그해서 여기에 놓거나 위 버튼을 클릭하세요<br>
+      <small>모든 형식 지원 — PDF, DOCX, XLSX, ZIP 등 (최대 50MB)</small>
+    </div>
+    <div id="file-list" class="file-list"></div>
+    <input id="file-input" type="file" multiple style="display:none" onchange="handleFileSelect(this)">
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-section">
+    <span class="author-label">작성자</span>
+    <input id="f-author" class="author-input" type="text" placeholder="닉네임" maxlength="20">
+  </div>
+
+</div>
+
+<footer>
+  © 2025 우당시 — 우리는 당신의 시간을 벌어드립니다
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const sb = createClient(
+  'https://ghmxdrjjovbkkhelezeh.supabase.co',
+  'sb_publishable_Ul2p8BNV7lRgFbG4DQu40w_3fCpCB_-'
+);
+
+let selectedCat = 'general';
+let uploadedImageUrl = null;
+let attachedFiles = [];
+
+/* ── 유틸 ── */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmt(bytes) {
+  if (bytes < 1024) return bytes + 'B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1) + 'KB';
+  return (bytes/1048576).toFixed(1) + 'MB';
+}
+function toast(msg, dur = 3000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), dur);
+}
+
+/* ── Auto-grow textarea ── */
+window.autoGrow = function(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+};
+
+window.updateCharCount = function() {
+  const len = document.getElementById('f-content').value.length;
+  document.getElementById('char-count').textContent = len.toLocaleString() + '자';
+};
+
+/* ── Category ── */
+window.selectCat = function(btn, cat) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedCat = cat;
+};
+
+/* ── Image upload ── */
+const imgDrop = document.getElementById('img-drop');
+
+imgDrop.addEventListener('dragover', e => { e.preventDefault(); e.stopPropagation(); imgDrop.classList.add('dragging'); });
+imgDrop.addEventListener('dragleave', e => { e.stopPropagation(); imgDrop.classList.remove('dragging'); });
+imgDrop.addEventListener('drop', async e => {
+  e.preventDefault(); e.stopPropagation();
+  imgDrop.classList.remove('dragging');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) await uploadImage(file);
+});
+
+window.handleImageSelect = async function(input) {
+  if (input.files[0]) await uploadImage(input.files[0]);
+};
+window.changeImage = function(e) { e.stopPropagation(); document.getElementById('img-input').click(); };
+window.removeImage = function(e) {
+  e.stopPropagation();
+  uploadedImageUrl = null;
+  document.getElementById('img-preview').src = '';
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  document.getElementById('img-placeholder').style.display = 'flex';
+  document.getElementById('img-input').value = '';
+};
+
+async function uploadImage(file) {
+  if (file.size > 10 * 1024 * 1024) { toast('이미지는 10MB 이하만 업로드 가능해요.'); return; }
+
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('img-preview').src = ev.target.result;
+    document.getElementById('img-placeholder').style.display = 'none';
+    document.getElementById('img-preview-wrap').style.display = 'block';
+    document.getElementById('img-progress').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+
+  try {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const path = `images/${Date.now()}.${ext}`;
+    const { error } = await sb.storage.from('community').upload(path, file, { cacheControl: '3600', upsert: false });
+    if (error) throw error;
+    const { data } = sb.storage.from('community').getPublicUrl(path);
+    uploadedImageUrl = data.publicUrl;
+    document.getElementById('img-progress').style.display = 'none';
+    toast('✅ 이미지 업로드 완료!');
+  } catch(err) {
+    document.getElementById('img-progress').textContent = '⚠️ 업로드 실패 — 게시 시 이미지가 저장되지 않을 수 있어요.';
+    console.error('Image upload error:', err);
+  }
+}
+
+/* ── File attachment ── */
+const fileDropArea = document.getElementById('file-drop-area');
+fileDropArea.addEventListener('dragover', e => { e.preventDefault(); fileDropArea.classList.add('dragging'); });
+fileDropArea.addEventListener('dragleave', () => fileDropArea.classList.remove('dragging'));
+fileDropArea.addEventListener('drop', async e => {
+  e.preventDefault(); fileDropArea.classList.remove('dragging');
+  for (const file of Array.from(e.dataTransfer.files)) await attachFile(file);
+});
+fileDropArea.addEventListener('click', () => document.getElementById('file-input').click());
+
+window.handleFileSelect = async function(input) {
+  for (const file of Array.from(input.files)) await attachFile(file);
+  input.value = '';
+};
+
+async function attachFile(file) {
+  if (file.size > 50 * 1024 * 1024) { toast(file.name + ' — 50MB 초과로 첨부할 수 없어요.'); return; }
+  const id = Date.now() + '_' + Math.random().toString(36).slice(2);
+  addFileItem(id, file.name, file.size, 'uploading');
+
+  try {
+    const path = `files/${Date.now()}_${file.name}`;
+    const { error } = await sb.storage.from('community').upload(path, file, { cacheControl: '3600', upsert: false });
+    if (error) throw error;
+    const { data } = sb.storage.from('community').getPublicUrl(path);
+    attachedFiles.push({ id, name: file.name, size: file.size, url: data.publicUrl });
+    updateFileItem(id, 'done');
+    toast('✅ ' + file.name + ' 업로드 완료!');
+  } catch(err) {
+    updateFileItem(id, 'error');
+    console.error('File upload error:', err);
+  }
+}
+
+function addFileItem(id, name, size, status) {
+  const list = document.getElementById('file-list');
+  const div = document.createElement('div');
+  div.className = 'file-item';
+  div.id = 'fi-' + id;
+  div.innerHTML = fileItemHTML(id, name, size, status);
+  list.appendChild(div);
+}
+
+function updateFileItem(id, status) {
+  const el = document.getElementById('fi-' + id);
+  if (!el) return;
+  const f = attachedFiles.find(f => f.id === id) || { name: el.querySelector('.file-name').textContent, size: 0 };
+  el.innerHTML = fileItemHTML(id, f.name || '', f.size || 0, status);
+}
+
+function fileItemHTML(id, name, size, status) {
+  const icons = { uploading: '⏳', done: '📄', error: '⚠️' };
+  const statusHTML = status === 'uploading'
+    ? '<span class="file-status">업로드 중...</span>'
+    : status === 'error'
+    ? '<span class="file-status" style="color:var(--red)">실패</span>'
+    : `<button class="file-remove" onclick="removeFile('${id}')">✕</button>`;
+  return `
+    <span class="file-icon">${icons[status] || '📄'}</span>
+    <div class="file-info">
+      <span class="file-name">${esc(name)}</span>
+      <span class="file-size">${fmt(size)}</span>
+    </div>
+    ${statusHTML}`;
+}
+
+window.removeFile = function(id) {
+  attachedFiles = attachedFiles.filter(f => f.id !== id);
+  const el = document.getElementById('fi-' + id);
+  if (el) el.remove();
+};
+
+/* ── Publish ── */
+window.publishPost = async function() {
+  const title   = document.getElementById('f-title').value.trim();
+  const content = document.getElementById('f-content').value.trim();
+  const author  = document.getElementById('f-author').value.trim();
+
+  if (!author) { toast('⚠️ 작성자 닉네임을 입력해주세요.'); document.getElementById('f-author').focus(); return; }
+  if (!title)  { toast('⚠️ 제목을 입력해주세요.'); document.getElementById('f-title').focus(); return; }
+  if (!content){ toast('⚠️ 내용을 입력해주세요.'); document.getElementById('f-content').focus(); return; }
+
+  const btn = document.getElementById('publish-btn');
+  btn.textContent = '게시 중...';
+  btn.disabled = true;
+
+  const pending = attachedFiles.filter(f => !f.url);
+  if (pending.length > 0) {
+    toast('⏳ 파일 업로드가 아직 완료되지 않았어요. 잠시 후 다시 시도해주세요.');
+    btn.textContent = '게시하기 →';
+    btn.disabled = false;
+    return;
+  }
+
+  const { error } = await sb.from('posts').insert([{
+    cat: selectedCat,
+    title,
+    content,
+    author,
+    views: 0,
+    image_url: uploadedImageUrl,
+    attachments: attachedFiles.map(f => ({ name: f.name, url: f.url, size: f.size }))
+  }]);
+
+  btn.textContent = '게시하기 →';
+  btn.disabled = false;
+
+  if (error) { toast('❌ 오류: ' + error.message); return; }
+
+  window.location.href = '/community';
+};
+
+/* ── Keyboard shortcut ── */
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') window.publishPost();
+});
+</script>
+</body>
+</html>

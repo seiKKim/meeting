@@ -6,6 +6,7 @@
     { "source": "/cheatsheet",  "destination": "/cheatsheet.html" },
     { "source": "/claude-design", "destination": "/claude-design.html" },
     { "source": "/token-router",  "destination": "/token-router.html" },
-    { "source": "/community",    "destination": "/community.html" }
+    { "source": "/community",    "destination": "/community.html" },
+    { "source": "/write",        "destination": "/write.html" }
   ]
 }
