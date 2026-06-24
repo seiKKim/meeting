@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>커뮤니티 | 우당시</title>
+<style>
+:root {
+  --bg:#ffffff;--bg2:#f8fafc;--card:#ffffff;--card2:#f8fafc;
+  --cardin:#f1f5f9;--border:#e2e8f0;--border2:#cbd5e1;
+  --green:#16a34a;--green2:#15803d;--green3:#22c55e;--green-dim:#dcfce7;
+  --text:#111827;--text2:#4b5563;--text3:#9ca3af;
+  --yellow:#d97706;--red:#dc2626;--blue:#2563eb;--purple:#7c3aed;
+  --mono:'Consolas','Fira Code',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;height:60px;}
+.nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;white-space:nowrap;margin-right:1.5rem;flex-shrink:0;}
+.nav-logo-icon{width:32px;height:32px;border-radius:8px;flex-shrink:0;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;}
+.nav-logo-text{display:flex;flex-direction:column;gap:1px;}
+.nav-logo-name{font-size:.95rem;font-weight:900;color:var(--text);letter-spacing:-.01em;}
+.nav-logo-sub{font-size:.58rem;color:var(--text3);font-weight:500;}
+.nav-pages{display:flex;align-items:stretch;flex:1;height:60px;}
+.nav-page{display:flex;align-items:center;padding:0 1rem;text-decoration:none;font-size:.86rem;font-weight:500;color:var(--text2);white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
+.nav-page:hover{color:var(--text);}
+.nav-page.active{color:var(--green);font-weight:700;border-bottom-color:var(--green);}
+.nav-group{position:relative;display:flex;align-items:stretch;}
+.nav-group:hover .nav-dropdown{display:flex;}
+.nav-dropdown{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.08);flex-direction:column;min-width:220px;padding:.4rem 0;z-index:200;}
+.nav-dd-item{padding:.65rem 1.2rem;color:var(--text2);text-decoration:none;font-size:.83rem;font-weight:500;white-space:nowrap;transition:background .15s,color .15s;display:block;}
+.nav-dd-item:hover{background:var(--bg2);color:var(--text);}
+.nav-group>.nav-page::after{content:' ▾';font-size:.7em;opacity:.5;}
+.nav-dd-item.active{color:var(--green);font-weight:700;background:var(--green-dim);}
+.nav-btns{display:flex;gap:.6rem;flex-shrink:0;}
+.btn-outline{border:1px solid var(--border2);border-radius:8px;padding:.4rem 1rem;font-size:.82rem;color:var(--text2);background:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;}
+
+/* PAGE */
+.page{max-width:1080px;margin:0 auto;padding:80px 2rem 4rem;}
+
+/* HERO */
+.hero{padding:2rem 0 1.5rem;}
+.badge{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border2);border-radius:999px;padding:.3rem 1rem;font-size:.78rem;font-weight:700;color:var(--text2);background:var(--card);margin-bottom:1.2rem;letter-spacing:.04em;}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.hero h1{font-size:2rem;font-weight:900;line-height:1.2;margin-bottom:.6rem;}
+.hero h1 span{color:var(--green);}
+.hero p{color:var(--text2);font-size:.93rem;max-width:520px;line-height:1.7;}
+
+/* TAB BAR */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin:1.5rem 0 0;}
+.tab-btn{background:none;border:none;padding:.7rem 1.4rem;font-size:.88rem;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text2);}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);}
+
+/* CAT BAR */
+.cat-bar{display:flex;flex-wrap:wrap;gap:.4rem;padding:.9rem 0;}
+.cat-chip{background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:.3rem .85rem;font-size:.77rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;}
+.cat-chip:hover{border-color:var(--border2);color:var(--text);}
+.cat-chip.active{background:var(--green-dim);border-color:var(--green3);color:var(--green2);}
+
+/* LAYOUT */
+.community-layout{display:flex;gap:2rem;align-items:flex-start;margin-top:.5rem;}
+.content-main{flex:1;min-width:0;}
+.sidebar{width:256px;flex-shrink:0;position:sticky;top:76px;}
+@media(max-width:760px){.community-layout{flex-direction:column;}.sidebar{width:100%;position:static;}}
+
+/* TAB PANEL */
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* POST LIST */
+.post-list{display:flex;flex-direction:column;gap:.55rem;}
+.post-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;cursor:pointer;transition:border-color .2s,box-shadow .15s;}
+.post-card:hover{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.post-card.hidden{display:none;}
+.post-top{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem;}
+.post-cat-badge{font-size:.68rem;font-weight:700;padding:.13rem .5rem;border-radius:999px;border:1px solid;}
+.post-cat-badge.coding{background:#dbeafe;border-color:#bfdbfe;color:var(--blue);}
+.post-cat-badge.auto{background:#f0fdf4;border-color:#86efac;color:var(--green2);}
+.post-cat-badge.marketing{background:#fff7ed;border-color:#fed7aa;color:#c2410c;}
+.post-cat-badge.doc{background:#faf5ff;border-color:#d8b4fe;color:var(--purple);}
+.post-cat-badge.data{background:#ecfdf5;border-color:#6ee7b7;color:#065f46;}
+.post-cat-badge.invest{background:#fffbeb;border-color:#fcd34d;color:#92400e;}
+.post-cat-badge.general{background:var(--card2);border-color:var(--border2);color:var(--text3);}
+.post-new{font-size:.65rem;font-weight:800;color:var(--red);background:#fee2e2;padding:.1rem .38rem;border-radius:4px;}
+.post-hot{font-size:.65rem;font-weight:800;color:#c2410c;background:#fff7ed;padding:.1rem .38rem;border-radius:4px;}
+.post-title{font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:.3rem;line-height:1.4;}
+.post-preview{font-size:.81rem;color:var(--text2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.post-meta{display:flex;align-items:center;gap:.8rem;margin-top:.55rem;}
+.post-author{display:flex;align-items:center;gap:.35rem;font-size:.75rem;color:var(--text3);}
+.post-avatar{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;color:#fff;flex-shrink:0;}
+.post-stats{display:flex;gap:.65rem;font-size:.72rem;color:var(--text3);margin-left:auto;}
+
+/* PROMPT GRID */
+.prompt-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.prompt-grid{grid-template-columns:1fr;}}
+.prompt-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem;transition:border-color .2s,box-shadow .2s;}
+.prompt-card:hover{border-color:var(--border2);box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.prompt-emoji{font-size:1.7rem;margin-bottom:.55rem;display:block;}
+.prompt-title{font-size:.97rem;font-weight:800;color:var(--text);margin-bottom:.35rem;}
+.prompt-desc{font-size:.81rem;color:var(--text2);line-height:1.6;margin-bottom:.75rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.prompt-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.75rem;}
+.prompt-tag{font-size:.68rem;font-weight:600;padding:.13rem .45rem;border-radius:5px;background:var(--card2);border:1px solid var(--border);color:var(--text3);}
+.prompt-actions{display:flex;gap:.45rem;}
+.btn-view{background:var(--green);color:#052e16;border:none;border-radius:7px;padding:.36rem .85rem;font-size:.77rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.25rem;}
+.btn-view:hover{opacity:.87;}
+.btn-soon{background:none;border:1px solid var(--border2);color:var(--text3);border-radius:7px;padding:.36rem .85rem;font-size:.77rem;font-weight:600;cursor:default;}
+
+/* STACK */
+.stack-grid{display:flex;flex-direction:column;gap:1rem;}
+.stack-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1.5rem;transition:border-color .2s,box-shadow .15s;}
+.stack-card:hover{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.stack-top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.7rem;}
+.stack-tool{background:var(--cardin);border:1px solid var(--border);border-radius:8px;padding:.28rem .7rem;font-size:.8rem;font-weight:700;color:var(--text);}
+.stack-plus{font-size:.9rem;color:var(--text3);font-weight:700;}
+.stack-arrow{font-size:1rem;color:var(--green2);font-weight:900;margin:0 .1rem;}
+.stack-result{font-size:.82rem;font-weight:700;color:var(--green2);background:var(--green-dim);padding:.28rem .75rem;border-radius:8px;border:1px solid var(--green3);}
+.stack-desc{font-size:.84rem;color:var(--text2);line-height:1.6;margin-bottom:.7rem;}
+.stack-steps{display:flex;flex-direction:column;gap:.4rem;}
+.stack-step{display:flex;gap:.6rem;align-items:flex-start;font-size:.81rem;color:var(--text2);}
+.snum{width:18px;height:18px;border-radius:50%;background:var(--cardin);border:1px solid var(--border2);font-size:.64rem;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0;margin-top:.15rem;}
+
+/* SIDEBAR */
+.sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.2rem;margin-bottom:.85rem;}
+.sidebar-title{font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem;}
+.trending-item{display:flex;gap:.55rem;align-items:flex-start;padding:.45rem 0;border-bottom:1px solid var(--border);}
+.trending-item:last-child{border-bottom:none;padding-bottom:0;}
+.tnum{font-size:.73rem;font-weight:900;color:var(--text3);min-width:16px;margin-top:.1rem;font-family:var(--mono);}
+.ttitle{font-size:.79rem;font-weight:600;color:var(--text2);line-height:1.4;cursor:pointer;}
+.ttitle:hover{color:var(--text);}
+.notice-item{display:flex;gap:.55rem;padding:.4rem 0;font-size:.79rem;color:var(--text2);border-bottom:1px solid var(--border);}
+.notice-item:last-child{border-bottom:none;}
+.nbadge{border-radius:4px;padding:.08rem .32rem;font-size:.63rem;font-weight:700;flex-shrink:0;margin-top:.12rem;}
+.nbadge.new{background:var(--green-dim);color:var(--green2);}
+.nbadge.info{background:#eff6ff;color:var(--blue);}
+
+/* WRITE BTN */
+.write-btn-wrap{display:flex;justify-content:flex-end;margin-bottom:.8rem;}
+.write-btn{background:var(--green);color:#052e16;border:none;border-radius:8px;padding:.42rem 1.05rem;font-size:.81rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;text-decoration:none;}
+.write-btn:hover{opacity:.88;}
+
+/* FOOTER */
+footer{text-align:center;padding:2.5rem;color:var(--text3);font-size:.78rem;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-icon">⏱</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">우당시</span>
+      <span class="nav-logo-sub">우리는 당신의 시간을 벌어드립니다</span>
+    </div>
+  </a>
+  <div class="nav-pages">
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page">가이드</a>
+      <div class="nav-dropdown">
+        <a href="/claude-design" class="nav-dd-item">🎨 Claude 디자인</a>
+        <a href="/token-router" class="nav-dd-item">💰 토큰 절감 99%</a>
+      </div>
+    </div>
+    <a href="/cheatsheet" class="nav-page">코딩이란?</a>
+    <div class="nav-group">
+      <a href="javascript:;" class="nav-page">Tip</a>
+      <div class="nav-dropdown">
+        <a href="/tip" class="nav-dd-item">🎙 회의록 자동 완성</a>
+        <a href="/invest" class="nav-dd-item">📈 AI 투자 리서치</a>
+      </div>
+    </div>
+    <a href="/community" class="nav-page active">커뮤니티</a>
+  </div>
+  <div class="nav-btns">
+    <a class="btn-outline" href="https://github.com/seiKKim/meeting" target="_blank">⭐ GitHub</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="badge"><span class="dot"></span> COMMUNITY</div>
+    <h1>함께 성장하는 <span>AI 활용</span> 커뮤니티</h1>
+    <p>회의록, 투자 리서치, 코딩까지 — AI로 시간을 아끼는 사람들의 노하우를 나눠요.</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('board',this)">📋 자유게시판</button>
+    <button class="tab-btn" onclick="switchTab('gallery',this)">✨ 프롬프트 갤러리</button>
+    <button class="tab-btn" onclick="switchTab('stack',this)">🔧 스킬 스택</button>
+  </div>
+
+  <div class="cat-bar" id="cat-bar">
+    <button class="cat-chip active" data-cat="all" onclick="filterCat(this,'all')">전체</button>
+    <button class="cat-chip" data-cat="coding" onclick="filterCat(this,'coding')">코딩/에이전트</button>
+    <button class="cat-chip" data-cat="auto" onclick="filterCat(this,'auto')">자동화</button>
+    <button class="cat-chip" data-cat="marketing" onclick="filterCat(this,'marketing')">마케팅</button>
+    <button class="cat-chip" data-cat="doc" onclick="filterCat(this,'doc')">문서/PPT</button>
+    <button class="cat-chip" data-cat="data" onclick="filterCat(this,'data')">데이터/엑셀</button>
+    <button class="cat-chip" data-cat="invest" onclick="filterCat(this,'invest')">투자/리서치</button>
+  </div>
+
+  <div class="community-layout">
+    <div class="content-main">
+
+      <!-- BOARD -->
+      <div id="tab-board" class="tab-panel active">
+        <div class="write-btn-wrap">
+          <a href="#" class="write-btn">✏️ 글쓰기</a>
+        </div>
+        <div class="post-list">
+
+          <div class="post-card" data-cat="auto">
+            <div class="post-top">
+              <span class="post-cat-badge auto">자동화</span>
+              <span class="post-new">NEW</span>
+            </div>
+            <div class="post-title">회의록 자동완성 써보니 진짜 시간이 남아요</div>
+            <div class="post-preview">처음엔 반신반의했는데, 1시간 회의를 20분 만에 정리했습니다. Obsidian에 자동 저장까지 되니 너무 편하네요. 주 3회 정기 미팅이 있는 분들은 꼭 써보세요 👍</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#16a34a">김</div>
+                김민준
+              </div>
+              <div class="post-stats"><span>👁 218</span><span>💬 14</span><span>2시간 전</span></div>
+            </div>
+          </div>
+
+          <div class="post-card" data-cat="invest">
+            <div class="post-top">
+              <span class="post-cat-badge invest">투자/리서치</span>
+              <span class="post-new">NEW</span>
+            </div>
+            <div class="post-title">AI 투자 리서치 프롬프트 실제 사용 후기</div>
+            <div class="post-preview">/분석 명령어로 관심 종목 돌려봤는데 뉴스 요약부터 감정 점검 질문까지 꽤 유용했습니다. 최종 판단은 제가 하지만 판단 근거 정리에 도움이 많이 됐어요.</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#d97706">최</div>
+                최지은
+              </div>
+              <div class="post-stats"><span>👁 163</span><span>💬 9</span><span>4시간 전</span></div>
+            </div>
+          </div>
+
+          <div class="post-card" data-cat="coding">
+            <div class="post-top">
+              <span class="post-cat-badge coding">코딩/에이전트</span>
+              <span class="post-hot">인기</span>
+            </div>
+            <div class="post-title">비개발자인데 Claude로 간단한 웹페이지 만들었어요</div>
+            <div class="post-preview">코딩이란? 가이드를 처음부터 읽고 나서 랜딩페이지 하나 만들었어요. HTML이 이렇게 동작하는 거였군요. 무서웠던 코딩이 이제 좀 친근해졌어요 😊</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#2563eb">이</div>
+                이수빈
+              </div>
+              <div class="post-stats"><span>👁 412</span><span>💬 27</span><span>어제</span></div>
+            </div>
+          </div>
+
+          <div class="post-card" data-cat="general">
+            <div class="post-top">
+              <span class="post-cat-badge general">자유</span>
+            </div>
+            <div class="post-title">Claude 처음 쓰는데 어디서 시작하면 좋을까요?</div>
+            <div class="post-preview">회사에서 AI 써보라는 말을 들어서 찾아왔는데... 무료 플랜으로 시작해도 되나요? 어떤 메뉴부터 보면 좋을지 알려주세요! 정보가 너무 많아서 오히려 혼란스러워요.</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#7c3aed">박</div>
+                박서연
+              </div>
+              <div class="post-stats"><span>👁 89</span><span>💬 6</span><span>어제</span></div>
+            </div>
+          </div>
+
+          <div class="post-card" data-cat="marketing">
+            <div class="post-top">
+              <span class="post-cat-badge marketing">마케팅</span>
+            </div>
+            <div class="post-title">SNS 카피 Claude로 10초 만에 뽑는 팁</div>
+            <div class="post-preview">10개씩 카피 요청하고 그중 최선 3개 고르는 방식으로 작업하니 시간이 절반으로 줄었어요. 톤앤매너 미리 정의해두면 훨씬 좋아요. 프롬프트 공유해드릴게요.</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#c2410c">정</div>
+                정하윤
+              </div>
+              <div class="post-stats"><span>👁 285</span><span>💬 18</span><span>2일 전</span></div>
+            </div>
+          </div>
+
+          <div class="post-card" data-cat="doc">
+            <div class="post-top">
+              <span class="post-cat-badge doc">문서/PPT</span>
+            </div>
+            <div class="post-title">PPT 기획안 Claude가 대신 써줬는데 퀄리티 대박이에요</div>
+            <div class="post-preview">회의 안건을 입력했더니 목차 구성, 각 슬라이드 내용 초안, 발표 흐름까지 뽑아줬어요. 이걸로 30분 만에 10장 완성. 나머지는 디자인만 했습니다.</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#7c3aed">강</div>
+                강다은
+              </div>
+              <div class="post-stats"><span>👁 193</span><span>💬 11</span><span>3일 전</span></div>
+            </div>
+          </div>
+
+          <div class="post-card" data-cat="data">
+            <div class="post-top">
+              <span class="post-cat-badge data">데이터/엑셀</span>
+            </div>
+            <div class="post-title">매월 수작업 Excel 보고서 자동화 성공했어요</div>
+            <div class="post-preview">Claude한테 양식 알려주고 반복 작업을 파이썬 스크립트로 만들어달라고 했더니 VBA 없이도 됐어요. 코딩 몰라도 진짜 됩니다. 월말 야근이 사라졌어요.</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#0891b2">조</div>
+                조유진
+              </div>
+              <div class="post-stats"><span>👁 347</span><span>💬 22</span><span>4일 전</span></div>
+            </div>
+          </div>
+
+          <div class="post-card" data-cat="coding">
+            <div class="post-top">
+              <span class="post-cat-badge coding">코딩/에이전트</span>
+            </div>
+            <div class="post-title">토큰 절감 99% 가이드 읽고 Claude 비용 줄였어요</div>
+            <div class="post-preview">저도 처음엔 막무가내로 긴 프롬프트 쏟아냈는데, 토큰 라우터 전략 쓰니까 품질은 유지되고 비용이 확실히 줄었어요. API 쓰시는 분들한테 특히 추천합니다.</div>
+            <div class="post-meta">
+              <div class="post-author">
+                <div class="post-avatar" style="background:#16a34a">윤</div>
+                윤지호
+              </div>
+              <div class="post-stats"><span>👁 276</span><span>💬 15</span><span>5일 전</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- GALLERY -->
+      <div id="tab-gallery" class="tab-panel">
+        <div class="prompt-grid">
+
+          <div class="prompt-card">
+            <span class="prompt-emoji">🎙</span>
+            <div class="prompt-title">회의록 자동 완성</div>
+            <div class="prompt-desc">회의 음성을 텍스트로 변환 후 구조화된 회의록으로 자동 정리하는 시스템 프롬프트. Obsidian 연동까지 지원합니다.</div>
+            <div class="prompt-tags">
+              <span class="prompt-tag">자동화</span>
+              <span class="prompt-tag">회의록</span>
+              <span class="prompt-tag">Whisper</span>
+            </div>
+            <div class="prompt-actions">
+              <a href="/tip" class="btn-view">→ 자세히 보기</a>
+            </div>
+          </div>
+
+          <div class="prompt-card">
+            <span class="prompt-emoji">📈</span>
+            <div class="prompt-title">AI 투자 리서치 시스템</div>
+            <div class="prompt-desc">종목 분석부터 감정 점검 질문까지, 체계적인 투자 리서치를 위한 Claude 시스템 프롬프트입니다.</div>
+            <div class="prompt-tags">
+              <span class="prompt-tag">투자</span>
+              <span class="prompt-tag">리서치</span>
+              <span class="prompt-tag">/cs 추적</span>
+            </div>
+            <div class="prompt-actions">
+              <a href="/invest" class="btn-view">→ 자세히 보기</a>
+            </div>
+          </div>
+
+          <div class="prompt-card">
+            <span class="prompt-emoji">📣</span>
+            <div class="prompt-title">마케팅 카피 10초 완성</div>
+            <div class="prompt-desc">제품/서비스 정보를 입력하면 SNS, 광고, 이메일 등 채널별 카피를 자동으로 생성합니다. 톤앤매너 설정 포함.</div>
+            <div class="prompt-tags">
+              <span class="prompt-tag">마케팅</span>
+              <span class="prompt-tag">카피라이팅</span>
+              <span class="prompt-tag">SNS</span>
+            </div>
+            <div class="prompt-actions">
+              <span class="btn-soon">준비 중</span>
+            </div>
+          </div>
+
+          <div class="prompt-card">
+            <span class="prompt-emoji">👨‍💻</span>
+            <div class="prompt-title">코드 리뷰 전문가</div>
+            <div class="prompt-desc">주니어부터 시니어까지, 코드를 분석하고 개선점·잠재 버그·성능 이슈를 상세히 제안해줍니다.</div>
+            <div class="prompt-tags">
+              <span class="prompt-tag">코딩</span>
+              <span class="prompt-tag">코드리뷰</span>
+              <span class="prompt-tag">버그찾기</span>
+            </div>
+            <div class="prompt-actions">
+              <span class="btn-soon">준비 중</span>
+            </div>
+          </div>
+
+          <div class="prompt-card">
+            <span class="prompt-emoji">📊</span>
+            <div class="prompt-title">데이터 분석 보고서</div>
+            <div class="prompt-desc">엑셀/CSV 데이터를 붙여넣으면 핵심 인사이트와 시각화 방향을 제안합니다. 상사 보고용 요약까지 작성해줍니다.</div>
+            <div class="prompt-tags">
+              <span class="prompt-tag">데이터</span>
+              <span class="prompt-tag">엑셀</span>
+              <span class="prompt-tag">보고서</span>
+            </div>
+            <div class="prompt-actions">
+              <span class="btn-soon">준비 중</span>
+            </div>
+          </div>
+
+          <div class="prompt-card">
+            <span class="prompt-emoji">📋</span>
+            <div class="prompt-title">PPT 기획 도우미</div>
+            <div class="prompt-desc">주제와 목적을 입력하면 목차 구성, 슬라이드별 내용 초안, 발표 흐름을 한번에 제안합니다.</div>
+            <div class="prompt-tags">
+              <span class="prompt-tag">PPT</span>
+              <span class="prompt-tag">기획</span>
+              <span class="prompt-tag">문서</span>
+            </div>
+            <div class="prompt-actions">
+              <span class="btn-soon">준비 중</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STACK -->
+      <div id="tab-stack" class="tab-panel">
+        <div class="stack-grid">
+
+          <div class="stack-card">
+            <div class="stack-top">
+              <span class="stack-tool">🎙 녹음 앱</span>
+              <span class="stack-plus">+</span>
+              <span class="stack-tool">Whisper STT</span>
+              <span class="stack-plus">+</span>
+              <span class="stack-tool">Claude</span>
+              <span class="stack-arrow">→</span>
+              <span class="stack-result">회의록 자동화</span>
+            </div>
+            <div class="stack-desc">회의를 녹음하고, Whisper로 텍스트 변환 후, Claude가 구조화된 회의록으로 정리합니다. Obsidian에 자동 저장까지 연결됩니다.</div>
+            <div class="stack-steps">
+              <div class="stack-step"><span class="snum">1</span>스마트폰으로 회의 녹음 (클로바노트, 삼성 음성 녹음 등)</div>
+              <div class="stack-step"><span class="snum">2</span>Whisper 또는 Ollama로 음성 → 텍스트 변환</div>
+              <div class="stack-step"><span class="snum">3</span>회의록 자동 완성 시스템 프롬프트로 Claude 요약</div>
+              <div class="stack-step"><span class="snum">4</span>Obsidian 노트로 자동 저장 및 태그 분류</div>
+            </div>
+          </div>
+
+          <div class="stack-card">
+            <div class="stack-top">
+              <span class="stack-tool">📰 뉴스/공시</span>
+              <span class="stack-plus">+</span>
+              <span class="stack-tool">Claude</span>
+              <span class="stack-arrow">→</span>
+              <span class="stack-result">AI 투자 리서치</span>
+            </div>
+            <div class="stack-desc">관심 종목의 뉴스·공시·재무 정보를 Claude에 붙여넣어 체계적인 리서치 보고서를 생성합니다. /cs 명령으로 매일 추적 관찰합니다.</div>
+            <div class="stack-steps">
+              <div class="stack-step"><span class="snum">1</span>투자 리서치 시스템 프롬프트 설정 (1회)</div>
+              <div class="stack-step"><span class="snum">2</span>/분석 [종목명] 으로 기본 리서치 시작</div>
+              <div class="stack-step"><span class="snum">3</span>/뉴스 로 최근 이슈 요약 및 영향 분석</div>
+              <div class="stack-step"><span class="snum">4</span>/cs 로 매일 추적 관찰 및 감정 점검</div>
+            </div>
+          </div>
+
+          <div class="stack-card">
+            <div class="stack-top">
+              <span class="stack-tool">Claude</span>
+              <span class="stack-plus">+</span>
+              <span class="stack-tool">Notion</span>
+              <span class="stack-arrow">→</span>
+              <span class="stack-result">지식 관리 시스템</span>
+            </div>
+            <div class="stack-desc">Claude로 학습한 내용을 구조화하고, Notion에 체계적으로 저장합니다. 나중에 Claude에 노션 내용을 다시 붙여넣어 활용합니다.</div>
+            <div class="stack-steps">
+              <div class="stack-step"><span class="snum">1</span>학습하거나 읽은 내용을 Claude에 붙여넣기</div>
+              <div class="stack-step"><span class="snum">2</span>"이 내용을 Notion 데이터베이스 형식으로 정리해줘" 요청</div>
+              <div class="stack-step"><span class="snum">3</span>Claude가 표, 태그, 요약, 액션아이템 분리해서 정리</div>
+              <div class="stack-step"><span class="snum">4</span>Notion에 복붙하여 지식 베이스 누적</div>
+            </div>
+          </div>
+
+          <div class="stack-card">
+            <div class="stack-top">
+              <span class="stack-tool">Excel/CSV</span>
+              <span class="stack-plus">+</span>
+              <span class="stack-tool">Claude</span>
+              <span class="stack-plus">+</span>
+              <span class="stack-tool">Python</span>
+              <span class="stack-arrow">→</span>
+              <span class="stack-result">데이터 자동화</span>
+            </div>
+            <div class="stack-desc">반복적인 Excel 보고서 작업을 Python 스크립트로 자동화합니다. Claude가 코드를 작성해주니 프로그래밍 경험이 없어도 가능합니다.</div>
+            <div class="stack-steps">
+              <div class="stack-step"><span class="snum">1</span>Excel 데이터와 원하는 보고서 형식 설명</div>
+              <div class="stack-step"><span class="snum">2</span>Claude에게 Python 스크립트 작성 요청</div>
+              <div class="stack-step"><span class="snum">3</span>스크립트 실행 → 보고서 자동 생성</div>
+              <div class="stack-step"><span class="snum">4</span>매월 데이터만 바꿔서 반복 실행</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">🔥 지금 뜨는 글</div>
+        <div class="trending-item">
+          <span class="tnum">1</span>
+          <span class="ttitle">비개발자인데 Claude로 간단한 웹페이지 만들었어요</span>
+        </div>
+        <div class="trending-item">
+          <span class="tnum">2</span>
+          <span class="ttitle">매월 수작업 Excel 보고서 자동화 성공했어요</span>
+        </div>
+        <div class="trending-item">
+          <span class="tnum">3</span>
+          <span class="ttitle">SNS 카피 Claude로 10초 만에 뽑는 팁</span>
+        </div>
+        <div class="trending-item">
+          <span class="tnum">4</span>
+          <span class="ttitle">PPT 기획안 Claude가 대신 써줬는데 퀄리티 대박이에요</span>
+        </div>
+        <div class="trending-item">
+          <span class="tnum">5</span>
+          <span class="ttitle">토큰 절감 99% 가이드 읽고 Claude 비용 줄였어요</span>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-title">📢 공지사항</div>
+        <div class="notice-item">
+          <span class="nbadge new">NEW</span>
+          우당시 커뮤니티 오픈 안내
+        </div>
+        <div class="notice-item">
+          <span class="nbadge info">안내</span>
+          6월 프롬프트 공유 이벤트
+        </div>
+        <div class="notice-item">
+          <span class="nbadge info">안내</span>
+          커뮤니티 이용 규칙 안내
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2025 우당시 — 우리는 당신의 시간을 벌어드립니다
+</footer>
+
+<script>
+var currentTab = 'board';
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('cat-bar').style.display = (tab === 'board') ? 'flex' : 'none';
+  currentTab = tab;
+  document.querySelectorAll('.cat-chip').forEach(function(c) { c.classList.remove('active'); });
+  var all = document.querySelector('.cat-chip[data-cat="all"]');
+  if (all) all.classList.add('active');
+  document.getElementById('tab-' + tab).querySelectorAll('[data-cat]').forEach(function(c) { c.classList.remove('hidden'); });
+}
+
+function filterCat(btn, cat) {
+  document.querySelectorAll('.cat-chip').forEach(function(c) { c.classList.remove('active'); });
+  btn.classList.add('active');
+  var panel = document.getElementById('tab-' + currentTab);
+  panel.querySelectorAll('[data-cat]').forEach(function(card) {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+</script>
+</body>
+</html>
